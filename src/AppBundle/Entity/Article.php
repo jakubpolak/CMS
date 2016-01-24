@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @author Jakub Polák
@@ -24,6 +25,8 @@ class Article {
     /**
      * @var string
      *
+     * @Assert\NotBlank()
+     * @Assert\Length(min="1", max="255")
      * @ORM\Column(name="heading", type="string", length=255)
      */
     private $heading;
@@ -31,6 +34,8 @@ class Article {
     /**
      * @var string
      *
+     * @Assert\NotBlank()
+     * @Assert\Length(min="1")
      * @ORM\Column(name="content", type="text")
      */
     private $content;
@@ -45,6 +50,8 @@ class Article {
     /**
      * @var \DateTime
      *
+     * @Assert\NotBlank()
+     * @Assert\Date()
      * @ORM\Column(name="writtenOn", type="date")
      */
     private $writtenOn;
@@ -86,7 +93,7 @@ class Article {
      * Set heading.
      *
      * @param string $heading
-     * @return Article
+     * @return self
      */
     public function setHeading($heading) {
         $this->heading = $heading;
@@ -107,7 +114,7 @@ class Article {
      * Set content.
      *
      * @param string $content
-     * @return Article
+     * @return self
      */
     public function setContent($content) {
         $this->content = $content;
@@ -128,7 +135,7 @@ class Article {
      * Set isPublished.
      *
      * @param boolean $isPublished
-     * @return Article
+     * @return self
      */
     public function setIsPublished($isPublished) {
         $this->isPublished = $isPublished;
@@ -149,7 +156,7 @@ class Article {
      * Set writtenOn.
      *
      * @param \DateTime $writtenOn
-     * @return Article
+     * @return self
      */
     public function setWrittenOn($writtenOn) {
         $this->writtenOn = $writtenOn;
@@ -179,7 +186,7 @@ class Article {
      * Set slugs.
      *
      * @param ArrayCollection $slugs
-     * @return Article
+     * @return self
      */
     public function setSlugs(ArrayCollection $slugs) {
         $this->slugs = $slugs;
@@ -191,7 +198,7 @@ class Article {
      * Add slug.
      *
      * @param Slug $slug
-     * @return Article
+     * @return self
      */
     public function addSlug(Slug $slug) {
         $this->slugs->add($slug);
@@ -204,7 +211,7 @@ class Article {
      * Remove slug.
      *
      * @param Slug $slug
-     * @return Article
+     * @return self
      */
     public function removeSlug(Slug $slug) {
         $this->slugs->remove($slug);
@@ -225,7 +232,7 @@ class Article {
      * Set images.
      *
      * @param ArrayCollection $images
-     * @return Article
+     * @return self
      */
     public function setImages(ArrayCollection $images) {
         $this->images = $images;

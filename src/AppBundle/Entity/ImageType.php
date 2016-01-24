@@ -59,7 +59,7 @@ class ImageType {
      *
      * @param string $name
      *
-     * @return ImageType
+     * @return self
      */
     public function setName($name) {
         $this->name = $name;
@@ -89,7 +89,7 @@ class ImageType {
      * Set images.
      *
      * @param ArrayCollection $images
-     * @return ImageType
+     * @return self
      */
     public function setImages($images) {
         $this->images = $images;
@@ -101,7 +101,7 @@ class ImageType {
      * Add image.
      *
      * @param Image $image
-     * @return ImageType
+     * @return self
      */
     public function addImage(Image $image) {
         $this->images->add($image);
@@ -114,7 +114,7 @@ class ImageType {
      * Remove image.
      *
      * @param Image $image
-     * @return ImageType
+     * @return self
      */
     public function removeImage(Image $image) {
         $this->images->remove($image);

@@ -94,8 +94,7 @@ class Menu {
      * Set name
      *
      * @param string $name
-     *
-     * @return Menu
+     * @return self
      */
     public function setName($name) {
         $this->name = $name;
@@ -116,8 +115,7 @@ class Menu {
      * Set content
      *
      * @param string $content
-     *
-     * @return Menu
+     * @return self
      */
     public function setContent($content) {
         $this->content = $content;
@@ -138,8 +136,7 @@ class Menu {
      * Set isActive
      *
      * @param boolean $isActive
-     *
-     * @return Menu
+     * @return self
      */
     public function setIsActive($isActive) {
         $this->isActive = $isActive;
@@ -169,8 +166,7 @@ class Menu {
      * Set position
      *
      * @param int $position
-     *
-     * @return Menu
+     * @return self
      */
     public function setPosition($position) {
         $this->position = $position;
@@ -181,7 +177,7 @@ class Menu {
     /**
      * Get menu
      *
-     * @return Menu
+     * @return self
      */
     public function getMenu() {
         return $this->menu;
@@ -191,8 +187,7 @@ class Menu {
      * Set menu
      *
      * @param Menu $menu
-     *
-     * @return Menu
+     * @return self
      */
     public function setMenu($menu) {
         $this->menu = $menu;
@@ -213,8 +208,7 @@ class Menu {
      * Set menus
      *
      * @param ArrayCollection $menus
-     *
-     * @return Menu
+     * @return self
      */
     public function setMenus($menus){
         $this->menus = $menus;
@@ -235,7 +229,7 @@ class Menu {
      * Set slugs.
      *
      * @param ArrayCollection $slugs
-     * @return Menu
+     * @return self
      */
     public function setSlugs($slugs) {
         $this->slugs = $slugs;

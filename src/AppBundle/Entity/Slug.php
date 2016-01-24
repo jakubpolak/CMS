@@ -64,7 +64,7 @@ class Slug {
      * Set content.
      *
      * @param string $content
-     * @return Slug
+     * @return self
      */
     public function setContent($content) {
         $this->content = $content;
@@ -94,7 +94,7 @@ class Slug {
      * Set menu.
      *
      * @param Menu $menu
-     * @return Slug
+     * @return self
      */
     public function setMenu($menu) {
         $this->menu = $menu;
@@ -115,7 +115,7 @@ class Slug {
      * Set language.
      *
      * @param Language $language
-     * @return Slug
+     * @return self
      */
     public function setLanguage($language) {
         $this->language = $language;
@@ -136,7 +136,7 @@ class Slug {
      * Set article.
      *
      * @param Article $article
-     * @return Slug
+     * @return self
      */
     public function setArticle($article) {
         $this->article = $article;

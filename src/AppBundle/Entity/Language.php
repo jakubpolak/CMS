@@ -70,7 +70,7 @@ class Language {
      * Set name.
      *
      * @param string $name
-     * @return Language
+     * @return self
      */
     public function setName($name) {
         $this->name = $name;
@@ -91,7 +91,7 @@ class Language {
      * Set code.
      *
      * @param string $code
-     * @return Language
+     * @return self
      */
     public function setCode($code) {
         $this->code = $code;
@@ -121,7 +121,7 @@ class Language {
      * Set slugs.
      *
      * @param ArrayCollection $slugs
-     * @return Language
+     * @return self
      */
     public function setSlugs(ArrayCollection $slugs) {
         $this->slugs = $slugs;
@@ -133,7 +133,7 @@ class Language {
      * Add slug.
      *
      * @param Slug $slug
-     * @return Language
+     * @return self
      */
     public function addSlug(Slug $slug) {
         $this->slugs->add($slug);
@@ -146,7 +146,7 @@ class Language {
      * Remove slug.
      *
      * @param Slug $slug
-     * @return Language
+     * @return self
      */
     public function removeSlug(Slug $slug) {
         $this->slugs->remove($slug);
@@ -167,7 +167,7 @@ class Language {
      * Set isLanguage.
      *
      * @param boolean $isDefault
-     * @return Language
+     * @return self
      */
     public function setIsDefault($isDefault) {
         $this->isDefault = $isDefault;

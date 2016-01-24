@@ -70,7 +70,7 @@ class Image {
      * Set name.
      *
      * @param string $name
-     * @return Image
+     * @return self
      */
     public function setName($name) {
         $this->name = $name;
@@ -91,7 +91,7 @@ class Image {
      * Set position.
      *
      * @param integer $position
-     * @return Image
+     * @return self
      */
     public function setPosition($position) {
         $this->position = $position;
@@ -111,7 +111,7 @@ class Image {
     /**
      * Get article.
      *
-     * @return Article
+     * @return self
      */
     public function getArticle() {
         return $this->article;
@@ -121,7 +121,7 @@ class Image {
      * Set article.
      *
      * @param Article $article
-     * @return Image
+     * @return self
      */
     public function setArticle($article) {
         $this->article = $article;
@@ -142,7 +142,7 @@ class Image {
      * Set imageType.
      *
      * @param ImageType $imageType
-     * @return Image
+     * @return self
      */
     public function setImageType($imageType) {
         $this->imageType = $imageType;

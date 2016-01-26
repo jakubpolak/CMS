@@ -13,8 +13,9 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * @author Jakub Polák
+ * Article controller.
  *
+ * @author Jakub Polák
  * @Route("/admin/article")
  */
 class ArticleController extends Controller {
@@ -22,7 +23,7 @@ class ArticleController extends Controller {
      * Index action.
      *
      * @Route("/{page}", defaults={"page" = 1}, name="admin_article_index")
-     * @Template(":admin/menu:index.html.twig")
+     * @Template("@App/admin/article/index.html.twig")
      * @Method("GET")
      */
     public function indexAction(int $page): array {
@@ -33,7 +34,7 @@ class ArticleController extends Controller {
      * Create action.
      *
      * @Route("/{page}/create", defaults={"page" = 1}, name="admin_article_create")
-     * @Template(":admin/menu:create.html.twig")
+     * @Template("@App/admin/article/create.html.twig")
      * @Method("GET")
      */
     public function createAction(int $page): array {
@@ -44,7 +45,7 @@ class ArticleController extends Controller {
      * Create process action.
      *
      * @Route("/{page}/create", defaults={"page" = 1}, name="admin_article_createProcess")
-     * @Template(":admin/menu:create.html.twig")
+     * @Template("@App/admin/article/create.html.twig")
      * @Method("POST")
      */
     public function createProcessAction(int $page, Request $request): array {
@@ -64,29 +65,59 @@ class ArticleController extends Controller {
             }
         }
 
-        return ['form' => $form->createView(), 'message' => $message];
+        return [
+            'form' => $form->createView(),
+            'message' => $message
+        ];
     }
 
     /**
      * Update action.
      *
      * @Route("/{id}/{page}/update", defaults={"page" = 1}, name="admin_article_update")
-     * @Template(":admin/menu:update.html.twig")
+     * @Template("@App/admin/article/update.html.twig")
      * @Method("GET")
      */
     public function updateAction(int $page, Article $article): array {
-        return [];
+        if ($article === null) {
+            $this->get('session')->getFlashBag()->add(Message::TYPE_DANGER, 'Článok neexistuje.');
+            return $this->redirect($this->generateUrl('admin_article_index', ['page' => $page]));
+        }
+
+        return ['form' => $this->createUpdateForm($article, $page)->createView()];
     }
 
     /**
      * Update process action.
      *
      * @Route("/{id}/{page}/update", defaults={"page" = 1}, name="admin_article_updateProcess")
-     * @Template(":admin/menu:update.html.twig")
+     * @Template("@App/admin/article/update.html.twig")
      * @Method("POST")
      */
     public function updateProcessAction(int $page, Article $article, Request $request): array {
-        return [];
+        if ($article === null) {
+            $this->get('session')->getFlashBag()->add(Message::TYPE_DANGER, 'Článok neexistuje.');
+            return $this->redirect($this->generateUrl('admin_article_index', ['page' => $page]));
+        }
+
+        $form = $this->createUpdateForm($article, $page);
+        $form->handleRequest($request);
+
+        $message = null;
+        if ($form->isValid()) {
+            try {
+                $this->get('service.article')->save($article);
+                $this->get('session')->getFlashBag()->add(Message::TYPE_SUCCESS, 'Článok bol uložený.');
+                return $this->redirect($this->generateUrl('admin_article_index', ['page' => $page]));
+            } catch (\Exception $e) {
+                $message = new Message(Message::TYPE_DANGER, 'Článok sa nepodarilo uložiť.');
+            }
+        }
+
+        return [
+            'form' => $form->createView(),
+            'message' => $message
+        ];
     }
 
     /**
@@ -96,7 +127,17 @@ class ArticleController extends Controller {
      * @Method("GET")
      */
     public function deleteAction(int $page, Article $article): array {
-        return [];
+        $flashBag = $this->get('session')->getFlashBag();
+
+        if ($article === null) {
+            $flashBag->add(Message::TYPE_DANGER, 'Článok sa nepodarilo zmazať, pretože neexistuje.');
+            return $this->redirect($this->generateUrl('admin_article_index', ['page' => $page]));
+        }
+
+        $this->get('service.article')->delete($article);
+        $flashBag->add(Message::TYPE_SUCCESS, 'Článok bol zmazaný.');
+
+        return $this->redirect($this->generateUrl('admin_article_index'));
     }
 
     /**

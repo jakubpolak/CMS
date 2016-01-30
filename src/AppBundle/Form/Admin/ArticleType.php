@@ -15,6 +15,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Trsteel\CkeditorBundle\Form\Type\CkeditorType;
 
 /**
+ * Article type.
+ *
  * @author Jakub Polák
  */
 class ArticleType extends AbstractType {

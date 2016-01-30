@@ -1,9 +1,11 @@
-# Learn more about services, parameters and containers at
-# http://symfony.com/doc/current/book/service_container.html
-parameters:
-    results_per_page: 20
+# TODO: Remove unused parameters.
+# parameters:
+   # results_per_page: 20
 
 services:
     service.article:
         class: AppBundle\Service\ArticleService
-        arguments: ['@doctrine.orm.default_entity_manager', %results_per_page%]
+        arguments: ['@doctrine.orm.default_entity_manager']
+    service.menu:
+        class: AppBundle\Service\MenuService
+        arguments: ['@doctrine.orm.default_entity_manager']

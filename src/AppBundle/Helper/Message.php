@@ -1,6 +1,6 @@
 <?php
 
-namespace  AppBundle\Message;
+namespace AppBundle\Helper;
 
 /**
  * @author Jakub Polák

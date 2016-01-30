@@ -7,6 +7,8 @@ use AppBundle\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManager;
 
 /**
+ * Article service.
+ *
  * @author Jakub Polák
  */
 class ArticleService {
@@ -16,36 +18,22 @@ class ArticleService {
     private $em;
 
     /**
-     * @var ArticleRepository
-     */
-    private $articleRepository;
-
-    /**
-     * @var int
-     */
-    private $resultsPerPage;
-
-    /**
      * Constructor.
      *
      * @param EntityManager $entityManager entity manager
-     * @param int $resultsPerPage results per page
      */
-    public function __construct(EntityManager $entityManager, int $resultsPerPage) {
+    public function __construct(EntityManager $entityManager) {
         $this->em = $entityManager;
         $this->articleRepository = $this->em->getRepository('AppBundle:Article');
-        $this->resultsPerPage = $resultsPerPage;
     }
 
     /**
-     * Get articles for pagination.
+     * Get all articles.
      *
-     * @param int $page
      * @return array
      */
-    public function getForPagination(int $page): array {
-        $firstResult = --$page * $this->resultsPerPage;
-        return $this->articleRepository->getByFirstResultAndMaxResults($firstResult, $this->resultsPerPage);
+    public function getAll(): array {
+        return $this->articleRepository->findAll();
     }
 
     /**

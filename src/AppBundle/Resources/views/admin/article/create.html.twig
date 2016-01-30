@@ -1,3 +1,7 @@
 {% extends '@App/admin/layout.html.twig' %}
 
-{% block content %}create.html.twig{% endblock %}
+{% block content %}
+    <form method="{{ form.vars.method }}" action="{{ form.vars.action }}">
+        {{ form_widget(form) }}
+    </form>
+{% endblock %}

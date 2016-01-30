@@ -51,7 +51,6 @@ class Article {
      * @var \DateTime
      *
      * @Assert\NotBlank()
-     * @Assert\Date()
      * @ORM\Column(name="writtenOn", type="date")
      */
     private $writtenOn;

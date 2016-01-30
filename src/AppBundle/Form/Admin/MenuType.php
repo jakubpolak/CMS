@@ -3,11 +3,16 @@
 namespace AppBundle\Form\Admin;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class MenuType extends AbstractType
-{
+/**
+ * Menu type.
+ *
+ * @author Jakub Polák
+ */
+class MenuType extends AbstractType {
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -15,19 +20,19 @@ class MenuType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name')
-            ->add('content')
-            ->add('isActive')
-            ->add('position')
-            ->add('menu')
+            ->add('name', null, ['label' => 'Názov'])
+            ->add('content', null, ['label' => 'Obsah'])
+            ->add('isActive', null, ['label' => 'Aktívny'])
+            ->add('position', null, ['label' => 'Pozícia'])
+            ->add('menu', null, ['label' => 'Menu'])
+            ->add('save', SubmitType::class, ['label' => 'Uložiť'])
         ;
     }
     
     /**
      * @param OptionsResolver $resolver
      */
-    public function configureOptions(OptionsResolver $resolver)
-    {
+    public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Menu'
         ));

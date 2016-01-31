@@ -32,9 +32,9 @@ class ArticleController extends Controller {
         $filter = $this->get('app.service.filter');
 
         return [
-            'articles' => $filter->getPagination($page - 1, $resultsPerPage, Article::class),
+            'articles' => $filter->getPagination(Article::class, $page, $resultsPerPage),
             'pagesCount' => $filter->getPagesCount(Article::class, $resultsPerPage),
-            'currentPage' => $page - 1
+            'currentPage' => $page
         ];
     }
 

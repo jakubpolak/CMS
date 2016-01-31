@@ -35,17 +35,17 @@ class FilterService {
     /**
      * Get pagination.
      *
+     * @param string $entity entity name
      * @param int $firstResult first result
      * @param int $maxResults max results per page
-     * @param string $entity entity name
      * @param array $orderBy order by [['column_name' => 'ASC'], ['column_name' => 'DESC'], ...]
      * @param array $filterBy filter by [['column_name' => ['value' => '', 'comparator' => '']]]
      * @return array
      */
-    public function getPagination(int $firstResult, int $maxResults, string $entity, array $orderBy = [], array $filterBy = []): array {
+    public function getPagination(string $entity, int $firstResult, int $maxResults, array $orderBy = [], array $filterBy = []): array {
         $query =  $this->em->getRepository($entity)
             ->createQueryBuilder('e')
-            ->setFirstResult($firstResult)
+            ->setFirstResult(--$firstResult)
             ->setMaxResults($maxResults);
 
         if (count($orderBy) !== 0) {

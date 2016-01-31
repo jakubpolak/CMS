@@ -26,7 +26,7 @@ class MenuController extends Controller {
      * @Method("GET")
      */
     public function indexAction(): array {
-        return []; // TODO: Implement.
+        return [];
     }
 
     /**
@@ -104,7 +104,7 @@ class MenuController extends Controller {
      */
     private function createUpdateForm(Menu $menu): Form {
         return $this->createForm(MenuType::class, $menu, [
-            'action' => $this->generateUrl('admin_menu_updateProcess'),
+            'action' => $this->generateUrl('admin_menu_updateProcess', ['id' => $menu->getId()]),
             'method' => Request::METHOD_POST
         ]);
     }

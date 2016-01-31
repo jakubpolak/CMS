@@ -45,7 +45,7 @@ class MenuController extends Controller {
      *
      * @Route("/create", name="admin_menu_createProcess")
      * @Template("@App/admin/menu/create.html.twig")
-     * @Method("POST)
+     * @Method("POST")
      */
     public function createProcessAction(Request $request) {
         return [];

@@ -23,12 +23,19 @@ class ArticleController extends Controller {
     /**
      * Index action.
      *
-     * @Route("", name="admin_article_index")
+     * @Route("/{page}/articles", defaults={"page" = 1}, name="admin_article_index")
      * @Template("@App/admin/article/index.html.twig")
      * @Method("GET")
      */
-    public function indexAction(): array {
-        return ['entities' => $this->get('service.article')->getAll()];
+    public function indexAction(int $page): array {
+        $resultsPerPage = $this->get('service_container')->getParameter('results_per_page');
+        $filter = $this->get('app.service.filter');
+
+        return [
+            'articles' => $filter->getPagination($page - 1, $resultsPerPage, Article::class),
+            'pagesCount' => $filter->getPagesCount(Article::class, $resultsPerPage),
+            'currentPage' => $page - 1
+        ];
     }
 
     /**
@@ -58,7 +65,7 @@ class ArticleController extends Controller {
         $message = null;
         if ($form->isValid()) {
             try {
-                $this->get('service.article')->save($article);
+                $this->get('app.service.article')->save($article);
                 $this->get('session')->getFlashBag()->add(Message::TYPE_SUCCESS, 'Článok bol uložený.');
                 return $this->redirect($this->generateUrl('admin_article_index'));
             } catch (\Exception $e) {
@@ -95,7 +102,7 @@ class ArticleController extends Controller {
      * @Template("@App/admin/article/update.html.twig")
      * @Method("POST")
      */
-    public function updateProcessAction(Article $article, Request $request): array {
+    public function updateProcessAction(Article $article, Request $request) {
         if ($article === null) {
             $this->get('session')->getFlashBag()->add(Message::TYPE_DANGER, 'Článok neexistuje.');
             return $this->redirect($this->generateUrl('admin_article_index'));
@@ -107,7 +114,7 @@ class ArticleController extends Controller {
         $message = null;
         if ($form->isValid()) {
             try {
-                $this->get('service.article')->save($article);
+                $this->get('app.service.article')->save($article);
                 $this->get('session')->getFlashBag()->add(Message::TYPE_SUCCESS, 'Článok bol uložený.');
                 return $this->redirect($this->generateUrl('admin_article_index'));
             } catch (\Exception $e) {
@@ -135,7 +142,7 @@ class ArticleController extends Controller {
             return $this->redirect($this->generateUrl('admin_article_index'));
         }
 
-        $this->get('service.article')->delete($article);
+        $this->get('app.service.article')->delete($article);
         $flashBag->add(Message::TYPE_SUCCESS, 'Článok bol zmazaný.');
 
         return $this->redirect($this->generateUrl('admin_article_index'));
@@ -162,7 +169,7 @@ class ArticleController extends Controller {
      */
     private function createUpdateForm(Article $article): Form {
         return $this->createForm(ArticleType::class, $article, [
-            'action' => $this->generateUrl('admin_article_updateProcess'),
+            'action' => $this->generateUrl('admin_article_updateProcess', ['id' => $article->getId()]),
             'method' => Request::METHOD_POST
         ]);
     }

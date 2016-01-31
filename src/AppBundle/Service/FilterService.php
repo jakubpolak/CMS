@@ -39,7 +39,8 @@ class FilterService {
      * @param int $firstResult first result
      * @param int $maxResults max results per page
      * @param array $orderBy order by [['column_name' => 'ASC'], ['column_name' => 'DESC'], ...]
-     * @param array $filterBy filter by [['column_name' => ['value' => '', 'comparator' => '']]]
+     * @param array $filterBy filter by [['column_name' => ['value' => '...', 'comparator' => '...']]],
+     *        example: ['heading' => ['value' => 'BBC news', 'comparator' => FilterService::COMPARATOR_EQUAL]]
      * @return array
      */
     public function getPagination(string $entity, int $firstResult, int $maxResults, array $orderBy = [], array $filterBy = []): array {

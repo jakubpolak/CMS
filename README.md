@@ -1,5 +1,7 @@
 # CMS
 
+Simple and customizable content management system for Wordpress like websites.
+
 Built with Symfony 3 and PHP 7.
 
 # Development Guide

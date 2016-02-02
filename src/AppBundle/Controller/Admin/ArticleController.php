@@ -23,42 +23,48 @@ class ArticleController extends Controller {
     /**
      * Index action.
      *
-     * @Route("", name="admin_article_index")
+     * @Route("/{page}/articles", defaults={"page" = 1}, name="admin_article_index")
      * @Template("@App/admin/article/index.html.twig")
      * @Method("GET")
      */
-    public function indexAction(): array {
-        return ['entities' => $this->get('service.article')->getAll()];
+    public function indexAction(int $page): array {
+        $resultsPerPage = $this->get('service_container')->getParameter('results_per_page');
+        $filter = $this->get('app.service.filter');
+
+        return [
+            'articles' => $filter->getPagination(Article::class, $page, $resultsPerPage),
+            'pagesCount' => $filter->getPagesCount(Article::class, $resultsPerPage),
+        ];
     }
 
     /**
      * Create action.
      *
-     * @Route("/create", name="admin_article_create")
+     * @Route("/{page}/create", defaults={"page" = 1}, name="admin_article_create")
      * @Template("@App/admin/article/create.html.twig")
      * @Method("GET")
      */
-    public function createAction(): array {
-        return ['form' => $this->createCreateForm(new Article())->createView()];
+    public function createAction(int $page): array {
+        return ['form' => $this->createCreateForm(new Article(), $page)->createView()];
     }
 
     /**
      * Create process action.
      *
-     * @Route("/create", name="admin_article_createProcess")
+     * @Route("/{page}/create", defaults={"page" = 1}, name="admin_article_createProcess")
      * @Template("@App/admin/article/create.html.twig")
      * @Method("POST")
      */
-    public function createProcessAction(Request $request) {
+    public function createProcessAction(Request $request, int $page) {
         $article = new Article();
 
-        $form = $this->createCreateForm($article);
+        $form = $this->createCreateForm($article, $page);
         $form->handleRequest($request);
 
         $message = null;
         if ($form->isValid()) {
             try {
-                $this->get('service.article')->save($article);
+                $this->get('app.service.article')->save($article);
                 $this->get('session')->getFlashBag()->add(Message::TYPE_SUCCESS, 'Článok bol uložený.');
                 return $this->redirect($this->generateUrl('admin_article_index'));
             } catch (\Exception $e) {
@@ -75,39 +81,39 @@ class ArticleController extends Controller {
     /**
      * Update action.
      *
-     * @Route("/{id}/update", name="admin_article_update")
+     * @Route("/{page}/{id}/update", defaults={"page" = 1}, name="admin_article_update")
      * @Template("@App/admin/article/update.html.twig")
      * @Method("GET")
      */
-    public function updateAction(Article $article): array {
+    public function updateAction(Article $article, int $page): array {
         if ($article === null) {
             $this->get('session')->getFlashBag()->add(Message::TYPE_DANGER, 'Článok neexistuje.');
             return $this->redirect($this->generateUrl('admin_article_index'));
         }
 
-        return ['form' => $this->createUpdateForm($article)->createView()];
+        return ['form' => $this->createUpdateForm($article, $page)->createView()];
     }
 
     /**
      * Update process action.
      *
-     * @Route("/{id}/update", name="admin_article_updateProcess")
+     * @Route("/{page}/{id}/update", defaults={"page" = 1}, name="admin_article_updateProcess")
      * @Template("@App/admin/article/update.html.twig")
      * @Method("POST")
      */
-    public function updateProcessAction(Article $article, Request $request): array {
+    public function updateProcessAction(Article $article, int $page, Request $request) {
         if ($article === null) {
             $this->get('session')->getFlashBag()->add(Message::TYPE_DANGER, 'Článok neexistuje.');
             return $this->redirect($this->generateUrl('admin_article_index'));
         }
 
-        $form = $this->createUpdateForm($article);
+        $form = $this->createUpdateForm($article, $page);
         $form->handleRequest($request);
 
         $message = null;
         if ($form->isValid()) {
             try {
-                $this->get('service.article')->save($article);
+                $this->get('app.service.article')->save($article);
                 $this->get('session')->getFlashBag()->add(Message::TYPE_SUCCESS, 'Článok bol uložený.');
                 return $this->redirect($this->generateUrl('admin_article_index'));
             } catch (\Exception $e) {
@@ -124,32 +130,33 @@ class ArticleController extends Controller {
     /**
      * Delete action.
      *
-     * @Route("/{id}//delete", name="admin_article_delete")
+     * @Route("/{page}/{id}//delete", defaults={"page" = 1}, name="admin_article_delete")
      * @Method("GET")
      */
-    public function deleteAction(Article $article): RedirectResponse {
+    public function deleteAction(Article $article, int $page): RedirectResponse {
         $flashBag = $this->get('session')->getFlashBag();
+        $redirect = $this->redirect($this->generateUrl('admin_article_index', ['page' => $page]));
 
         if ($article === null) {
             $flashBag->add(Message::TYPE_DANGER, 'Článok sa nepodarilo zmazať, pretože neexistuje.');
-            return $this->redirect($this->generateUrl('admin_article_index'));
+        } else {
+            $this->get('app.service.article')->delete($article);
+            $flashBag->add(Message::TYPE_SUCCESS, 'Článok bol zmazaný.');
         }
 
-        $this->get('service.article')->delete($article);
-        $flashBag->add(Message::TYPE_SUCCESS, 'Článok bol zmazaný.');
-
-        return $this->redirect($this->generateUrl('admin_article_index'));
+        return $redirect;
     }
 
     /**
      * Create article create form.
      *
      * @param Article $article
+     * @param int $page
      * @return Form
      */
-    private function createCreateForm(Article $article): Form {
+    private function createCreateForm(Article $article, int $page): Form {
         return $this->createForm(ArticleType::class, $article, [
-            'action' => $this->generateUrl('admin_article_createProcess'),
+            'action' => $this->generateUrl('admin_article_createProcess', ['page' => $page]),
             'method' => Request::METHOD_POST
         ]);
     }
@@ -158,11 +165,12 @@ class ArticleController extends Controller {
      * Create article update form.
      *
      * @param Article $article
+     * @param int $page
      * @return Form
      */
-    private function createUpdateForm(Article $article): Form {
+    private function createUpdateForm(Article $article, int $page): Form {
         return $this->createForm(ArticleType::class, $article, [
-            'action' => $this->generateUrl('admin_article_updateProcess'),
+            'action' => $this->generateUrl('admin_article_updateProcess', ['id' => $article->getId(), 'page' => $page]),
             'method' => Request::METHOD_POST
         ]);
     }

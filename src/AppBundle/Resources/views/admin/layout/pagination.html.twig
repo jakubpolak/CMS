@@ -1,0 +1,59 @@
+{% set currentPage = currentPage - 1 %}
+
+{% if pagesCount > 1 %}
+    <ul class="pagination pull-right">
+        {% set left = false %}
+        {% if currentPage < 4 %}
+            {% set left = true %}
+
+            {% if (5 <= pagesCount) %}
+                {% set high = 5 %}
+            {% else %}
+                {% set high = pagesCount %}
+            {% endif %}
+
+            {% for i in range(low = 1, high = high, step = 1) %}
+                <li class="paginate_button{% if currentPage == i - 1 %} active{% endif %}">
+                    <a href="{{ path(route, {'page' : i}) }}">
+                        {{ i }}
+                    </a>
+                </li>
+            {% endfor %}
+            {% if pagesCount > 5 %}
+                <li class="paginate_button"><a href="{{ path(route, {'page' : 6}) }}">{{ 'Ďalej'|trans({}, 'admin') }}</a></li>
+            {% endif %}
+        {% endif %}
+
+        {% if currentPage >= 4 and currentPage < pagesCount - 3 %}
+            <li class="paginate_button"><a href="{{ path(route, {'page' : currentPage - 2}) }}">{{ 'Späť'|trans({}, 'admin') }}</a></li>
+
+            {% if pagesCount > currentPage + 3 %}
+                {% set high = currentPage + 2 %}
+            {% else %}
+                {% set high = pagesCount - 1 %}
+            {% endif %}
+
+            {% for i in range(low = currentPage - 2, high = high, step = 1) %}
+                <li class="paginate_button{% if currentPage == i %} active{% endif %}">
+                    <a href="{{ path(route, {'page' : i + 1}) }}">
+                        {{ i + 1 }}
+                    </a>
+                </li>
+            {% endfor %}
+            {% if pagesCount > currentPage + 2 %}
+                <li class="paginate_button"><a href="{{ path(route, {'page' : currentPage + 3}) }}">{{ 'Ďalej'|trans({}, 'admin') }}</a></li>
+            {% endif %}
+        {% endif %}
+
+        {% if currentPage > pagesCount - 4 and not left %}
+            <li class="paginate_button"><a href="{{ path(route, {'page' : pagesCount - 4}) }}">{{ 'Späť'|trans({}, 'admin') }}</a></li>
+            {% for i in range(low = pagesCount - 4, high = pagesCount - 1, step = 1) %}
+                <li class="paginate_button {% if currentPage == i %}active{% endif %}">
+                    <a href="{{ path(route, {'page' : i + 1}) }}">
+                        {{ i + 1 }}
+                    </a>
+                </li>
+            {% endfor %}
+        {% endif %}
+    </ul>
+{% endif %}

@@ -1,0 +1,9 @@
+{% for flashMessage in app.session.flashbag.get('success') %}
+    <div class="alert alert-success">{{ flashMessage|trans({}, 'admin') }}</div>
+{% endfor %}
+{% for flashMessage in app.session.flashbag.get('danger') %}
+    <div class="alert alert-danger">{{ flashMessage|trans({}, 'admin') }}</div>
+{% endfor %}
+{% if message is defined and message is not empty %}
+    <div class="alert alert-{{ message.type }}">{{ message.text|trans({}, 'admin') }}</div>
+{% endif %}

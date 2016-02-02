@@ -1,6 +1,19 @@
-.margin-bottom-05 { margin-bottom: 0.5em; }
-.margin-bottom-10 { margin-bottom: 1.0em; }
-.margin-bottom-15 { margin-bottom: 1.5em; }
-.margin-bottom-20 { margin-bottom: 2.0em; }
-.margin-bottom-25 { margin-bottom: 2.5em; }
-.margin-bottom-30 { margin-bottom: 3.0em; }
+.app-margin-bottom-05 { margin-bottom: 0.5em; }
+.app-margin-bottom-10 { margin-bottom: 1.0em; }
+.app-margin-bottom-15 { margin-bottom: 1.5em; }
+.app-margin-bottom-20 { margin-bottom: 2.0em; }
+.app-margin-bottom-25 { margin-bottom: 2.5em; }
+.app-margin-bottom-30 { margin-bottom: 3.0em; }
+.app-center { text-align: center; }
+
+html, body {
+    height: 100%;
+}
+
+#wrapper, #page-wrapper {
+    min-height: 800px;
+}
+
+.pagination {
+    margin: 0;
+}

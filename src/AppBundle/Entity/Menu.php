@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -58,14 +59,14 @@ class Menu {
     private $menu;
 
     /**
-     * @var ArrayCollection
+     * @var Collection
      *
      * @ORM\OneToMany(targetEntity="Menu", mappedBy="menu")
      */
     private $menus;
 
     /**
-     * @var ArrayCollection
+     * @var Collection
      *
      * @ORM\OneToMany(targetEntity="Slug", mappedBy="menu")
      */
@@ -198,7 +199,7 @@ class Menu {
     /**
      * Get menus
      *
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getMenus() {
         return $this->menus;
@@ -207,7 +208,7 @@ class Menu {
     /**
      * Set menus
      *
-     * @param ArrayCollection $menus
+     * @param Collection $menus
      * @return self
      */
     public function setMenus($menus){
@@ -219,7 +220,7 @@ class Menu {
     /**
      * Get slugs.
      *
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getSlugs() {
         return $this->slugs;
@@ -228,7 +229,7 @@ class Menu {
     /**
      * Set slugs.
      *
-     * @param ArrayCollection $slugs
+     * @param Collection $slugs
      * @return self
      */
     public function setSlugs($slugs) {

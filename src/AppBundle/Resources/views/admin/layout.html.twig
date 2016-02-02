@@ -60,7 +60,7 @@
                             </li>
                             <li>
                                 <a{% if 'admin_article' in currentRoute %} class="active" {% endif %}href="{{ path('admin_article_index') }}">
-                                    <i class="fa fa-list fa-fw"></i> <span>{{ 'Články'|trans({}, 'admin') }}</span>
+                                    <i class="fa fa-file fa-fw"></i> <span>{{ 'Články'|trans({}, 'admin') }}</span>
                                 </a>
                             </li>
                             <li>
@@ -77,10 +77,20 @@
             <div id="page-wrapper">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1>{% block heading %}{% endblock %}</h1>
+                        <h1 class="page-header">{% block heading %}{% endblock %}</h1>
                     </div>
                 </div>
-                {# TODO: Add messages. #}
+                {# TODO: Do not display in case that there are no messages. #}
+                <div class="row">
+                    <div class="col-lg-12">
+                        {% include '@App/admin/layout/messages.html.twig' %}
+                    </div>
+                </div>
+                <div class="row app-margin-bottom-15">
+                    <div class="col-lg-12">
+                        {{ 'Administrácia'|trans({}, 'admin') }} {% block breadcrumbs %}{% endblock %}
+                    </div>
+                </div>
                 {% block content %}{% endblock %}
             </div>
         </div>

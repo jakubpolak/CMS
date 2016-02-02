@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -32,7 +33,7 @@ class ImageType {
     private $name;
 
     /**
-     * @var ArrayCollection
+     * @var Collection
      *
      * @ORM\OneToMany(targetEntity="Image", mappedBy="imageType")
      */
@@ -79,7 +80,7 @@ class ImageType {
     /**
      * Get images.
      *
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getImages() {
         return $this->images;
@@ -88,7 +89,7 @@ class ImageType {
     /**
      * Set images.
      *
-     * @param ArrayCollection $images
+     * @param Collection $images
      * @return self
      */
     public function setImages($images) {

@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -56,14 +57,14 @@ class Article {
     private $writtenOn;
 
     /**
-     * @var ArrayCollection
+     * @var Collection
      *
      * @ORM\OneToMany(targetEntity="Slug", mappedBy="article")
      */
     private $slugs;
 
     /**
-     * @var ArrayCollection
+     * @var Collection
      *
      * @ORM\OneToMany(targetEntity="Image", mappedBy="article")
      */
@@ -175,7 +176,7 @@ class Article {
     /**
      * Get slugs.
      *
-     * @return ArrayCollection
+     * @return Collection
      */
     public function getSlugs() {
         return $this->slugs;
@@ -184,10 +185,10 @@ class Article {
     /**
      * Set slugs.
      *
-     * @param ArrayCollection $slugs
+     * @param Collection $slugs
      * @return self
      */
-    public function setSlugs(ArrayCollection $slugs) {
+    public function setSlugs(Collection $slugs) {
         $this->slugs = $slugs;
 
         return $this;
@@ -230,10 +231,10 @@ class Article {
     /**
      * Set images.
      *
-     * @param ArrayCollection $images
+     * @param Collection $images
      * @return self
      */
-    public function setImages(ArrayCollection $images) {
+    public function setImages(Collection $images) {
         $this->images = $images;
 
         return $this;

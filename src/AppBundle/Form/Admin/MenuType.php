@@ -25,7 +25,7 @@ class MenuType extends AbstractType {
             ->add('isActive', null, ['label' => 'Aktívny'])
             ->add('position', null, ['label' => 'Pozícia'])
             ->add('menu', null, ['label' => 'Menu'])
-            ->add('save', SubmitType::class, ['label' => 'Uložiť'])
+            ->add('save', SubmitType::class, ['label' => 'Uložiť', 'attr' => ['class' => 'btn btn-primary']])
         ;
     }
     

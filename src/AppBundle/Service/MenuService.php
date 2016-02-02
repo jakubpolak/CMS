@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManager;
 /**
  * Menu service.
  *
- * @package AppBundle\Service
+ * @author Jakub Polák
  */
 class MenuService {
     /**

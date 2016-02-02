@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -43,7 +44,7 @@ class Language {
     private $isDefault;
 
     /**
-     * @var ArrayCollection
+     * @var Collection
      *
      * @ORM\OneToMany(targetEntity="Slug", mappedBy="language")
      */
@@ -120,10 +121,10 @@ class Language {
     /**
      * Set slugs.
      *
-     * @param ArrayCollection $slugs
+     * @param Collection $slugs
      * @return self
      */
-    public function setSlugs(ArrayCollection $slugs) {
+    public function setSlugs(Collection $slugs) {
         $this->slugs = $slugs;
 
         return $this;

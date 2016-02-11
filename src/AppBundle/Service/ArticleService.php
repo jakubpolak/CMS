@@ -5,17 +5,18 @@ namespace AppBundle\Service;
 use AppBundle\Entity\Article;
 use AppBundle\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 
 /**
  * Article service.
  *
- * @author Jakub Polák
+ * @author Jakub Polák, Jana Poláková
  */
-class ArticleService {
+class ArticleService extends CrudService {
     /**
-     * @var EntityManager
+     * @var ArticleRepository
      */
-    private $em;
+    private $articleRepository;
 
     /**
      * Constructor.
@@ -23,38 +24,16 @@ class ArticleService {
      * @param EntityManager $entityManager entity manager
      */
     public function __construct(EntityManager $entityManager) {
-        $this->em = $entityManager;
+        parent::__construct($entityManager);
         $this->articleRepository = $this->em->getRepository('AppBundle:Article');
     }
 
     /**
-     * Get all articles.
+     * Get repository.
      *
-     * @return array
+     * @return EntityRepository
      */
-    public function getAll(): array {
-        return $this->articleRepository->findAll();
-    }
-
-    /**
-     * Delete article.
-     *
-     * @param Article $article
-     */
-    public function delete(Article $article) {
-        $this->em->remove($article);
-        $this->em->flush();
-    }
-
-    /**
-     * Save an article.
-     *
-     * @param Article $article
-     */
-    public function save(Article $article) {
-        if ($article->getId() === null) {
-            $this->em->persist($article);
-        }
-        $this->em->flush();
+    public function getRepository(): EntityRepository {
+        return $this->articleRepository;
     }
 }

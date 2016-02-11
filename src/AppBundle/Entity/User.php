@@ -8,12 +8,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 
 /**
- * User
+ * @author Jakub Polák, Jana Poláková
  *
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  */
-class User implements AdvancedUserInterface, \Serializable {
+class User implements AdvancedUserInterface, \Serializable, Entity {
     /**
      * @var int
      *
@@ -26,9 +26,9 @@ class User implements AdvancedUserInterface, \Serializable {
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=100, unique=true)
+     * @ORM\Column(name="username", type="string", length=100, unique=true)
      */
-    private $email;
+    private $username;
 
     /**
      * @var string
@@ -36,13 +36,6 @@ class User implements AdvancedUserInterface, \Serializable {
      * @ORM\Column(name="password", type="string", length=100)
      */
     private $password;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="salt", type="string", length=50)
-     */
-    private $salt;
 
     /**
      * @var Collection
@@ -60,6 +53,7 @@ class User implements AdvancedUserInterface, \Serializable {
      */
     public function __construct() {
         $this->roles = new ArrayCollection();
+        $this->salt = md5(uniqid(null, true));
     }
 
     /**
@@ -69,27 +63,6 @@ class User implements AdvancedUserInterface, \Serializable {
      */
     public function getId() {
         return $this->id;
-    }
-
-    /**
-     * Set email
-     *
-     * @param string $email
-     * @return User
-     */
-    public function setEmail($email) {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Get email
-     *
-     * @return string
-     */
-    public function getEmail() {
-        return $this->email;
     }
 
     /**
@@ -114,24 +87,12 @@ class User implements AdvancedUserInterface, \Serializable {
     }
 
     /**
-     * Set salt
-     *
-     * @param string $salt
-     * @return User
-     */
-    public function setSalt($salt) {
-        $this->salt = $salt;
-
-        return $this;
-    }
-
-    /**
      * Get salt
      *
-     * @return string
+     * @return null
      */
     public function getSalt() {
-        return $this->salt;
+        return null;
     }
 
     /**
@@ -153,12 +114,23 @@ class User implements AdvancedUserInterface, \Serializable {
     }
 
     /**
+     * Set username.
+     *
+     * @return User
+     */
+    public function setUsername($username) {
+        $this->username = $username;
+
+        return $this;
+    }
+
+    /**
      * Get username.
      *
      * @return string
      */
     public function getUsername() {
-        return $this->email;
+        return $this->username;
     }
 
     /**
@@ -212,9 +184,8 @@ class User implements AdvancedUserInterface, \Serializable {
     public function serialize() {
         return serialize([
             $this->id,
-            $this->email,
+            $this->username,
             $this->password,
-            $this->salt,
         ]);
     }
 
@@ -226,9 +197,8 @@ class User implements AdvancedUserInterface, \Serializable {
     public function unserialize($serialized) {
         list(
             $this->id,
-            $this->email,
+            $this->username,
             $this->password,
-            $this->salt,
             ) = unserialize($serialized);
     }
 }

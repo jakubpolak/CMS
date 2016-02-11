@@ -1,44 +1,44 @@
 {% extends '@App/admin/layout.html.twig' %}
 
-{% block heading %}{{ 'Menu'|trans({}, 'admin') }}{% endblock %}
+{% block heading %}{{ 'Používatelia'|trans({}, 'admin') }}{% endblock %}
 
-{% block breadcrumbs %}&raquo; {{ 'Menu'|trans({}, 'admin') }}{% endblock %}
+{% block breadcrumbs %}&raquo; {{ 'Používatelia'|trans({}, 'admin') }}{% endblock %}
 
 {% block content %}
     <div class="row app-margin-bottom-15">
         <div class="col-lg-12">
             <div class="btn-group pull-right" role="group">
-                <a href="{{ path('admin_menu_create') }}" type="button" class="btn btn-default btn-lg">{{ 'Nové'|trans({}, 'admin') }}</a>
+                <a href="{{ path('admin_user_create') }}" type="button" class="btn btn-default btn-lg">{{ 'Nový'|trans({}, 'admin') }}</a>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-lg-12">
             <div class="panel panel-default">
-                <div class="panel-heading">{{ 'Menu'|trans({}, 'admin') }}</div>
+                <div class="panel-heading">{{ 'Používatelia'|trans({}, 'admin') }}</div>
                 <div class="panel-body">
-                    {% if menus|length == 0 %}
-                        <div class="alert alert-info">{{ 'Žiadne menu.'|trans({}, 'admin') }}</div>
+                    {% if users|length == 0 %}
+                        <div class="alert alert-info">{{ 'Žiadny používatelia.'|trans({}, 'admin') }}</div>
                     {% else %}
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th class="col-lg-8">{{ 'Názov'|trans({}, 'admin') }}</th>
-                                    <th class="col-lg-2">{{ 'Pozícia'|trans({}, 'admin') }}</th>
+                                    <th class="col-lg-8">{{ 'Email'|trans({}, 'admin') }}</th>
+                                    <th class="col-lg-1 app-center">{{ 'Rola'|trans({}, 'admin') }}</th>
                                     <th class="col-lg-1">&nbsp;</th>
                                     <th class="col-lg-1">&nbsp;</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for menu in menus %}
+                                {% for user in users %}
                                     <tr>
-                                        <td>{{ menu.name }}</td>
-                                        <td>{{ menu.position }}</td>
+                                        <td>{{ user.username }}</td>
+                                        <td>{{ merge(user.roles, 'name') }}</td>
                                         <td class="app-center">
-                                            <a href="{{ url('admin_menu_update', {'id': menu.id}) }}">{{ 'Upraviť'|trans({}, 'admin') }}</a>
+                                            <a href="{{ url('admin_user_update', {'id': user.id}) }}">{{ 'Upraviť'|trans({}, 'admin') }}</a>
                                         </td>
                                         <td class="app-center">
-                                            <a href="{{ url('admin_menu_delete', {'id': menu.id}) }}">{{ 'Zmazať'|trans({}, 'admin') }}</a>
+                                            <a href="{{ url('admin_user_delete', {'id': user.id}) }}">{{ 'Zmazať'|trans({}, 'admin') }}</a>
                                         </td>
                                     </tr>
                                 {% endfor %}

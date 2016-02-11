@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @author Jakub Polák
+ * @author Jakub Polák, Jana Poláková
  *
  * @ORM\Table(name="image_type")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ImageTypeRepository")

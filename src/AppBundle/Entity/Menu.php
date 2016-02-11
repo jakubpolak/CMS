@@ -7,12 +7,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @author Jakub Polák
+ * @author Jakub Polák, Jana Poláková
  *
  * @ORM\Table(name="menu")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MenuRepository")
  */
-class Menu {
+class Menu implements Entity {
     /**
      * @var int
      *

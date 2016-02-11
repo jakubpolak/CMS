@@ -16,14 +16,14 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * Article controller.
  *
- * @author Jakub Polák
- * @Route("/admin/article")
+ * @author Jakub Polák, Jana Poláková
+ * @Route("/admin/articles")
  */
 class ArticleController extends Controller {
     /**
      * Index action.
      *
-     * @Route("/{page}/articles", defaults={"page" = 1}, name="admin_article_index")
+     * @Route("/{page}", defaults={"page" = 1}, name="admin_article_index")
      * @Template("@App/admin/article/index.html.twig")
      * @Method("GET")
      */
@@ -85,7 +85,7 @@ class ArticleController extends Controller {
      * @Template("@App/admin/article/update.html.twig")
      * @Method("GET")
      */
-    public function updateAction(Article $article, int $page): array {
+    public function updateAction(Article $article, int $page) {
         if ($article === null) {
             $this->get('session')->getFlashBag()->add(Message::TYPE_DANGER, 'Článok neexistuje.');
             return $this->redirect($this->generateUrl('admin_article_index'));
@@ -102,9 +102,11 @@ class ArticleController extends Controller {
      * @Method("POST")
      */
     public function updateProcessAction(Article $article, int $page, Request $request) {
+        $redirect = $this->redirect($this->generateUrl('admin_article_index', ['page' => $page]));
+
         if ($article === null) {
             $this->get('session')->getFlashBag()->add(Message::TYPE_DANGER, 'Článok neexistuje.');
-            return $this->redirect($this->generateUrl('admin_article_index'));
+            return $redirect;
         }
 
         $form = $this->createUpdateForm($article, $page);
@@ -115,7 +117,7 @@ class ArticleController extends Controller {
             try {
                 $this->get('app.service.article')->save($article);
                 $this->get('session')->getFlashBag()->add(Message::TYPE_SUCCESS, 'Článok bol uložený.');
-                return $this->redirect($this->generateUrl('admin_article_index'));
+                return $redirect;
             } catch (\Exception $e) {
                 $message = new Message(Message::TYPE_DANGER, 'Článok sa nepodarilo uložiť.');
             }

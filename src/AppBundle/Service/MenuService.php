@@ -3,37 +3,50 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\Menu;
+use AppBundle\Repository\MenuRepository;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
 
 /**
  * Menu service.
  *
- * @author Jakub Polák
+ * @author Jakub Polák, Jana Poláková
  */
-class MenuService {
+class MenuService extends CrudService {
     /**
-     * @var EntityManager
+     * @var MenuRepository
      */
-    private $em;
+    private $menuRepository;
 
     /**
-     * Constructor.
+     * Constructor
      *
-     * @param EntityManager $entityManager
+     * @param EntityManager $entityManager entity manager
      */
     public function __construct(EntityManager $entityManager) {
-        $this->em = $entityManager;
+        parent::__construct($entityManager);
+        $this->menuRepository = $this->em->getRepository('AppBundle:Menu');
     }
 
     /**
-     * Save a menu.
+     * Get repository.
      *
-     * @param Menu $menu
+     * @return EntityRepository
      */
-    public function save(Menu $menu) {
-        if ($menu->getId() === null) {
-            $this->em->persist($menu);
-        }
-        $this->em->flush();
+    public function getRepository(): EntityRepository {
+        return $this->menuRepository;
+    }
+
+    /**
+     * Get parents.
+     *
+     * @param bool|null $isActive is active
+     * @return array
+     */
+    public function getParents(bool $isActive = null) {
+        return ($isActive === null)
+            ? $this->menuRepository->getTopLevel()
+            : $this->menuRepository->getTopLevelByIsActive($isActive)
+        ;
     }
 }

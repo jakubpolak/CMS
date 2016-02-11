@@ -3,6 +3,9 @@ parameters:
    results_per_page: 1
 
 services:
+    app.service.user:
+        class: AppBundle\Service\UserService
+        arguments: ['@doctrine.orm.default_entity_manager']
     app.service.article:
         class: AppBundle\Service\ArticleService
         arguments: ['@doctrine.orm.default_entity_manager']

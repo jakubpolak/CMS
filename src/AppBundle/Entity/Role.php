@@ -7,9 +7,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\Role\RoleInterface;
 
 /**
- * Role
+ * @author Jakub Polák, Jana Poláková
  *
- * @ORM\Table(name="role")
+ * @ORM\Table(name="role", uniqueConstraints={
+ *      @ORM\UniqueConstraint(columns="name"),
+ *      @ORM\UniqueConstraint(columns="role")
+ * })
  * @ORM\Entity(repositoryClass="AppBundle\Repository\RoleRepository")
  */
 class Role implements RoleInterface {

@@ -42,10 +42,8 @@ class ArticleService {
      * @param Article $article
      */
     public function delete(Article $article) {
-        if ($article !== null) {
-            $this->em->remove($article);
-            $this->em->flush();
-        }
+        $this->em->remove($article);
+        $this->em->flush();
     }
 
     /**

@@ -59,14 +59,19 @@
                                 </a>
                             </li>
                             <li>
-                                <a{% if 'admin_article' in currentRoute %} class="active" {% endif %}href="{{ path('admin_article_index') }}">
+                                <a {% if 'admin_article' in currentRoute %} class="active"{% endif %} href="{{ path('admin_article_index') }}">
                                     <i class="fa fa-file fa-fw"></i> <span>{{ 'Články'|trans({}, 'admin') }}</span>
                                 </a>
                             </li>
                             <li>
                                 {# TODO: Add link.#}
-                                <a href="#">
+                                <a {% if 'admin_menu' in currentRoute %} class="active"{% endif %} href="{{ path('admin_menu_index') }}">
                                     <i class="fa fa-list fa-fw"></i> <span>{{ 'Menu'|trans({}, 'admin') }}</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('admin_user_index') }}">
+                                    <i class="fa fa-user fa-fw"></i> <span>{{ 'Používatelia'|trans({}, 'admin') }}</span>
                                 </a>
                             </li>
                         </ul>

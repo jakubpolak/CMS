@@ -5,7 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @author Jakub Polák
+ * @author Jakub Polák, Jana Poláková
  *
  * @ORM\Table(name="slug")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\SlugRepository")

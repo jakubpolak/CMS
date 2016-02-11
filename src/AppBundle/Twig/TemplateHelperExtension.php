@@ -39,6 +39,7 @@ class TemplateHelperExtension extends \Twig_Extension {
     public function getFunctions(): array {
         return [
             new \Twig_SimpleFunction('bool', [$this, 'boolFunction'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('merge', [$this, 'mergeFunction'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -54,6 +55,26 @@ class TemplateHelperExtension extends \Twig_Extension {
             ? $this->translator->trans('áno', [], $domain)
             : $this->translator->trans('nie', [], $domain)
         ;
+    }
+
+    /**
+     * Merge values of specified entity attributes into a single string. Values are delimited by specified delimiter.
+     *
+     * @param array $entities entities
+     * @param string $attributeName attribute name
+     * @param string $delimiter delimiter
+     * @return string
+     */
+    public function mergeFunction(array $entities, string $attributeName, string $delimiter = ', '): string {
+        $result = '';
+        $methodName = 'get' . ucfirst($attributeName);
+
+        foreach ($entities as $entity) {
+            $result .= $entity->{$methodName}();
+            $result .= $delimiter;
+        }
+
+        return substr($result, 0, strlen($result) - 2);
     }
 
     /**

@@ -29,18 +29,30 @@
                                     <th class="col-lg-1">&nbsp;</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {% for menu in menus %}
+                            <tbody class="app-menu-list">
+                                {% for parent in menus %}
                                     <tr>
-                                        <td>{{ menu.name }}</td>
-                                        <td>{{ menu.position }}</td>
+                                        <td class="level-parent">{{ parent.name }}</td>
+                                        <td>{{ parent.position }}</td>
                                         <td class="app-center">
-                                            <a href="{{ url('admin_menu_update', {'id': menu.id}) }}">{{ 'Upraviť'|trans({}, 'admin') }}</a>
+                                            <a href="{{ url('admin_menu_update', {'id': parent.id}) }}">{{ 'Upraviť'|trans({}, 'admin') }}</a>
                                         </td>
                                         <td class="app-center">
-                                            <a href="{{ url('admin_menu_delete', {'id': menu.id}) }}">{{ 'Zmazať'|trans({}, 'admin') }}</a>
+                                            <a href="{{ url('admin_menu_delete', {'id': parent.id}) }}">{{ 'Zmazať'|trans({}, 'admin') }}</a>
                                         </td>
                                     </tr>
+                                    {% for child in parent.menus %}
+                                        <tr>
+                                            <td class="level-child">{{ child.name }}</td>
+                                            <td>{{ child.position }}</td>
+                                            <td class="app-center">
+                                                <a href="{{ url('admin_menu_update', {'id': child.id}) }}">{{ 'Upraviť'|trans({}, 'admin') }}</a>
+                                            </td>
+                                            <td class="app-center">
+                                                <a href="{{ url('admin_menu_delete', {'id': child.id}) }}">{{ 'Zmazať'|trans({}, 'admin') }}</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
                                 {% endfor %}
                             </tbody>
                         </table>

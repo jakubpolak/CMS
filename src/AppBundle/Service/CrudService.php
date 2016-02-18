@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityRepository;
 /**
  * CRUD service.
  *
- * @author Jakub Polák
+ * @author Jakub Polák, Jana Poláková
  */
 abstract class CrudService {
     /**

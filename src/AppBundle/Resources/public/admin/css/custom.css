@@ -17,3 +17,11 @@ html, body {
 .pagination {
     margin: 0;
 }
+
+.app-menu-list .level-child {
+    color: #999999;
+}
+
+.app-menu-list .level-parent {
+    font-weight: bold;
+}

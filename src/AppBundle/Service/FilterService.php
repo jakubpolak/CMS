@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityManager;
 /**
  * Pagination service.
  *
- * @author Jakub Polák
+ * @author Jakub Polák, Jana Poláková
  */
 class FilterService {
     const COMPARATOR_EQUAL = '=';

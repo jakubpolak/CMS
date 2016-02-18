@@ -2,7 +2,6 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -39,18 +38,11 @@ class Meta implements Entity{
     private $metaDescription;
 
     /**
-     * @var Collection
+     * @var Article
      *
-     * @ORM\OneToMany(targetEntity="Article", mappedBy="meta")
+     * @ORM\OneToOne(targetEntity="Article", inversedBy="meta")
      */
-    private $articles;
-
-    /**
-     * Meta constructor.
-     */
-    public function __construct() {
-        $this->articles = new ArrayCollection();
-    }
+    private $article;
 
     /**
      * Get id
@@ -104,22 +96,22 @@ class Meta implements Entity{
     }
 
     /**
-     * Get articles.
+     * Get article.
      *
-     * @return Collection
+     * @return Article
      */
-    public function getArticles() {
-        return $this->articles;
+    public function getArticle() {
+        return $this->article;
     }
 
     /**
-     * Set articles.
+     * Set article.
      *
-     * @param Collection $articles
+     * @param Article $article article
      * @return self
      */
-    public function setArticles(Collection $articles) {
-        $this->articles = $articles;
+    public function setArticle(Article $article) {
+        $this->article = $article;
 
         return $this;
     }

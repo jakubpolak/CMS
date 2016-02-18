@@ -44,7 +44,7 @@ class Article implements Entity {
     /**
      * @var bool
      *
-     * @ORM\Column(name="isPublished", type="boolean")
+     * @ORM\Column(name="is_published", type="boolean")
      */
     private $isPublished;
 
@@ -52,7 +52,7 @@ class Article implements Entity {
      * @var \DateTime
      *
      * @Assert\NotBlank()
-     * @ORM\Column(name="writtenOn", type="date")
+     * @ORM\Column(name="written_on", type="date")
      */
     private $writtenOn;
 
@@ -73,7 +73,7 @@ class Article implements Entity {
     /**
      * @var Meta
      *
-     * @ORM\ManyToOne(targetEntity="Menu", inversedBy="articles")
+     * @ORM\OneToOne(targetEntity="Meta", mappedBy="article")
      * @ORM\JoinColumn(referencedColumnName="id", name="meta_id")
      */
     private $meta;
@@ -271,6 +271,27 @@ class Article implements Entity {
         $this->images->remove($image);
 
         return $this->images;
+    }
+
+    /**
+     * Get meta.
+     *
+     * @return Meta
+     */
+    public function getMeta() {
+        return $this->meta;
+    }
+
+    /**
+     * Set meta.
+     *
+     * @param Meta $meta
+     * @return self
+     */
+    public function setMeta(Meta $meta) {
+        $this->meta = $meta;
+
+        return $this;
     }
 }
 

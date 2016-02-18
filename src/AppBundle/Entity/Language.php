@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="language")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\LanguageRepository")
  */
-class Language {
+class Language implements Entity {
     /**
      * @var int
      *

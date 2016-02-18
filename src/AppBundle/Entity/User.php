@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  */
-class User implements AdvancedUserInterface, \Serializable, Entity {
+class User implements Entity, AdvancedUserInterface, \Serializable {
     /**
      * @var int
      *

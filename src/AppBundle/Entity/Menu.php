@@ -83,7 +83,7 @@ class Menu implements Entity {
     }
 
     /**
-     * Get id
+     * Get id.
      *
      * @return int
      */
@@ -92,7 +92,7 @@ class Menu implements Entity {
     }
 
     /**
-     * Set name
+     * Set name.
      *
      * @param string $name
      * @return self
@@ -104,7 +104,7 @@ class Menu implements Entity {
     }
 
     /**
-     * Get name
+     * Get name.
      *
      * @return string
      */
@@ -113,7 +113,7 @@ class Menu implements Entity {
     }
 
     /**
-     * Set content
+     * Set content.
      *
      * @param string $content
      * @return self
@@ -125,7 +125,7 @@ class Menu implements Entity {
     }
 
     /**
-     * Get content
+     * Get content.
      *
      * @return string
      */
@@ -134,7 +134,7 @@ class Menu implements Entity {
     }
 
     /**
-     * Set isActive
+     * Set isActive.
      *
      * @param boolean $isActive
      * @return self
@@ -146,7 +146,7 @@ class Menu implements Entity {
     }
 
     /**
-     * Get isActive
+     * Get isActive.
      *
      * @return bool
      */
@@ -155,7 +155,7 @@ class Menu implements Entity {
     }
 
     /**
-     * Get position
+     * Get position.
      *
      * @return int
      */
@@ -164,7 +164,7 @@ class Menu implements Entity {
     }
 
     /**
-     * Set position
+     * Set position.
      *
      * @param int $position
      * @return self
@@ -176,7 +176,7 @@ class Menu implements Entity {
     }
 
     /**
-     * Get menu
+     * Get menu.
      *
      * @return self
      */
@@ -185,19 +185,19 @@ class Menu implements Entity {
     }
 
     /**
-     * Set menu
+     * Set menu.
      *
      * @param Menu $menu
      * @return self
      */
-    public function setMenu($menu) {
+    public function setMenu(Menu $menu) {
         $this->menu = $menu;
 
         return $this;
     }
 
     /**
-     * Get menus
+     * Get menus.
      *
      * @return Collection
      */
@@ -206,12 +206,12 @@ class Menu implements Entity {
     }
 
     /**
-     * Set menus
+     * Set menus.
      *
      * @param Collection $menus
      * @return self
      */
-    public function setMenus($menus){
+    public function setMenus(Collection $menus){
         $this->menus = $menus;
 
         return $this;
@@ -232,7 +232,7 @@ class Menu implements Entity {
      * @param Collection $slugs
      * @return self
      */
-    public function setSlugs($slugs) {
+    public function setSlugs(Collection $slugs) {
         $this->slugs = $slugs;
 
         return $this;

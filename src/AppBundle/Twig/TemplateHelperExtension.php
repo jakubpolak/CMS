@@ -2,6 +2,7 @@
 
 namespace AppBundle\Twig;
 
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Translation\Translator;
 
 /**
@@ -16,19 +17,22 @@ class TemplateHelperExtension extends \Twig_Extension {
     private $translator;
 
     /**
-     * @var string
+     * @var EntityManager
      */
-    private $translatorDomain;
+    private $em;
 
     /**
      * Constructor.
      *
      * @param Translator $translator
-     * @param string $translatorDomain
+     * @param EntityManager $entityManager entity manager
      */
-    public function __construct(Translator $translator, string $translatorDomain = null) {
+    public function __construct(
+        Translator $translator,
+        EntityManager $entityManager
+    ) {
         $this->translator = $translator;
-        $this->translatorDomain = $translatorDomain;
+        $this->em = $entityManager;
     }
 
     /**
@@ -40,6 +44,7 @@ class TemplateHelperExtension extends \Twig_Extension {
         return [
             new \Twig_SimpleFunction('bool', [$this, 'boolFunction'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('merge', [$this, 'mergeFunction'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('languagesCount', [$this, 'languagesCountFunction'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -78,11 +83,20 @@ class TemplateHelperExtension extends \Twig_Extension {
     }
 
     /**
+     * Return count of languages.
+     *
+     * @return int
+     */
+    public function languagesCountFunction(): int {
+        return $this->em->getRepository('AppBundle:Language')->getCount();
+    }
+
+    /**
      * Returns the name of the extension.
      *
      * @return string The extension name
      */
-    public function getName() {
+    public function getName(): string {
         return 'templateHelper_extension';
     }
 }

@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\Role\RoleInterface;
  * })
  * @ORM\Entity(repositoryClass="AppBundle\Repository\RoleRepository")
  */
-class Role implements RoleInterface {
+class Role implements Entity, RoleInterface {
     const ROLE_ADMIN = 'ROLE_ADMIN';
     const ROLE_USER = 'ROLE_USER';
 

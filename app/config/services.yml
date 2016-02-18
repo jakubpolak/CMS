@@ -12,12 +12,15 @@ services:
     app.service.menu:
         class: AppBundle\Service\MenuService
         arguments: ['@doctrine.orm.default_entity_manager']
+    app.service.slug:
+        class: AppBundle\Service\SlugService
+        arguments: ['@doctrine.orm.default_entity_manager']
     app.service.filter:
         class: AppBundle\Service\FilterService
         arguments: ['@doctrine.orm.default_entity_manager']
     app.twig.template_helper:
         class: AppBundle\Twig\TemplateHelperExtension
         public: false
-        arguments: ['@translator.default']
+        arguments: ['@translator.default', '@doctrine.orm.default_entity_manager']
         tags:
             - { name: twig.extension }

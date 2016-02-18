@@ -62,7 +62,7 @@ class MenuController extends Controller {
                 $this->get('session')->getFlashBag()->add(Message::TYPE_SUCCESS, 'Menu bolo uložené.');
                 return $this->redirect($this->generateUrl('admin_menu_index'));
             } catch (\Exception $e) {
-                $message = new Message(Message::TYPE_DANGER, 'Používateľa sa nepodarilo uložiť.');
+                $message = new Message(Message::TYPE_DANGER, 'Menu sa nepodarilo uložiť.');
             }
         }
 

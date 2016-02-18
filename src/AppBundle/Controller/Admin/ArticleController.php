@@ -91,7 +91,13 @@ class ArticleController extends Controller {
             return $this->redirect($this->generateUrl('admin_article_index'));
         }
 
-        return ['form' => $this->createUpdateForm($article, $page)->createView()];
+        $form = $this->createUpdateForm($article, $page);
+
+        return [
+            'form' => $form->createView(),
+            'slugs' => $article->getSlugs(),
+            'article' => $article
+        ];
     }
 
     /**
@@ -125,7 +131,9 @@ class ArticleController extends Controller {
 
         return [
             'form' => $form->createView(),
-            'message' => $message
+            'message' => $message,
+            'slugs' => $article->getSlugs(),
+            'article' => $article,
         ];
     }
 

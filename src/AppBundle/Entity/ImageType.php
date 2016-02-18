@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="image_type")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ImageTypeRepository")
  */
-class ImageType {
+class ImageType implements Entity {
     const GALLERY = 'GALLERY';
     const SLIDER = 'SLIDER';
 

@@ -7,10 +7,12 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @author Jakub Polák, Jana Poláková
  *
- * @ORM\Table(name="slug")
+ * @ORM\Table(name="slug", uniqueConstraints={
+ *     @ORM\UniqueConstraint(columns={"content", "language_id"})
+ * })
  * @ORM\Entity(repositoryClass="AppBundle\Repository\SlugRepository")
  */
-class Slug {
+class Slug implements Entity {
     /**
      * @var int
      *
@@ -23,7 +25,7 @@ class Slug {
     /**
      * @var string
      *
-     * @ORM\Column(name="content", type="string", length=255, unique=true)
+     * @ORM\Column(name="content", type="string", length=255)
      */
     private $content;
 

@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="article")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ArticleRepository")
  */
-class Article {
+class Article implements Entity {
     /**
      * @var int
      *
@@ -69,6 +69,14 @@ class Article {
      * @ORM\OneToMany(targetEntity="Image", mappedBy="article")
      */
     private $images;
+
+    /**
+     * @var Meta
+     *
+     * @ORM\ManyToOne(targetEntity="Menu", inversedBy="articles")
+     * @ORM\JoinColumn(referencedColumnName="id", name="meta_id")
+     */
+    private $meta;
 
     /**
      * Constructor.

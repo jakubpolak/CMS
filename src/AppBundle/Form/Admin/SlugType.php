@@ -2,19 +2,19 @@
 
 namespace AppBundle\Form\Admin;
 
-use AppBundle\Entity\Article;
+use AppBundle\Entity\Slug;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Trsteel\CkeditorBundle\Form\Type\CkeditorType;
 
 /**
- * Article type.
+ * Slug type
  *
- * @author Jakub Polák
+ * @author Jakub Polák, Jana Poláková
  */
-class ArticleType extends AbstractType {
+class SlugType extends AbstractType {
     /**
      * Build form.
      *
@@ -23,22 +23,25 @@ class ArticleType extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-            ->add('heading',null, ['label' => 'Nadpis'])
-            ->add('content', CkeditorType::class, ['label' => 'Obsah'])
-            ->add('isPublished', null, ['label' => 'Publikovať'])
-            ->add('writtenOn', null, ['label' => 'Napísaný dňa'])
+            ->add('content', null, ['label' => 'URL'])
+            ->add('language', EntityType::class, [
+                'label' => 'Jazyk',
+                'class' => 'AppBundle:Language',
+                'choice_label' => 'code',
+                'multiple' => false,
+            ])
             ->add('save', SubmitType::class, ['label' => 'Uložiť', 'attr' => ['class' => 'btn btn-primary']])
         ;
     }
-    
+
     /**
      * Configure options.
      *
      * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver) {
-        $resolver->setDefaults([
-            'data_class' => Article::class
-        ]);
+        $resolver->setDefaults(array(
+            'data_class' => Slug::class
+        ));
     }
 }

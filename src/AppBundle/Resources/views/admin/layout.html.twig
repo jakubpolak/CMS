@@ -1,5 +1,6 @@
 {# TODO: All menu is active. #}
 {% set currentRoute = app.request.get('_route') %}
+{% set entityName = app.request.get('entityName') %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -59,13 +60,13 @@
                                 </a>
                             </li>
                             <li>
-                                <a {% if 'admin_article' in currentRoute %} class="active"{% endif %} href="{{ path('admin_article_index') }}">
+                                <a {% if 'admin_article' in currentRoute or entityName == 'article' %} class="active"{% endif %} href="{{ path('admin_article_index') }}">
                                     <i class="fa fa-file fa-fw"></i> <span>{{ 'Články'|trans({}, 'admin') }}</span>
                                 </a>
                             </li>
                             <li>
                                 {# TODO: Add link.#}
-                                <a {% if 'admin_menu' in currentRoute %} class="active"{% endif %} href="{{ path('admin_menu_index') }}">
+                                <a {% if 'admin_menu' in currentRoute or entityName == 'article' %} class="active"{% endif %} href="{{ path('admin_menu_index') }}">
                                     <i class="fa fa-list fa-fw"></i> <span>{{ 'Menu'|trans({}, 'admin') }}</span>
                                 </a>
                             </li>

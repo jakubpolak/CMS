@@ -65,6 +65,11 @@
                                 </a>
                             </li>
                             <li>
+                                <a {% if 'admin_language' in currentRoute %} class="active"{% endif %} href="{{ path('admin_language_index') }}">
+                                    <i class="fa fa-list fa-fw"></i> <span>{{ 'Jazyky'|trans({}, 'admin') }}</span>
+                                </a>
+                            </li>
+                            <li>
                                 {# TODO: Add link.#}
                                 <a {% if 'admin_menu' in currentRoute or entityName == 'article' %} class="active"{% endif %} href="{{ path('admin_menu_index') }}">
                                     <i class="fa fa-list fa-fw"></i> <span>{{ 'Menu'|trans({}, 'admin') }}</span>

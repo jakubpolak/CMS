@@ -23,6 +23,7 @@ class ArticleType extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
+            ->add('meta', MetaType::class, ['label' => false])
             ->add('heading',null, ['label' => 'Nadpis'])
             ->add('content', CkeditorType::class, ['label' => 'Obsah'])
             ->add('isPublished', null, ['label' => 'Publikovať'])

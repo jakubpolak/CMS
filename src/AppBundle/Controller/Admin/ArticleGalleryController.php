@@ -183,7 +183,7 @@ class ArticleGalleryController extends Controller {
      */
     private function createUpdateForm(Image $image, int $articleId): Form {
         return $this->createForm(ImageType::class, $image, [
-            'action' => $this->generateUrl('admin_articleGallery_updateProcess', ['articleId' => $articleId]),
+            'action' => $this->generateUrl('admin_articleGallery_updateProcess', ['articleId' => $articleId, 'imageId' => $image->getId()]),
             'method' => Request::METHOD_POST
         ]);
     }

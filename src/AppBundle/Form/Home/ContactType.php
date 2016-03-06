@@ -1,19 +1,17 @@
 <?php
 
-namespace AppBundle\Form\Admin;
+namespace AppBundle\Form\Home;
 
-use AppBundle\Entity\Language;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Language type.
+ * Contact type
  *
  * @author Jakub Polák, Jana Poláková
  */
-class LanguageType extends AbstractType {
+class ContactType extends AbstractType {
     /**
      * Build form.
      *
@@ -21,14 +19,9 @@ class LanguageType extends AbstractType {
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        $builder
-            ->add('name', null, ['label' => 'Názov'])
-            ->add('code', null, ['label' => 'Kód'])
-            ->add('isDefault', null, ['label' => 'Východzí'])
-            ->add('save', SubmitType::class, ['label' => 'Uložiť', 'attr' => ['class' => 'btn btn-primary']])
-        ;
+
     }
-    
+
     /**
      * Configure options.
      *
@@ -36,7 +29,7 @@ class LanguageType extends AbstractType {
      */
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
-            'data_class' => Language::class
+            'data_class' => Contact::class
         ));
     }
 }

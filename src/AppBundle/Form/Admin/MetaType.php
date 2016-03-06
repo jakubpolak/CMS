@@ -2,18 +2,18 @@
 
 namespace AppBundle\Form\Admin;
 
-use AppBundle\Entity\Language;
+use AppBundle\Entity\Meta;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Language type.
+ * Meta type.
  *
  * @author Jakub Polák, Jana Poláková
  */
-class LanguageType extends AbstractType {
+class MetaType extends AbstractType {
     /**
      * Build form.
      *
@@ -22,13 +22,11 @@ class LanguageType extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-            ->add('name', null, ['label' => 'Názov'])
-            ->add('code', null, ['label' => 'Kód'])
-            ->add('isDefault', null, ['label' => 'Východzí'])
-            ->add('save', SubmitType::class, ['label' => 'Uložiť', 'attr' => ['class' => 'btn btn-primary']])
+            ->add('meta_keywords', null, ['label' => 'Meta kľúčové slová'])
+            ->add('meta_description', TextareaType::class, ['label' => 'Meta popis'])
         ;
     }
-    
+
     /**
      * Configure options.
      *
@@ -36,7 +34,7 @@ class LanguageType extends AbstractType {
      */
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
-            'data_class' => Language::class
+            'data_class' => Meta::class
         ));
     }
 }

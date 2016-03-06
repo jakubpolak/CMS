@@ -74,7 +74,7 @@ class ArticleController extends Controller {
 
         return [
             'form' => $form->createView(),
-            'message' => $message
+            'message' => $message,
         ];
     }
 
@@ -96,7 +96,8 @@ class ArticleController extends Controller {
         return [
             'form' => $form->createView(),
             'slugs' => $article->getSlugs(),
-            'article' => $article
+            'article' => $article,
+            'images' => $article->getImages(),
         ];
     }
 
@@ -134,6 +135,7 @@ class ArticleController extends Controller {
             'message' => $message,
             'slugs' => $article->getSlugs(),
             'article' => $article,
+            'images' => $article->getImages(),
         ];
     }
 
@@ -167,7 +169,7 @@ class ArticleController extends Controller {
     private function createCreateForm(Article $article, int $page): Form {
         return $this->createForm(ArticleType::class, $article, [
             'action' => $this->generateUrl('admin_article_createProcess', ['page' => $page]),
-            'method' => Request::METHOD_POST
+            'method' => Request::METHOD_POST,
         ]);
     }
 
@@ -181,7 +183,7 @@ class ArticleController extends Controller {
     private function createUpdateForm(Article $article, int $page): Form {
         return $this->createForm(ArticleType::class, $article, [
             'action' => $this->generateUrl('admin_article_updateProcess', ['id' => $article->getId(), 'page' => $page]),
-            'method' => Request::METHOD_POST
+            'method' => Request::METHOD_POST,
         ]);
     }
 }

@@ -73,7 +73,7 @@ class Article implements Entity {
     /**
      * @var Meta
      *
-     * @ORM\OneToOne(targetEntity="Meta", mappedBy="article")
+     * @ORM\OneToOne(targetEntity="Meta", mappedBy="article", cascade={"ALL"})
      * @ORM\JoinColumn(referencedColumnName="id", name="meta_id")
      */
     private $meta;

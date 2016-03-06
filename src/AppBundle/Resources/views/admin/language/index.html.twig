@@ -1,0 +1,54 @@
+{% extends '@App/admin/layout.html.twig' %}
+
+{% block heading %}{{ 'Jazyky'|trans({}, 'admin') }}{% endblock %}
+
+{% block breadcrumbs %}&raquo; {{ 'Jazyky'|trans({}, 'admin') }}{% endblock %}
+
+{% block content %}
+    <div class="row app-margin-bottom-15">
+        <div class="col-lg-12">
+            <div class="btn-group pull-right" role="group">
+                <a href="{{ path('admin_language_create') }}" type="button" class="btn btn-default btn-md">{{ 'Nový jazyk'|trans({}, 'admin') }}</a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">{{ 'Jazyky'|trans({}, 'admin') }}</div>
+                <div class="panel-body">
+                    {% if languages|length == 0 %}
+                        <div class="alert alert-info">{{ 'Žiadny jazyk.'|trans({}, 'admin') }}</div>
+                    {% else %}
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="col-lg-6">{{ 'Názov'|trans({}, 'admin') }}</th>
+                                    <th class="col-lg-2">{{ 'Kód'|trans({}, 'admin') }}</th>
+                                    <th class="col-lg-2">{{ 'Východzí'|trans({}, 'admin') }}</th>
+                                    <th class="col-lg-1">&nbsp;</th>
+                                    <th class="col-lg-1">&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for language in languages %}
+                                    <tr>
+                                        <td>{{ language.name }}</td>
+                                        <td>{{ language.code }}</td>
+                                        <td>{{ bool(language.isDefault) }}</td>
+                                        <td class="app-center">
+                                            <a href="{{ url('admin_language_update', {'id': language.id}) }}">{{ 'Upraviť'|trans({}, 'admin') }}</a>
+                                        </td>
+                                        <td class="app-center">
+                                            <a href="{{ url('admin_language_delete', {'id': language.id}) }}">{{ 'Zmazať'|trans({}, 'admin') }}</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

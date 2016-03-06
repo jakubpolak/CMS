@@ -20,4 +20,18 @@ class LanguageRepository extends EntityRepository {
             ->useQueryCache(true)
             ->getSingleScalarResult();
     }
+
+    /**
+     * Set isDefault to all languages.
+     *
+     * @param bool $isDefault is default
+     */
+    public function setDefault(bool $isDefault) {
+        $dql = "UPDATE AppBundle:Language l SET l.isDefault = :isDefault";
+
+        $this->_em->createQuery($dql)
+            ->useQueryCache(true)
+            ->setParameter('isDefault', $isDefault)
+            ->execute();
+    }
 }

@@ -2,18 +2,19 @@
 
 namespace AppBundle\Form\Admin;
 
-use AppBundle\Entity\Language;
+use AppBundle\Entity\Image;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Language type.
+ * Image type.
  *
  * @author Jakub Polák, Jana Poláková
  */
-class LanguageType extends AbstractType {
+class ImageType extends AbstractType {
     /**
      * Build form.
      *
@@ -22,13 +23,12 @@ class LanguageType extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-            ->add('name', null, ['label' => 'Názov'])
-            ->add('code', null, ['label' => 'Kód'])
-            ->add('isDefault', null, ['label' => 'Východzí'])
+            ->add('file', FileType::class, ['label' => 'Obrázok', 'required' => true])
+            ->add('position', null, ['label' => 'Pozícia'])
             ->add('save', SubmitType::class, ['label' => 'Uložiť', 'attr' => ['class' => 'btn btn-primary']])
         ;
     }
-    
+
     /**
      * Configure options.
      *
@@ -36,7 +36,7 @@ class LanguageType extends AbstractType {
      */
     public function configureOptions(OptionsResolver $resolver) {
         $resolver->setDefaults(array(
-            'data_class' => Language::class
+            'data_class' => Image::class
         ));
     }
 }

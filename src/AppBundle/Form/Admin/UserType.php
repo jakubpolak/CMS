@@ -2,10 +2,9 @@
 
 namespace AppBundle\Form\Admin;
 
-use AppBundle\Entity\Role;
 use AppBundle\Entity\User;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -25,14 +24,13 @@ class UserType extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-            ->add('username', null, ['label' => 'Email'])
-            ->add('password', PasswordType::class, ['label' => 'Heslo'])
-            ->add('roles', EntityType::class, [
-                'label' => 'Rola',
-                'class' => 'AppBundle:Role',
-                'choice_label' => 'name',
+            ->add('username', null, ['label' => 'Prihlasovacie meno'])
+            ->add('email', null, ['label' => 'Email'])
+            ->add('roles', ChoiceType::class, [
+                'choices' => User::ROLES_DATA,
                 'multiple' => true,
             ])
+            ->add('password', PasswordType::class, ['label' => 'Heslo'])
             ->add('save', SubmitType::class, ['label' => 'Uložiť', 'attr' => ['class' => 'btn btn-primary']])
         ;
     }

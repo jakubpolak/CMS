@@ -12,7 +12,12 @@ use Doctrine\ORM\EntityRepository;
  *
  * @author Jakub Polák, Jana Poláková
  */
-class UserService extends CrudService {
+class UserService {
+    /**
+     * @var EntityManager
+     */
+    protected $em;
+
     /**
      * @var UserRepository
      */
@@ -24,7 +29,7 @@ class UserService extends CrudService {
      * @param EntityManager $entityManager entity manager
      */
     public function __construct(EntityManager $entityManager) {
-        parent::__construct($entityManager);
+        $this->em = $entityManager;
         $this->userRepository = $this->em->getRepository('AppBundle:User');
     }
 
@@ -35,5 +40,36 @@ class UserService extends CrudService {
      */
     public function getRepository(): EntityRepository {
         return $this->userRepository;
+    }
+
+    /**
+     * Save user.
+     *
+     * @param User $user
+     */
+    public function save(User $user) {
+        if ($user->getId() === null){
+            $this->em->persist($user);
+        }
+        $this->em->flush();
+    }
+
+    /**
+     * Get all users.
+     *
+     * @return array
+     */
+    public function getAll(): array {
+        return $this->getRepository()->findAll();
+    }
+
+    /**
+     * Delete user.
+     *
+     * @param User $user
+     */
+    public function delete(User $user) {
+        $this->em->remove($user);
+        $this->em->flush();
     }
 }

@@ -18,6 +18,7 @@ class AppKernel extends Kernel
             new Trsteel\CkeditorBundle\TrsteelCkeditorBundle(),
             new AppBundle\AppBundle(),
             new Liip\ImagineBundle\LiipImagineBundle(),
+            new FOS\UserBundle\FOSUserBundle(),
         ];
 
         if (in_array($this->getEnvironment(), ['dev', 'test'], true)) {

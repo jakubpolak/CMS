@@ -65,17 +65,14 @@ class TemplateHelperExtension extends \Twig_Extension {
     /**
      * Merge values of specified entity attributes into a single string. Values are delimited by specified delimiter.
      *
-     * @param array $entities entities
-     * @param string $attributeName attribute name
      * @param string $delimiter delimiter
      * @return string
      */
-    public function mergeFunction(array $entities, string $attributeName, string $delimiter = ', '): string {
+    public function mergeFunction(array $values, string $delimiter = ', '): string {
         $result = '';
-        $methodName = 'get' . ucfirst($attributeName);
 
-        foreach ($entities as $entity) {
-            $result .= $entity->{$methodName}();
+        foreach ($values as $key => $value) {
+            $result .= $value;
             $result .= $delimiter;
         }
 

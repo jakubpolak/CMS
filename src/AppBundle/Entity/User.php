@@ -10,7 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="fos_user")
  */
 class User extends BaseUser {
-    const ROLES_DATA = ['ROLE_ADMIN' => 'administrátor', 'ROLE_USER' => 'používateľ'];
+    const ROLES = [
+        'administrátor' => 'ROLE_ADMIN',
+        'používateľ' => 'ROLE_USER',
+    ];
 
     /**
      * @ORM\Id

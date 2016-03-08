@@ -27,7 +27,7 @@ class UserType extends AbstractType {
             ->add('username', null, ['label' => 'Prihlasovacie meno'])
             ->add('email', null, ['label' => 'Email'])
             ->add('roles', ChoiceType::class, [
-                'choices' => User::ROLES_DATA,
+                'choices' => User::ROLES,
                 'multiple' => true,
             ])
             ->add('password', PasswordType::class, ['label' => 'Heslo'])

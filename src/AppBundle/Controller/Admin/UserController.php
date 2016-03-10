@@ -113,7 +113,8 @@ class UserController extends Controller {
                 $this->get('session')->getFlashBag()->add(Message::TYPE_SUCCESS, 'Používateľ bol uložený.');
                 return $redirect;
             } catch (\Exception $e) {
-                $message = new Message(Message::TYPE_DANGER, 'Používateľa sa nepodarilo uložiť.');
+                $message = new Message(Message::TYPE_DANGER, $e->getMessage());
+                //$message = new Message(Message::TYPE_DANGER, 'Používateľa sa nepodarilo uložiť.');
             }
         }
 

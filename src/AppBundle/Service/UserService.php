@@ -52,7 +52,7 @@ class UserService {
         if ($userId === null) { $this->em->persist($user); }
 
         if ($userPassword === null) { // Updating existing user.
-            $data = $this->userRepository->getById($userId);
+            $data = $this->getById($userId);
             $encodePassword = $data['password'];
             $encodeSalt = $data['salt'];
         } else { // Creating a new user or updating an existing user.
@@ -76,6 +76,10 @@ class UserService {
      */
     public function getAll(): array {
         return $this->userRepository->findAll();
+    }
+
+    public function getById(int $userId): array {
+        return $this->userRepository->getById($userId)[0];
     }
 
     /**

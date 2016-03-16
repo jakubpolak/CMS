@@ -3,6 +3,9 @@
 namespace AppBundle\Controller\Home;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
  * Default controller.
@@ -10,5 +13,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  * @author Jakub Polák, Jana Poláková
  */
 class DefaultController extends Controller {
-    
+    /**
+     * Index action.
+     *
+     * @Route("", name="admin_default_index")
+     * @Template("@App/home/layout.html.twig")
+     * @Method("GET")
+     */
+    public function indexAction() {
+        return [];
+    }
 }

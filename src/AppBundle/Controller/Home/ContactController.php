@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  * Contact controller.
  *
  * @author Jakub Polák, Jana Poláková
+ * @Route("/contact")
  */
 class ContactController extends Controller{
     /**

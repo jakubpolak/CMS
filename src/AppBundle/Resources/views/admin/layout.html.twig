@@ -1,6 +1,7 @@
 {# TODO: All menu is active. #}
 {% set currentRoute = app.request.get('_route') %}
 {% set entityName = app.request.get('entityName') %}
+{% set languagesCount = languagesCount()  %}
 <!DOCTYPE html>
 <html>
     <head>
@@ -66,7 +67,7 @@
                             </li>
                             <li>
                                 <a {% if 'admin_language' in currentRoute %} class="active"{% endif %} href="{{ path('admin_language_index') }}">
-                                    <i class="fa fa-list fa-fw"></i> <span>{{ 'Jazyky'|trans({}, 'admin') }}</span>
+                                    <i class="fa fa-language fa-fw"></i> <span>{{ 'Jazyky'|trans({}, 'admin') }}</span>
                                 </a>
                             </li>
                             <li>

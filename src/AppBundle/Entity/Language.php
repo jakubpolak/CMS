@@ -51,10 +51,18 @@ class Language implements Entity {
     private $slugs;
 
     /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="TranslationMapper", mappedBy="language")
+     */
+    private $translationMappers;
+
+    /**
      * Constructor.
      */
     public function __construct() {
         $this->slugs = new ArrayCollection();
+        $this->translationMappers = new ArrayCollection();
         $this->isDefault = false;
     }
 
@@ -158,7 +166,7 @@ class Language implements Entity {
     /**
      * Get isDefault.
      *
-     * @return boolean
+     * @return bool
      */
     public function getIsDefault() {
         return $this->isDefault;
@@ -167,7 +175,7 @@ class Language implements Entity {
     /**
      * Set isLanguage.
      *
-     * @param boolean $isDefault
+     * @param bool $isDefault
      * @return self
      */
     public function setIsDefault($isDefault) {

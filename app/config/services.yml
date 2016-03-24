@@ -25,6 +25,9 @@ services:
     app.service.image:
         class: AppBundle\Service\ImageService
         arguments: ['@doctrine.orm.default_entity_manager', '%www_root%', '%upload_dir%']
+    app.service.staticpage:
+        class: AppBundle\Service\StaticPageService
+        arguments: ['@doctrine.orm.default_entity_manager']
     app.twig.template_helper:
         class: AppBundle\Twig\TemplateHelperExtension
         public: false

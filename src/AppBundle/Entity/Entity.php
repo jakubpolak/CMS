@@ -8,5 +8,5 @@ namespace AppBundle\Entity;
  * @author Jakub Polák, Jana Poláková
  */
 interface Entity {
-    function getId();
+    public function getId();
 }

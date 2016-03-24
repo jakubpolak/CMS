@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="meta")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MetaRepository")
  */
-class Meta implements Entity{
+class Meta implements Entity {
     /**
      * @var int
      *

@@ -2,6 +2,7 @@ parameters:
    results_per_page: 1
    www_root: web
    upload_dir: upload
+   cache_location: '/../../../../../var/cache'
 
 services:
     app.service.user:
@@ -28,6 +29,9 @@ services:
     app.service.staticpage:
         class: AppBundle\Service\StaticPageService
         arguments: ['@doctrine.orm.default_entity_manager']
+    app.service.cache:
+        class: AppBundle\Service\CacheService
+        arguments: ['%cache_location%']
     app.twig.template_helper:
         class: AppBundle\Twig\TemplateHelperExtension
         public: false

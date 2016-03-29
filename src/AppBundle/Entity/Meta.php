@@ -46,7 +46,7 @@ class Meta implements Entity {
     /**
      * Get id
      *
-     * @return int
+     * @return int|null
      */
     public function getId() {
         return $this->id;
@@ -58,7 +58,7 @@ class Meta implements Entity {
      * @param string $metaKeywords
      * @return self
      */
-    public function setMetaKeywords($metaKeywords) {
+    public function setMetaKeywords(string $metaKeywords): self {
         $this->metaKeywords = $metaKeywords;
 
         return $this;
@@ -69,7 +69,7 @@ class Meta implements Entity {
      *
      * @return string
      */
-    public function getMetaKeywords() {
+    public function getMetaKeywords(): string {
         return $this->metaKeywords;
     }
 
@@ -79,7 +79,7 @@ class Meta implements Entity {
      * @param string $metaDescription
      * @return self
      */
-    public function setMetaDescription($metaDescription) {
+    public function setMetaDescription(string $metaDescription): self {
         $this->metaDescription = $metaDescription;
 
         return $this;
@@ -90,7 +90,7 @@ class Meta implements Entity {
      *
      * @return string
      */
-    public function getMetaDescription() {
+    public function getMetaDescription(): string {
         return $this->metaDescription;
     }
 
@@ -99,7 +99,7 @@ class Meta implements Entity {
      *
      * @return Article
      */
-    public function getArticle() {
+    public function getArticle(): Article {
         return $this->article;
     }
 
@@ -109,7 +109,7 @@ class Meta implements Entity {
      * @param Article $article article
      * @return self
      */
-    public function setArticle(Article $article) {
+    public function setArticle(Article $article): self {
         $this->article = $article;
 
         return $this;

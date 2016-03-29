@@ -56,7 +56,7 @@ class Slug implements Entity {
     /**
      * Get id.
      *
-     * @return int
+     * @return int|null
      */
     public function getId() {
         return $this->id;
@@ -68,7 +68,7 @@ class Slug implements Entity {
      * @param string $content
      * @return self
      */
-    public function setContent($content) {
+    public function setContent(string $content): self {
         $this->content = $content;
 
         return $this;
@@ -79,7 +79,7 @@ class Slug implements Entity {
      *
      * @return string
      */
-    public function getContent() {
+    public function getContent(): string {
         return $this->content;
     }
 
@@ -88,7 +88,7 @@ class Slug implements Entity {
      *
      * @return Menu
      */
-    public function getMenu() {
+    public function getMenu(): Menu {
         return $this->menu;
     }
 
@@ -98,7 +98,7 @@ class Slug implements Entity {
      * @param Menu $menu
      * @return self
      */
-    public function setMenu($menu) {
+    public function setMenu(Menu $menu): self {
         $this->menu = $menu;
 
         return $this;
@@ -109,7 +109,7 @@ class Slug implements Entity {
      *
      * @return Language
      */
-    public function getLanguage() {
+    public function getLanguage(): Language {
         return $this->language;
     }
 
@@ -119,7 +119,7 @@ class Slug implements Entity {
      * @param Language $language
      * @return self
      */
-    public function setLanguage($language) {
+    public function setLanguage(Language $language): self {
         $this->language = $language;
 
         return $this;
@@ -130,7 +130,7 @@ class Slug implements Entity {
      *
      * @return Article
      */
-    public function getArticle() {
+    public function getArticle(): Article {
         return $this->article;
     }
 
@@ -140,7 +140,7 @@ class Slug implements Entity {
      * @param Article $article
      * @return self
      */
-    public function setArticle($article) {
+    public function setArticle(Article $article): self {
         $this->article = $article;
 
         return $this;

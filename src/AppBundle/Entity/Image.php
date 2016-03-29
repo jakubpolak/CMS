@@ -67,9 +67,12 @@ class Image implements Entity {
     private $imageType;
 
     /**
-     * Constructor.
+     * Image constructor.
+     *
+     * @param string $wwwRoot
+     * @param string $uploadDir
      */
-    public function __construct($wwwRoot, $uploadDir) {
+    public function __construct(string $wwwRoot, string $uploadDir) {
         $this->wwwRoot = $wwwRoot;
         $this->uploadDir = $uploadDir;
         $this->position = 0;
@@ -80,7 +83,7 @@ class Image implements Entity {
      *
      * @return string
      */
-    public function getWwwRoot() {
+    public function getWwwRoot(): string {
         return $this->wwwRoot;
     }
 
@@ -90,7 +93,7 @@ class Image implements Entity {
      * @param string $wwwRoot
      * @return self
      */
-    public function setWwwRoot($wwwRoot) {
+    public function setWwwRoot(string $wwwRoot): self {
         $this->wwwRoot = $wwwRoot;
 
         return $this;
@@ -100,7 +103,7 @@ class Image implements Entity {
     /**
      * Get id.
      *
-     * @return int
+     * @return int|null
      */
     public function getId() {
         return $this->id;
@@ -112,7 +115,7 @@ class Image implements Entity {
      * @param string $name
      * @return self
      */
-    public function setName($name) {
+    public function setName(string $name): self {
         $this->name = $name;
 
         return $this;
@@ -123,17 +126,17 @@ class Image implements Entity {
      *
      * @return string
      */
-    public function getName() {
+    public function getName(): string {
         return $this->name;
     }
 
     /**
      * Set position.
      *
-     * @param integer $position
+     * @param int $position
      * @return self
      */
-    public function setPosition($position) {
+    public function setPosition(int $position): self {
         $this->position = $position;
 
         return $this;
@@ -144,7 +147,7 @@ class Image implements Entity {
      *
      * @return int
      */
-    public function getPosition() {
+    public function getPosition(): int {
         return $this->position;
     }
 
@@ -153,7 +156,7 @@ class Image implements Entity {
      *
      * @return File
      */
-    public function getFile() {
+    public function getFile(): File {
         return $this->file;
     }
 
@@ -161,9 +164,9 @@ class Image implements Entity {
      * Set file.
      *
      * @param File $file
-     * @return $this
+     * @return self
      */
-    public function setFile($file) {
+    public function setFile(File $file): self {
         $this->file = $file;
 
         return $this;
@@ -171,19 +174,17 @@ class Image implements Entity {
 
     /**
      * Remove file.
-     *
-     * return $this;
      */
-    public function removeFile(){
+    public function removeFile() {
         @unlink($this->getAbsolutePath());
     }
 
     /**
      * Get article.
      *
-     * @return self
+     * @return Article
      */
-    public function getArticle() {
+    public function getArticle(): Article {
         return $this->article;
     }
 
@@ -193,7 +194,7 @@ class Image implements Entity {
      * @param Article $article
      * @return self
      */
-    public function setArticle($article) {
+    public function setArticle(Article $article): self {
         $this->article = $article;
 
         return $this;
@@ -204,7 +205,7 @@ class Image implements Entity {
      *
      * @return ImageType
      */
-    public function getImageType() {
+    public function getImageType(): ImageType {
         return $this->imageType;
     }
 
@@ -214,7 +215,7 @@ class Image implements Entity {
      * @param ImageType $imageType
      * @return self
      */
-    public function setImageType($imageType) {
+    public function setImageType(ImageType $imageType): self {
         $this->imageType = $imageType;
 
         return $this;
@@ -247,7 +248,7 @@ class Image implements Entity {
      *
      * @return string
      */
-    public function getUploadRootDir() {
+    public function getUploadRootDir(): string {
         return __DIR__ . '/../../../' . $this->wwwRoot . '/' . $this->uploadDir;
     }
 
@@ -257,7 +258,7 @@ class Image implements Entity {
      * @param string $uploadDir
      * @return self
      */
-    public function setUploadDir($uploadDir) {
+    public function setUploadDir(string $uploadDir): self {
         $this->uploadDir = $uploadDir;
 
         return $this;
@@ -268,7 +269,7 @@ class Image implements Entity {
      *
      * @return string
      */
-    public function getUploadDir() {
+    public function getUploadDir(): string {
         return $this->uploadDir;
     }
 
@@ -284,8 +285,6 @@ class Image implements Entity {
 
     /**
      * Delete file.
-     *
-     * return self;
      */
     public function delete() {
         @unlink($this->getAbsolutePath());

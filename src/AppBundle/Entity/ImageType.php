@@ -49,7 +49,7 @@ class ImageType implements Entity {
     /**
      * Get id
      *
-     * @return int
+     * @return int|null
      */
     public function getId() {
         return $this->id;
@@ -62,7 +62,7 @@ class ImageType implements Entity {
      *
      * @return self
      */
-    public function setName($name) {
+    public function setName(string $name): self {
         $this->name = $name;
 
         return $this;
@@ -73,7 +73,7 @@ class ImageType implements Entity {
      *
      * @return string
      */
-    public function getName() {
+    public function getName(): string {
         return $this->name;
     }
 
@@ -82,7 +82,7 @@ class ImageType implements Entity {
      *
      * @return Collection
      */
-    public function getImages() {
+    public function getImages(): Collection {
         return $this->images;
     }
 
@@ -92,7 +92,7 @@ class ImageType implements Entity {
      * @param Collection $images
      * @return self
      */
-    public function setImages($images) {
+    public function setImages(Collection $images): self {
         $this->images = $images;
 
         return $this;
@@ -104,7 +104,7 @@ class ImageType implements Entity {
      * @param Image $image
      * @return self
      */
-    public function addImage(Image $image) {
+    public function addImage(Image $image): self {
         $this->images->add($image);
         $image->setImageType($this);
 
@@ -117,7 +117,7 @@ class ImageType implements Entity {
      * @param Image $image
      * @return self
      */
-    public function removeImage(Image $image) {
+    public function removeImage(Image $image): self {
         $this->images->remove($image);
 
         return $this;

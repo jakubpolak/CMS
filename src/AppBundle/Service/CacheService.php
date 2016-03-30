@@ -28,12 +28,12 @@ class CacheService {
      * @param string $dir
      */
     public function clearCache(string $dir = '') {
-        $cache_dir = __DIR__ . $this->cacheLocation;
+        $cacheDir = __DIR__ . $this->cacheLocation;
 
-        if (is_dir($cache_dir) && basename($cache_dir) === 'cache') {
-            $this->cc($cache_dir, "dev/$dir");
-            $this->cc($cache_dir, "prod/$dir");
-            $this->cc($cache_dir, "test/$dir");
+        if (is_dir($cacheDir) && basename($cacheDir) === 'cache') {
+            $this->cc($cacheDir, "dev/$dir");
+            $this->cc($cacheDir, "prod/$dir");
+            $this->cc($cacheDir, "test/$dir");
         }
     }
 
@@ -64,11 +64,11 @@ class CacheService {
     /**
      * Remove cache from specified directory
      *
-     * @param string $cache_dir
+     * @param string $cacheDir
      * @param string $name
      */
-    private function cc(string $cache_dir, string $name) {
-        $d = $cache_dir . '/' . $name;
+    private function cc(string $cacheDir, string $name) {
+        $d = $cacheDir . '/' . $name;
         if (is_dir($d)) {
             $this->rrmdir($d);
         }

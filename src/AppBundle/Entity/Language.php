@@ -39,7 +39,7 @@ class Language implements Entity {
     /**
      * @var bool
      *
-     * @ORM\Column(name="is_default", type="boolean", nullable=false)
+     * @ORM\Column(name="is_default", type="boolean")
      */
     private $isDefault;
 
@@ -69,7 +69,7 @@ class Language implements Entity {
     /**
      * Get id.
      *
-     * @return int
+     * @return int|null
      */
     public function getId() {
         return $this->id;
@@ -81,7 +81,7 @@ class Language implements Entity {
      * @param string $name
      * @return self
      */
-    public function setName($name) {
+    public function setName(string $name): self {
         $this->name = $name;
 
         return $this;
@@ -92,7 +92,7 @@ class Language implements Entity {
      *
      * @return string
      */
-    public function getName() {
+    public function getName(): string {
         return $this->name;
     }
 
@@ -102,7 +102,7 @@ class Language implements Entity {
      * @param string $code
      * @return self
      */
-    public function setCode($code) {
+    public function setCode(string $code) {
         $this->code = $code;
 
         return $this;
@@ -113,16 +113,16 @@ class Language implements Entity {
      *
      * @return string
      */
-    public function getCode() {
+    public function getCode(): string {
         return $this->code;
     }
 
     /**
      * Get slugs.
      *
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getSlugs() {
+    public function getSlugs(): Collection {
         return $this->slugs;
     }
 
@@ -132,7 +132,7 @@ class Language implements Entity {
      * @param Collection $slugs
      * @return self
      */
-    public function setSlugs(Collection $slugs) {
+    public function setSlugs(Collection $slugs): self {
         $this->slugs = $slugs;
 
         return $this;
@@ -144,7 +144,7 @@ class Language implements Entity {
      * @param Slug $slug
      * @return self
      */
-    public function addSlug(Slug $slug) {
+    public function addSlug(Slug $slug): self {
         $this->slugs->add($slug);
         $slug->setLanguage($this);
 
@@ -157,7 +157,7 @@ class Language implements Entity {
      * @param Slug $slug
      * @return self
      */
-    public function removeSlug(Slug $slug) {
+    public function removeSlug(Slug $slug): self {
         $this->slugs->remove($slug);
 
         return $this;
@@ -168,7 +168,7 @@ class Language implements Entity {
      *
      * @return bool
      */
-    public function getIsDefault() {
+    public function getIsDefault(): bool {
         return $this->isDefault;
     }
 
@@ -178,7 +178,7 @@ class Language implements Entity {
      * @param bool $isDefault
      * @return self
      */
-    public function setIsDefault($isDefault) {
+    public function setIsDefault(bool $isDefault): self {
         $this->isDefault = $isDefault;
 
         return $this;

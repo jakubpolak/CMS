@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -83,7 +84,7 @@ class Article implements Entity {
      */
     public function __construct() {
         $this->isPublished = false;
-        $this->writtenOn = new \DateTime();
+        $this->writtenOn = new DateTime();
         $this->slugs = new ArrayCollection();
         $this->images = new ArrayCollection();
     }
@@ -91,7 +92,7 @@ class Article implements Entity {
     /**
      * Get id.
      *
-     * @return int
+     * @return int|null
      */
     public function getId() {
         return $this->id;
@@ -103,7 +104,7 @@ class Article implements Entity {
      * @param string $heading
      * @return self
      */
-    public function setHeading($heading) {
+    public function setHeading(string $heading): self {
         $this->heading = $heading;
 
         return $this;
@@ -114,7 +115,7 @@ class Article implements Entity {
      *
      * @return string
      */
-    public function getHeading() {
+    public function getHeading(): string {
         return $this->heading;
     }
 
@@ -124,7 +125,7 @@ class Article implements Entity {
      * @param string $content
      * @return self
      */
-    public function setContent($content) {
+    public function setContent(string $content): self {
         $this->content = $content;
 
         return $this;
@@ -135,17 +136,17 @@ class Article implements Entity {
      *
      * @return string
      */
-    public function getContent() {
+    public function getContent(): string {
         return $this->content;
     }
 
     /**
      * Set isPublished.
      *
-     * @param boolean $isPublished
+     * @param bool $isPublished
      * @return self
      */
-    public function setIsPublished($isPublished) {
+    public function setIsPublished(bool $isPublished): self {
         $this->isPublished = $isPublished;
 
         return $this;
@@ -156,17 +157,17 @@ class Article implements Entity {
      *
      * @return bool
      */
-    public function getIsPublished() {
+    public function getIsPublished(): bool {
         return $this->isPublished;
     }
 
     /**
      * Set writtenOn.
      *
-     * @param \DateTime $writtenOn
+     * @param DateTime $writtenOn
      * @return self
      */
-    public function setWrittenOn($writtenOn) {
+    public function setWrittenOn(DateTime $writtenOn) {
         $this->writtenOn = $writtenOn;
 
         return $this;
@@ -175,9 +176,9 @@ class Article implements Entity {
     /**
      * Get writtenOn.
      *
-     * @return \DateTime
+     * @return DateTime
      */
-    public function getWrittenOn() {
+    public function getWrittenOn(): DateTime {
         return $this->writtenOn;
     }
 
@@ -186,7 +187,7 @@ class Article implements Entity {
      *
      * @return Collection
      */
-    public function getSlugs() {
+    public function getSlugs(): Collection {
         return $this->slugs;
     }
 
@@ -196,7 +197,7 @@ class Article implements Entity {
      * @param Collection $slugs
      * @return self
      */
-    public function setSlugs(Collection $slugs) {
+    public function setSlugs(Collection $slugs): self {
         $this->slugs = $slugs;
 
         return $this;
@@ -208,7 +209,7 @@ class Article implements Entity {
      * @param Slug $slug
      * @return self
      */
-    public function addSlug(Slug $slug) {
+    public function addSlug(Slug $slug): self {
         $this->slugs->add($slug);
         $slug->setArticle($this);
 
@@ -221,7 +222,7 @@ class Article implements Entity {
      * @param Slug $slug
      * @return self
      */
-    public function removeSlug(Slug $slug) {
+    public function removeSlug(Slug $slug): self {
         $this->slugs->remove($slug);
 
         return $this;
@@ -230,9 +231,9 @@ class Article implements Entity {
     /**
      * Get images.
      *
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function getImages() {
+    public function getImages(): Collection {
         return $this->images;
     }
 
@@ -242,7 +243,7 @@ class Article implements Entity {
      * @param Collection $images
      * @return self
      */
-    public function setImages(Collection $images) {
+    public function setImages(Collection $images): self {
         $this->images = $images;
 
         return $this;
@@ -252,9 +253,9 @@ class Article implements Entity {
      * Add image.
      *
      * @param Image $image
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function addImage(Image $image) {
+    public function addImage(Image $image): Collection {
         $this->images->add($image);
         $image->setArticle($this);
 
@@ -265,9 +266,9 @@ class Article implements Entity {
      * Remove image.
      *
      * @param Image $image
-     * @return ArrayCollection
+     * @return Collection
      */
-    public function removeImage(Image $image) {
+    public function removeImage(Image $image): Collection {
         $this->images->remove($image);
 
         return $this->images;
@@ -278,7 +279,7 @@ class Article implements Entity {
      *
      * @return Meta
      */
-    public function getMeta() {
+    public function getMeta(): Meta {
         return $this->meta;
     }
 
@@ -288,7 +289,7 @@ class Article implements Entity {
      * @param Meta $meta
      * @return self
      */
-    public function setMeta(Meta $meta) {
+    public function setMeta(Meta $meta): self {
         $this->meta = $meta;
 
         return $this;

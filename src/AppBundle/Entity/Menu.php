@@ -32,7 +32,7 @@ class Menu implements Entity {
     /**
      * @var string
      *
-     * @ORM\Column(name="content", type="text", nullable=true)
+     * @ORM\Column(name="content", type="text")
      */
     private $content;
 
@@ -44,7 +44,7 @@ class Menu implements Entity {
     private $isActive;
 
     /**
-     * @var integer
+     * @var int
      *
      * @ORM\Column(name="position", type="integer")
      */
@@ -85,7 +85,7 @@ class Menu implements Entity {
     /**
      * Get id.
      *
-     * @return int
+     * @return int|null
      */
     public function getId() {
         return $this->id;
@@ -97,7 +97,7 @@ class Menu implements Entity {
      * @param string $name
      * @return self
      */
-    public function setName($name) {
+    public function setName(string $name): self {
         $this->name = $name;
 
         return $this;
@@ -108,7 +108,7 @@ class Menu implements Entity {
      *
      * @return string
      */
-    public function getName() {
+    public function getName(): string {
         return $this->name;
     }
 
@@ -118,7 +118,7 @@ class Menu implements Entity {
      * @param string $content
      * @return self
      */
-    public function setContent($content) {
+    public function setContent(string $content): self {
         $this->content = $content;
 
         return $this;
@@ -129,17 +129,17 @@ class Menu implements Entity {
      *
      * @return string
      */
-    public function getContent() {
+    public function getContent(): string {
         return $this->content;
     }
 
     /**
      * Set isActive.
      *
-     * @param boolean $isActive
+     * @param bool $isActive
      * @return self
      */
-    public function setIsActive($isActive) {
+    public function setIsActive(bool $isActive): self {
         $this->isActive = $isActive;
 
         return $this;
@@ -150,7 +150,7 @@ class Menu implements Entity {
      *
      * @return bool
      */
-    public function getIsActive() {
+    public function getIsActive(): bool {
         return $this->isActive;
     }
 
@@ -159,7 +159,7 @@ class Menu implements Entity {
      *
      * @return int
      */
-    public function getPosition() {
+    public function getPosition(): int {
         return $this->position;
     }
 
@@ -169,7 +169,7 @@ class Menu implements Entity {
      * @param int $position
      * @return self
      */
-    public function setPosition($position) {
+    public function setPosition(int $position): self {
         $this->position = $position;
 
         return $this;
@@ -180,7 +180,7 @@ class Menu implements Entity {
      *
      * @return self
      */
-    public function getMenu() {
+    public function getMenu(): Menu {
         return $this->menu;
     }
 
@@ -190,7 +190,7 @@ class Menu implements Entity {
      * @param Menu $menu
      * @return self
      */
-    public function setMenu(Menu $menu) {
+    public function setMenu(Menu $menu): self {
         $this->menu = $menu;
 
         return $this;
@@ -201,7 +201,7 @@ class Menu implements Entity {
      *
      * @return Collection
      */
-    public function getMenus() {
+    public function getMenus(): Collection {
         return $this->menus;
     }
 
@@ -211,7 +211,7 @@ class Menu implements Entity {
      * @param Collection $menus
      * @return self
      */
-    public function setMenus(Collection $menus){
+    public function setMenus(Collection $menus): self {
         $this->menus = $menus;
 
         return $this;
@@ -222,7 +222,7 @@ class Menu implements Entity {
      *
      * @return Collection
      */
-    public function getSlugs() {
+    public function getSlugs(): Collection {
         return $this->slugs;
     }
 

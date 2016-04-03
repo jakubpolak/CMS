@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Jakub Polák, Jana Poláková
  *
  * @ORM\Table(name="translation_mapper")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\TranslationMapperRepository")
  */
 class TranslationMapper implements Entity {
     /**
@@ -54,14 +54,14 @@ class TranslationMapper implements Entity {
     /**
      * @var string
      *
-     * @ORM\Column(name="attribute_original_content", type="text", nullable=true)
+     * @ORM\Column(name="attribute_original_content", type="text")
      */
     private $attributeOriginalContent;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="attribute_current_content", type="text", nullable=true)
+     * @ORM\Column(name="attribute_current_content", type="text")
      */
     private $attributeCurrentContent;
 
@@ -98,9 +98,9 @@ class TranslationMapper implements Entity {
     /**
      * Get id.
      *
-     * @return int
+     * @return int|null
      */
-    public function getId(): int {
+    public function getId() {
         return $this->id;
     }
 
@@ -110,7 +110,7 @@ class TranslationMapper implements Entity {
      * @param int $id
      * @return self
      */
-    public function setId($id): self {
+    public function setId(int $id): self {
         $this->id = $id;
 
         return $this;
@@ -233,7 +233,7 @@ class TranslationMapper implements Entity {
     /**
      * Set attribute current content.
      *
-     * @param mixed $attributeCurrentContent
+     * @param string $attributeCurrentContent
      * @return self
      */
     public function setAttributeCurrentContent(string $attributeCurrentContent): self {
@@ -254,7 +254,7 @@ class TranslationMapper implements Entity {
     /**
      * Set updated.
      *
-     * @param mixed $updated
+     * @param DateTime $updated
      * @return self
      */
     public function setUpdated(DateTime $updated): self {

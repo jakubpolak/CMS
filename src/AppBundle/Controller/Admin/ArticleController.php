@@ -148,7 +148,7 @@ class ArticleController extends Controller {
     public function deleteAction(Article $article, int $page): RedirectResponse {
         $flashBag = $this->get('session')->getFlashBag();
         $redirect = $this->redirect($this->generateUrl('admin_article_index', ['page' => $page]));
-
+        
         if ($article === null) {
             $flashBag->add(Message::TYPE_DANGER, 'Článok sa nepodarilo zmazať, pretože neexistuje.');
         } else {

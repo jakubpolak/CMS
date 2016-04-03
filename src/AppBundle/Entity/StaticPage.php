@@ -78,7 +78,7 @@ class StaticPage implements Entity {
      * @param string $heading
      * @return self
      */
-    public function setHeading($heading){
+    public function setHeading($heading): self {
         $this->heading = $heading;
 
         return $this;
@@ -99,7 +99,7 @@ class StaticPage implements Entity {
      * @param string $content
      * @return self
      */
-    public function setContent($content){
+    public function setContent($content): self {
         $this->content = $content;
 
         return $this;
@@ -120,7 +120,7 @@ class StaticPage implements Entity {
      * @param boolean $isActive
      * @return self
      */
-    public function setIsActive($isActive){
+    public function setIsActive($isActive): self {
         $this->isActive = $isActive;
 
         return $this;
@@ -141,7 +141,7 @@ class StaticPage implements Entity {
      * @param Meta $meta
      * @return self
      */
-    public function setMeta($meta){
+    public function setMeta($meta): self {
         $this->meta = $meta;
 
         return $this;

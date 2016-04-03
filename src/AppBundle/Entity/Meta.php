@@ -137,7 +137,7 @@ class Meta implements Entity {
      * @param StaticPage $staticPage
      * @return self
      */
-    public function setStaticPage($staticPage){
+    public function setStaticPage($staticPage): self {
         $this->staticPage = $staticPage;
 
         return $this;

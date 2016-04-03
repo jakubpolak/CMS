@@ -1,14 +1,14 @@
 {% extends '@App/admin/layout.html.twig' %}
 
-{% block heading %}{{ 'Používatelia'|trans({}, 'admin') }}{% endblock %}
+{% block heading %}{{ 'Statické stránky'|trans({}, 'admin') }}{% endblock %}
 
-{% block breadcrumbs %}&raquo; <a href="{{ path('admin_user_index') }}">{{ 'Používatelia'|trans({}, 'admin') }}</a> &raquo; {{ 'Nový používateľ'|trans({}, 'admin') }}{% endblock %}
+{% block breadcrumbs %}&raquo; <a href="{{ path('admin_staticPage_index') }}">{{ 'Statické stránky'|trans({}, 'admin') }}</a> &raquo; {{ 'Upraviť statickú stránku'|trans({}, 'admin') }}{% endblock %}
 
 {% block content %}
     <div class="row">
         <div class="col-lg-12">
             <div class="panel panel-default">
-                <div class="panel-heading">{{ 'Nový používateľ'|trans({}, 'admin') }}</div>
+                <div class="panel-heading">{{ 'Upraviť statickú stránku'|trans({}, 'admin') }}</div>
                 <div class="panel-body">
                     <form role="form" method="{{ form.vars.method }}" action="{{ form.vars.action }}">
                         {{ form_widget(form) }}

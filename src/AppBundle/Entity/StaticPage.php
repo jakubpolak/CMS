@@ -40,6 +40,21 @@ class StaticPage implements Entity {
     private $content;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="is_active", type="boolean")
+     */
+    private $isActive;
+
+    /**
+     * @var Meta
+     *
+     * @ORM\OneToOne(targetEntity="Meta", mappedBy="staticPage", cascade={"ALL"})
+     * @ORM\JoinColumn(referencedColumnName="id", name="meta_id")
+     */
+    private $meta;
+
+    /**
      * Get id.
      *
      * @return int
@@ -61,7 +76,7 @@ class StaticPage implements Entity {
      * Set heading.
      *
      * @param string $heading
-     * @return $this
+     * @return self
      */
     public function setHeading($heading){
         $this->heading = $heading;
@@ -82,10 +97,52 @@ class StaticPage implements Entity {
      * Set content.
      *
      * @param string $content
-     * @return $this
+     * @return self
      */
     public function setContent($content){
         $this->content = $content;
+
+        return $this;
+    }
+
+    /**
+     * Get is active.
+     *
+     * @return boolean
+     */
+    public function getIsActive(){
+        return $this->isActive;
+    }
+
+    /**
+     * Set is active.
+     *
+     * @param boolean $isActive
+     * @return self
+     */
+    public function setIsActive($isActive){
+        $this->isActive = $isActive;
+
+        return $this;
+    }
+
+    /**
+     * Get meta.
+     *
+     * @return Meta
+     */
+    public function getMeta(){
+        return $this->meta;
+    }
+
+    /**
+     * Set meta.
+     *
+     * @param Meta $meta
+     * @return self
+     */
+    public function setMeta($meta){
+        $this->meta = $meta;
 
         return $this;
     }

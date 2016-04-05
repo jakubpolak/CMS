@@ -44,6 +44,13 @@ class Meta implements Entity {
     private $article;
 
     /**
+     * @var StaticPage
+     *
+     * @ORM\OneToOne(targetEntity="StaticPage", inversedBy="meta")
+     */
+    private $staticPage;
+
+    /**
      * Get id
      *
      * @return int|null
@@ -111,6 +118,27 @@ class Meta implements Entity {
      */
     public function setArticle(Article $article): self {
         $this->article = $article;
+
+        return $this;
+    }
+
+    /**
+     * Get static page.
+     *
+     * @return StaticPage
+     */
+    public function getStaticPage(){
+        return $this->staticPage;
+    }
+
+    /**
+     * Set static page.
+     *
+     * @param StaticPage $staticPage
+     * @return self
+     */
+    public function setStaticPage($staticPage): self {
+        $this->staticPage = $staticPage;
 
         return $this;
     }

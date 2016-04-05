@@ -13,7 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  * @author Jakub Polák, Jana Poláková
  * @Route("/contact")
  */
-class ContactController extends Controller{
+class ContactController extends Controller {
     /**
      * Contact action.
      *

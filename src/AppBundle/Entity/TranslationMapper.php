@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @author Jakub Polák, Jana Poláková
  *
- * @ORM\Table(name="translation_mapper")
+ * @ORM\Table(name="translation_mapper", uniqueConstraints={@ORM\UniqueConstraint(columns={"entity", "entity_id", "attribute"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TranslationMapperRepository")
  */
 class TranslationMapper implements Entity {
@@ -78,14 +78,6 @@ class TranslationMapper implements Entity {
      * @ORM\OneToMany(targetEntity="Translation", mappedBy="translationMapper", cascade={"all"})
      */
     private $translations;
-
-    /**
-     * @var Language
-     *
-     * @ORM\ManyToOne(targetEntity="Language", inversedBy="translationMappers")
-     * @ORM\JoinColumn(name="language_id", referencedColumnName="id")
-     */
-    private $language;
 
     /**
      * Constructor.
@@ -280,27 +272,6 @@ class TranslationMapper implements Entity {
      */
     public function setTranslations(Collection $translations): self {
         $this->translations = $translations;
-
-        return $this;
-    }
-
-    /**
-     * Get language.
-     *
-     * @return Language
-     */
-    public function getLanguage(): Language {
-        return $this->language;
-    }
-
-    /**
-     * Set language.
-     *
-     * @param Language $language
-     * @return self
-     */
-    public function setLanguage(Language $language): self {
-        $this->language = $language;
 
         return $this;
     }

@@ -3,6 +3,13 @@ parameters:
    www_root: web
    upload_dir: upload
    cache_location: '/../../../var/cache'
+   translation_config:
+      entities:
+          Article:
+              heading: text
+              content: ckeditor
+      display_names:
+          article: 'Článok'
 
 services:
     app.service.user:
@@ -38,3 +45,6 @@ services:
         arguments: ['@translator.default', '@doctrine.orm.default_entity_manager']
         tags:
             - { name: twig.extension }
+    app.service.translation:
+        class: AppBundle\Service\TranslationService
+        arguments: ['@doctrine.orm.default_entity_manager', '@app.service.cache', '%translation_config%']

@@ -25,4 +25,16 @@ class TestController extends Controller {
 
         return new Response('Done ...');
     }
+
+    /**
+     * Translation action.
+     *
+     * @Route("/translation", name="home_test_translation")
+     * @Method("GET")
+     */
+    public function translationAction() {
+        $this->get('app.service.translation')->synchronize();
+
+        return new Response('Done ...');
+    }
 }

@@ -21,16 +21,8 @@ class DefaultController extends Controller {
      * @Method("GET")
      */
     public function indexAction() {
+        $menuTree = $this->get('app.service.menu')->getMenu(true);
 
-        //vycucnut menu, ak nejake existuje a je aktivne, tak zobrazit menus do twigu
-        $parentsMenus = $this->get('app.service.menu')->getParents(true);
-        $childsMenus = $this->get('app.service.menu')->getChilds(true);
-        $menus = $this->get('app.service.menu')->getAllByIsActive(true);
-
-        return [
-            'parentsMenus' => $parentsMenus,
-            'childsMenus' => $childsMenus,
-            'menus' => $menus
-        ];
+        return ['menuTree' => $menuTree];
     }
 }

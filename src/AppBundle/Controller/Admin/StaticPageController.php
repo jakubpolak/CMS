@@ -26,7 +26,7 @@ class StaticPageController extends Controller {
      * @Template("@App/admin/static-page/index.html.twig")
      * @Method("GET")
      */
-    public function indexAction(): array{
+    public function indexAction(): array {
         return ['staticPages' => $this->get('app.service.staticPage')->getAll()];
     }
 
@@ -42,7 +42,7 @@ class StaticPageController extends Controller {
     }
 
     /**
-     * Create proces action.
+     * Create process action.
      *
      * @Route("/create", name="admin_staticPage_createProcess")
      * @Template("@App/admin/static-page/create.html.twig")

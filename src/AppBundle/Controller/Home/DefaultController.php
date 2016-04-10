@@ -25,4 +25,16 @@ class DefaultController extends Controller {
 
         return ['menuTree' => $menuTree];
     }
+
+    /**
+     * Contact action.
+     *
+     * @Route("/contact", name="home_default_contact")
+     * @Template("@App/home/default/contact.html.twig")
+     * @Method("GET")
+     */
+    public function contactAction() {
+        $menuTree = $this->get('app.service.menu')->getMenu(true);
+
+        return ['menuTree' => $menuTree];    }
 }

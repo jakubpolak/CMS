@@ -45,7 +45,18 @@ class TemplateHelperExtension extends \Twig_Extension {
             new \Twig_SimpleFunction('bool', [$this, 'boolFunction'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('merge', [$this, 'mergeFunction'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('languagesCount', [$this, 'languagesCountFunction'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('isArray', [$this, 'isArrayFunction'], ['is_safe' => ['html']]),
         ];
+    }
+
+    /**
+     * Decide if input is array or not.
+     *
+     * @param $input
+     * @return bool
+     */
+    public function isArrayFunction($input){
+        return is_array($input);
     }
 
     /**

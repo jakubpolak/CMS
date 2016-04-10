@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class MenuController extends Controller {
     /**
-     * Index action
+     * Index action.
      *
      * @Route("", name="admin_menu_index")
      * @Template("@App/admin/menu/index.html.twig")

@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Menu;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -55,69 +56,73 @@ class MenuRepository extends EntityRepository {
     }
 
     /**
-     * Get child menus.
+     * Get menu.
      *
+     * @param bool|null $isActive is active.
      * @return array
      */
-    public function getChilds(): array {
-        $dql = '
-            SELECT m
-            FROM AppBundle:Menu m
-            WHERE m.menu IS NOT NULL
-            ORDER BY m.position ASC
-        ';
-
-        return $this->_em
-            ->createQuery($dql)
-            ->useQueryCache(true)
-            ->useResultCache(true)
-            ->getResult()
-        ;
+    public function getMenu($isActive = null){
+        return $this->getTree($this->getParents($isActive), [], $isActive);
     }
 
     /**
-     * Get child menus by is active.
+     * Get parents.
      *
-     * @param bool $isActive
+     * @param bool|null $isActive is active
      * @return array
      */
-    public function getChildsByIsActive(bool $isActive): array {
-        $dql = '
-            SELECT m
-            FROM AppBundle:Menu m
-            WHERE m.menu IS NOT NULL AND m.isActive = :isActive
-            ORDER BY m.position ASC
-        ';
+    public function getParents($isActive = null){
+        $qb = $this->_em->getRepository('AppBundle:Menu')->createQueryBuilder('m');
 
-        return $this->_em
-            ->createQuery($dql)
-            ->setParameter('isActive', $isActive)
-            ->useQueryCache(true)
-            ->useResultCache(true)
-            ->getResult()
-        ;
+        $qb->where('m.menu IS NULL')->orderBy('m.position', 'ASC');
+
+        if ($isActive === true){
+            $qb->andWhere('m.isActive = 1');
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
     /**
-     * Get all menus by is active.
+     * Get children.
      *
-     * @param bool $isActive
+     * @param Menu $parentMenu parent menu
+     * @param bool|null $isActive is active
      * @return array
      */
-    public function getAllByIsActive(bool $isActive): array {
-        $dql = '
-            SELECT m
-            FROM AppBundle:Menu m
-            WHERE m.isActive = :isActive
-            ORDER BY m.position ASC
-        ';
+    public function getChildren(Menu $parentMenu, $isActive = null){
+        $qb = $this->_em->getRepository('AppBundle:Menu')->createQueryBuilder('m');
 
-        return $this->_em
-            ->createQuery($dql)
-            ->setParameter('isActive', $isActive)
-            ->useQueryCache(true)
-            ->useResultCache(true)
-            ->getResult()
+        $qb->where('m.menu = :parentMenu')
+            ->orderBy('m.position', 'ASC')
+            ->setParameter('parentMenu', $parentMenu)
         ;
+
+        if ($isActive === true){
+            $qb->andWhere('m.isActive = 1');
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Get tree.
+     *
+     * @param array $parents parents
+     * @param array $tree tree
+     * @param bool $isActive is active
+     * @return array
+     */
+    public function getTree(array $parents, array $tree = [], $isActive = null){
+        foreach ($parents as $parent){
+            $tree[$parent->getId()] = $parent;
+            $children = $this->getChildren($parent, $isActive);
+
+            if (!empty($children)){
+                $tree[$parent->getId()]->setMenus($children);
+                $this->getTree($children, $tree, $isActive);
+            }
+        }
+        return $tree;
     }
 }

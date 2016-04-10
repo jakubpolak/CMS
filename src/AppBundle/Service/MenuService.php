@@ -51,25 +51,12 @@ class MenuService extends CrudService {
     }
 
     /**
-     * Get childs.
+     * Get menu.
      *
-     * @param bool|null $isActive
+     * @param bool|null $isActive is active
      * @return array
      */
-    public function getChilds(bool $isActive = null) {
-        return ($isActive === null)
-            ? $this->menuRepository->getChilds()
-            : $this->menuRepository->getChildsByIsActive($isActive)
-        ;
-    }
-
-    /**
-     * Get al by is active.
-     *
-     * @param bool $isActive
-     * @return array
-     */
-    public function getAllByIsActive(bool $isActive) {
-        return $this->menuRepository->getAllByIsActive($isActive);
+    public function getMenu(bool $isActive = null) {
+        return $this->menuRepository->getMenu($isActive);
     }
 }

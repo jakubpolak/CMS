@@ -59,7 +59,7 @@ class Menu implements Entity {
     private $menu;
 
     /**
-     * @var Collection
+     * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Menu", mappedBy="menu")
      */
@@ -199,19 +199,19 @@ class Menu implements Entity {
     /**
      * Get menus.
      *
-     * @return Collection
+     * @return array
      */
-    public function getMenus(): Collection {
+    public function getMenus() {
         return $this->menus;
     }
 
     /**
      * Set menus.
      *
-     * @param Collection $menus
+     * @param array $menus
      * @return self
      */
-    public function setMenus(Collection $menus): self {
+    public function setMenus($menus): self {
         $this->menus = $menus;
 
         return $this;

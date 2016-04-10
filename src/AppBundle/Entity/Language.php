@@ -51,18 +51,10 @@ class Language implements Entity {
     private $slugs;
 
     /**
-     * @var Collection
-     *
-     * @ORM\OneToMany(targetEntity="TranslationMapper", mappedBy="language")
-     */
-    private $translationMappers;
-
-    /**
      * Constructor.
      */
     public function __construct() {
         $this->slugs = new ArrayCollection();
-        $this->translationMappers = new ArrayCollection();
         $this->isDefault = false;
     }
 

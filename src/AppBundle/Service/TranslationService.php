@@ -52,11 +52,14 @@ class TranslationService {
         foreach ($entities as $entityName => $entityAttributes) {
             $namesOfEntityAttributes = array_keys($entityAttributes);
 
+            echo $this->translationMapperRepository->getGroupsCount(); die();
             $this->removeInvalidEntries($entityName, $namesOfEntityAttributes);
             $this->updateExistingEntries($entityName, $namesOfEntityAttributes);
             $this->createNewEntries($entityName, $namesOfEntityAttributes, $entityAttributes);
         }
     }
+
+
 
     /**
      * Update existing entries.
@@ -66,6 +69,11 @@ class TranslationService {
      */
     private function updateExistingEntries(string $entity, array $namesOfEntityAttributes) {
         $idsOfEntities = $this->translationMapperRepository->getEntityIds($entity);
+
+        if (count($idsOfEntities) === 0) {
+            return;
+        }
+
         $idsOfEntitiesVector = $this->convertToVector($idsOfEntities, 'entityId');
         $idsOfEntitiesDQL = $this->convertToString($idsOfEntitiesVector);
         $namesOfAttributesWithAliasDQL = $this->getAttributesWithAliasDQL($namesOfEntityAttributes);

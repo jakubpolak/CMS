@@ -28,14 +28,13 @@ class TranslationMapperRepository extends EntityRepository {
     }
 
     /**
-     * Update attributeContent of entries with attributeName equal to $attributeName
-     * and attributeName equal to $attributeName and entityId equal to $entityId
-     * and entity equal to $entity.
+     * Update attributeContent to $attributeContent of an entry with attributeName equal to $attributeName
+     * and attributeName equal to $attributeName and entityId equal to $entityId and entity equal to $entity.
      * 
      * @param string $attributeContent attribute content
      * @param string $attributeName attribute name
      * @param int $entityId entity id
-     * @param string $entity entity name
+     * @param string $entity entity
      */
     public function updateAttributeContent(string $attributeContent, string $attributeName, int $entityId, string $entity) {
         $this->getEntityManager()
@@ -47,7 +46,7 @@ class TranslationMapperRepository extends EntityRepository {
                 'attributeContent' => $attributeContent,
                 'attributeName' => $attributeName,
                 'entityId' => $entityId,
-                'entity' => $entity,
+                'entity' => $entity
             ])->execute();
     }
 
@@ -57,19 +56,30 @@ class TranslationMapperRepository extends EntityRepository {
      * 
      * @param string $idsOfEntitiesDQL ids of entities DQL
      * @param string $namesOfAttributesDQL names of attributes DQL
-     * @param string $entity
+     * @param string $entity entity
      */
     public function delete(string $idsOfEntitiesDQL, string $namesOfAttributesDQL, string $entity) {
         $this->getEntityManager()
-            ->createQuery('
+            ->createQuery("
                 DELETE FROM AppBundle:TranslationMapper tm 
-                WHERE tm.entityId NOT IN(:idsOfEntitiesDQL) 
-                    OR tm.attribute NOT IN(:namesOfAttributesDQL) 
-                    AND tm.entity = :entity
-            ')->setParameters([
-                'entity' => $entity,
-                'idsOfEntitiesDQL' => $idsOfEntitiesDQL,
-                'namesOfAttributesDQL' => $namesOfAttributesDQL,
-            ])->execute();
+                WHERE (tm.entityId NOT IN($idsOfEntitiesDQL) OR tm.attribute NOT IN($namesOfAttributesDQL)) AND tm.entity = :entity
+            ")->setParameter('entity', $entity)
+            ->execute();
+    }
+
+    /**
+     * Get groups count.
+     * 
+     * @return int
+     */
+    public function getGroupsCount() {
+        $result = $this->getEntityManager()
+            ->createQuery('                
+                SELECT COUNT(tm.id) 
+                FROM AppBundle:TranslationMapper tm 
+                GROUP BY tm.entityId, tm.entity                
+            ')->getArrayResult();
+
+        return count($result);
     }
 }

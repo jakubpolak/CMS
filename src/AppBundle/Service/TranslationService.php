@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\TranslationMapper;
+use AppBundle\Repository\TranslationMapperRepository;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -27,6 +28,11 @@ class TranslationService {
     private $config;
 
     /**
+     * @var TranslationMapperRepository
+     */
+    private $translationMapperRepository;
+
+    /**
      * Constructor.
      *
      * @param EntityManager $em entity manager
@@ -37,6 +43,7 @@ class TranslationService {
         $this->em = $em;
         $this->cacheService = $cacheService;
         $this->config = $config;
+        $this->translationMapperRepository = $em->getRepository('AppBundle:TranslationMapper');
     }
 
     public function synchronize() {
@@ -46,7 +53,7 @@ class TranslationService {
             $namesOfEntityAttributes = array_keys($entityAttributes);
 
             $this->removeInvalidEntries($entityName, $namesOfEntityAttributes);
-            //$this->updateExistingEntries($entityName, $namesOfEntityAttributes);
+            $this->updateExistingEntries($entityName, $namesOfEntityAttributes);
             $this->createNewEntries($entityName, $namesOfEntityAttributes, $entityAttributes);
         }
     }
@@ -54,42 +61,26 @@ class TranslationService {
     /**
      * Update existing entries.
      *
-     * @param string $entityName entity name
+     * @param string $entity entity name
      * @param array $namesOfEntityAttributes names of entity attributes
      */
-    private function updateExistingEntries(string $entityName, array $namesOfEntityAttributes) {
-        $idsOfEntities = $this->em
-            ->createQuery("SELECT tm.entityId FROM AppBundle:TranslationMapper tm WHERE tm.entity = '{$entityName}' GROUP BY tm.entityId")
-            ->getArrayResult();
+    private function updateExistingEntries(string $entity, array $namesOfEntityAttributes) {
+        $idsOfEntities = $this->translationMapperRepository->getEntityIds($entity);
         $idsOfEntitiesVector = $this->convertToVector($idsOfEntities, 'entityId');
         $idsOfEntitiesDQL = $this->convertToString($idsOfEntitiesVector);
-
         $namesOfAttributesWithAliasDQL = $this->getAttributesWithAliasDQL($namesOfEntityAttributes);
 
         $valuesOfEntities = $this->em
-            ->createQuery("SELECT {$namesOfAttributesWithAliasDQL} FROM AppBundle:$entityName e WHERE e.id IN ($idsOfEntitiesDQL)")
+            ->createQuery("SELECT {$namesOfAttributesWithAliasDQL} FROM AppBundle:$entity e WHERE e.id IN ($idsOfEntitiesDQL)")
             ->getArrayResult();
 
-        foreach ($valuesOfEntities as $valuesOfAttributes) {
-            foreach ($valuesOfAttributes as $attributeName => $attributeValue) {
-                if ($attributeName === 'id') {
+        foreach ($valuesOfEntities as $attributes) {
+            foreach ($attributes as $name => $content) {
+                if ($name === 'id') {
                     continue;
                 }
 
-                $dql = '
-                    UPDATE AppBundle:TranslationMapper tm
-                    SET tm.attributeContent = :attributeContent
-                    WHERE tm.entityId = :entityId AND tm.attribute = :attributeName AND tm.entity = :entityName
-                ';
-
-                $this->em
-                    ->createQuery($dql)
-                    ->setParameters([
-                        'attributeContent' => $attributeValue,
-                        'attributeName' => $attributeName,
-                        'entityId' => $valuesOfAttributes['id'],
-                        'entityName' => $entityName,
-                    ])->execute();
+                $this->translationMapperRepository->updateAttributeContent($content, $name, (int) $attributes['id'], $entity);
             }
         }
     }
@@ -97,23 +88,20 @@ class TranslationService {
     /**
      * Create new entries.
      *
-     * @param string $entityName entity name
+     * @param string $entity entity name
      * @param array $namesOfEntityAttributes names of entity attributes
      * @param array $entityAttributes entity attributes
      */
-    private function createNewEntries(string $entityName, array $namesOfEntityAttributes, array $entityAttributes) {
-        $idsOfEntities = $this->em
-            ->createQuery("SELECT tm.entityId FROM AppBundle:TranslationMapper tm WHERE tm.entity = '{$entityName}' GROUP BY tm.entityId")
-            ->getArrayResult();
-
+    private function createNewEntries(string $entity, array $namesOfEntityAttributes, array $entityAttributes) {
+        $idsOfEntities = $this->translationMapperRepository->getEntityIds($entity);
         $namesOfAttributesWithAliasDQL = $this->getAttributesWithAliasDQL($namesOfEntityAttributes);
 
-        $dql = "SELECT $namesOfAttributesWithAliasDQL FROM AppBundle:$entityName e";
+        $dql = "SELECT $namesOfAttributesWithAliasDQL FROM AppBundle:$entity e";
         if (count($idsOfEntities) !== 0) {
             $idsOfEntitiesVector = $this->convertToVector($idsOfEntities, 'entityId');
             $idsOfEntitiesDQL = $this->convertToString($idsOfEntitiesVector);
 
-            $dql = "SELECT $namesOfAttributesWithAliasDQL FROM AppBundle:$entityName e WHERE e.id NOT IN($idsOfEntitiesDQL)";
+            $dql = "SELECT $namesOfAttributesWithAliasDQL FROM AppBundle:$entity e WHERE e.id NOT IN($idsOfEntitiesDQL)";
         }
 
         $valuesOfEntities = $this->em->createQuery($dql)->getArrayResult();
@@ -125,7 +113,7 @@ class TranslationService {
                 }
                 $attributeType = $entityAttributes[$attributeName];
                 $translationMapper = new TranslationMapper();
-                $translationMapper->setEntity($entityName)
+                $translationMapper->setEntity($entity)
                     ->setEntityId($valuesOfAttributes['id'])
                     ->setAttribute($attributeName)
                     ->setAttributeContent($attributeValue)
@@ -158,15 +146,7 @@ class TranslationService {
         $idsOfEntitiesVector = $this->convertToVector($idsOfEntities, 'id');
         $idsOfEntitiesDQL = $this->convertToString($idsOfEntitiesVector, ',');
         $namesOfAttributesWrappedDQL = $this->convertToString($namesOfEntityAttributes, ',', "'");
-
-        $dql = "
-            DELETE
-                FROM AppBundle:TranslationMapper tm
-            WHERE
-                (tm.entityId NOT IN($idsOfEntitiesDQL) OR tm.attribute NOT IN($namesOfAttributesWrappedDQL))
-                AND tm.entity = '{$entityName}'";
-
-        $this->em->createQuery($dql)->execute();
+        $this->translationMapperRepository->delete($idsOfEntitiesDQL, $namesOfAttributesWrappedDQL, $entityName);
     }
 
     /**

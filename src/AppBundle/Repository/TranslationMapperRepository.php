@@ -128,7 +128,7 @@ class TranslationMapperRepository extends EntityRepository {
     }
 
 
-    public function getGroupedByEntityPagination($page = 0, $limit = 10) {
+    public function getGroupedByEntityLimitedByFirstResultAndMaxResults(int $firstResult, int $maxResults): Collection {
 
     }
 

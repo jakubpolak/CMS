@@ -52,7 +52,7 @@ class TranslationService {
         foreach ($entities as $entityName => $entityAttributes) {
             $namesOfEntityAttributes = array_keys($entityAttributes);
 
-            echo $this->translationMapperRepository->getGroupsCount(); die();
+            echo $this->translationMapperRepository->getCountGroupedByEntityIdAndEntity(); die();
             $this->removeInvalidEntries($entityName, $namesOfEntityAttributes);
             $this->updateExistingEntries($entityName, $namesOfEntityAttributes);
             $this->createNewEntries($entityName, $namesOfEntityAttributes, $entityAttributes);
@@ -68,7 +68,7 @@ class TranslationService {
      * @param array $namesOfEntityAttributes names of entity attributes
      */
     private function updateExistingEntries(string $entity, array $namesOfEntityAttributes) {
-        $idsOfEntities = $this->translationMapperRepository->getEntityIds($entity);
+        $idsOfEntities = $this->translationMapperRepository->getEntityIdByEntity($entity);
 
         if (count($idsOfEntities) === 0) {
             return;
@@ -101,7 +101,7 @@ class TranslationService {
      * @param array $entityAttributes entity attributes
      */
     private function createNewEntries(string $entity, array $namesOfEntityAttributes, array $entityAttributes) {
-        $idsOfEntities = $this->translationMapperRepository->getEntityIds($entity);
+        $idsOfEntities = $this->translationMapperRepository->getEntityIdByEntity($entity);
         $namesOfAttributesWithAliasDQL = $this->getAttributesWithAliasDQL($namesOfEntityAttributes);
 
         $dql = "SELECT $namesOfAttributesWithAliasDQL FROM AppBundle:$entity e";

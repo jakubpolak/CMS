@@ -103,9 +103,9 @@ class TranslationMapperRepository extends EntityRepository {
      *
      * @param int $firstResult first result
      * @param int $maxResults max results
-     * @return Collection
+     * @return array
      */
-    public function getLimitedByFirstResultAndMaxResults(int $firstResult, int $maxResults): Collection {
+    public function getLimited(int $firstResult, int $maxResults): array {
         return $this->getEntityManager()
             ->createQuery('
                 SELECT tm
@@ -127,9 +127,23 @@ class TranslationMapperRepository extends EntityRepository {
             ->getSingleScalarResult();
     }
 
-
-    public function getGroupedByEntityLimitedByFirstResultAndMaxResults(int $firstResult, int $maxResults): Collection {
-
+    /**
+     * Get grouped by entity
+     *
+     * @param int $firstResult
+     * @param int $maxResults
+     * @return array
+     */
+    public function getLimitedAndGroupedByEntityIdAndEntity(int $firstResult, int $maxResults): array {
+        return $this->getEntityManager()
+            ->createQuery('
+                SELECT tm 
+                FROM AppBundle:TranslationMapper tm                  
+                ORDER BY tm.entity DESC, tm.entityId ASC
+                GROUP BY tm.entity, tm.entityId
+            ')->setFirstResult($firstResult)
+            ->setMaxResults($maxResults)
+            ->getResult();
     }
 
     /**

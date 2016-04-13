@@ -46,20 +46,34 @@ class TranslationService {
         $this->translationMapperRepository = $em->getRepository('AppBundle:TranslationMapper');
     }
 
+    /**
+     * Synchronize translation tables with the rest of database and translation files
+     * with translation tables.
+     */
     public function synchronize() {
         $entities = $this->config['entities'];
 
         foreach ($entities as $entityName => $entityAttributes) {
             $namesOfEntityAttributes = array_keys($entityAttributes);
 
-            echo $this->translationMapperRepository->getCountGroupedByEntityIdAndEntity(); die();
             $this->removeInvalidEntries($entityName, $namesOfEntityAttributes);
             $this->updateExistingEntries($entityName, $namesOfEntityAttributes);
             $this->createNewEntries($entityName, $namesOfEntityAttributes, $entityAttributes);
         }
     }
 
+    public function getPagination(int $firstResult, int $maxResults) {
+        $entries = $this->translationMapperRepository
+            ->getLimitedAndGroupedByEntityIdAndEntity(--$firstResult * $maxResults, $maxResults);
 
+        $result = [];
+        foreach ($entries as $entry) {
+            $result[] = $this->translationMapperRepository
+                ->getByEntityAndEntityId($entries['entity'], $entries['entity_id'], true);
+        }
+
+        return $result;
+    }
 
     /**
      * Update existing entries.
@@ -79,8 +93,11 @@ class TranslationService {
         $namesOfAttributesWithAliasDQL = $this->getAttributesWithAliasDQL($namesOfEntityAttributes);
 
         $valuesOfEntities = $this->em
-            ->createQuery("SELECT {$namesOfAttributesWithAliasDQL} FROM AppBundle:$entity e WHERE e.id IN ($idsOfEntitiesDQL)")
-            ->getArrayResult();
+            ->createQuery("
+                SELECT {$namesOfAttributesWithAliasDQL} 
+                FROM AppBundle:$entity e 
+                WHERE e.id IN ($idsOfEntitiesDQL)
+            ")->getArrayResult();
 
         foreach ($valuesOfEntities as $attributes) {
             foreach ($attributes as $name => $content) {

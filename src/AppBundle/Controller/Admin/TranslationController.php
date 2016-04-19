@@ -2,11 +2,11 @@
 
 namespace AppBundle\Controller\Admin;
 
+use AppBundle\Helper\Message;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -23,25 +23,32 @@ class TranslationController extends Controller {
      * @Template("@App/admin/translation/index.html.twig")
      * @Method("GET")
      */
-    public function indexAction(int $page) {
-        $maxResults = $this->getParameter('translation_config')['max_results'];
+    public function indexAction(int $page): array {
+        $resultsPerPage = $this->get('service_container')->getParameter('results_per_page');
         $translationService = $this->get('app.service.translation');
 
         return [
-            'translations' => $translationService->getPagination($page, $maxResults),
-            'pagesCount' => $translationService->getPagesCount(),
+            'translations' => $translationService->getPagination($page, $resultsPerPage),
+            'pagesCount' => $translationService->getPagesCount($resultsPerPage),
         ];
     }
 
     /**
      * Update action.
      *
-     * @Route("/update", name="admin_translation_update")
+     * @Route("/{entity}/{entityId}/update", name="admin_translation_update")
      * @Template("@App/admin/translation/update.html.twig")
      * @Method("GET")
      */
-    public function updateAction() {
-        return [];
+    public function updateAction(string $entity, int $entityId) {
+        $entityGroup = $this->get('app.service.translation')->getEntityGroup($entity, $entityId);
+
+        if ($entityGroup === null) {
+            $this->get('session')->getFlashBag()->add(Message::TYPE_DANGER, 'Preklad neexistuje.');
+            return $this->redirect($this->generateUrl('admin_translation_index'));
+        }
+
+        return ['entityGroup' => $entityGroup];
     }
 
     /**
@@ -51,7 +58,7 @@ class TranslationController extends Controller {
      * @Template("@App/admin/translation/update.html.twig")
      * @Method("POST")
      */
-    public function updateProcessAction(\HttpRequest $httpRequest) {
+    public function updateProcessAction(string $entity, int $entityId, Request $request) {
         return [];
     }
 

@@ -42,7 +42,7 @@
                                     {% endfor %}
                                     <tr>
                                         <td colspan="2">
-                                            <a class="btn btn-primary pull-right" href="#">{{ 'Upraviť'|trans({}, 'admin') }}</a>
+                                            <a class="btn btn-primary pull-right" href="{{ path('admin_translation_update', { 'entity': translation.details.entity, 'entityId': translation.details.entityId }) }}">{{ 'Upraviť'|trans({}, 'admin') }}</a>
                                         </td>
                                     </tr>
                                 </tbody>

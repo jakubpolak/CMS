@@ -63,6 +63,17 @@ class TranslationService {
     }
 
     /**
+     * Get entity group.
+     * 
+     * @param string $entity entity name
+     * @param int $entityId entity id
+     * @return array
+     */
+    public function getEntityGroup(string $entity, int $entityId): array {
+        return $this->translationMapperRepository->getByEntityAndEntityId($entity, $entityId, true);
+    }
+
+    /**
      * Get entries for paginated list of results.
      *
      * @param int $firstResult first result
@@ -83,7 +94,12 @@ class TranslationService {
         $displayNames = $this->config['display_names'];
         foreach ($result as $group => &$entitiesAndDetails) {
             $entityName = $entitiesAndDetails['entities'][0]['entity'];
+            $entityId = $entitiesAndDetails['entities'][0]['entityId'];
+            
             $entitiesAndDetails['details']['entityDisplayName'] = $displayNames[$entityName];
+            $entitiesAndDetails['details']['entity'] = $entityName;
+            $entitiesAndDetails['details']['entityId'] = $entityId;
+
             foreach ($entitiesAndDetails['entities'] as &$entity) {
                 $entity['attributeDisplayName'] = $displayNames[$entity['attribute']];
             }
@@ -95,10 +111,11 @@ class TranslationService {
     /**
      * Get count of entries for paginated list of results.
      *
+     * @param int $maxResults max results
      * @return int
      */
-    public function getPagesCount() {
-        return $this->translationMapperRepository->getCountGroupedByEntityIdAndEntity();
+    public function getPagesCount(int $maxResults): int {
+        return ceil($this->translationMapperRepository->getCountGroupedByEntityIdAndEntity() / $maxResults);
     }
 
     /**

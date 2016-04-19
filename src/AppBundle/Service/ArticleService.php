@@ -36,4 +36,8 @@ class ArticleService extends CrudService {
     public function getRepository(): EntityRepository {
         return $this->articleRepository;
     }
+
+    public function getAllByIsPublished(bool $isPublished) {
+        return $this->articleRepository->getAllByIsPublished($isPublished);
+    }
 }

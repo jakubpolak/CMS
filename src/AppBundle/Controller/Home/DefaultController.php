@@ -36,5 +36,6 @@ class DefaultController extends Controller {
     public function contactAction() {
         $menuTree = $this->get('app.service.menu')->getMenu(true);
 
-        return ['menuTree' => $menuTree];    }
+        return ['menuTree' => $menuTree];
+    }
 }

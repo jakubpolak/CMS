@@ -32,9 +32,8 @@
                     {% endblock %}
                 </div>
             </div>
-            <div class="row">
-                {% block content %}
-                {% endblock %}
+            {% block content %}
+            {% endblock %}
             {{ include('AppBundle:home/default/footer.html.twig') }}
         </div>
         <script src="{{ asset('bundles/app/home/js/jquery.js') }}"></script>

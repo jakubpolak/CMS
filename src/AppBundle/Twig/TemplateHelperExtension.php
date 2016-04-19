@@ -50,12 +50,23 @@ class TemplateHelperExtension extends \Twig_Extension {
     }
 
     /**
+     * Get filters.
+     *
+     * @return array
+     */
+    public function getFilters(): array {
+        return [
+            new \Twig_SimpleFilter('substr', [$this, 'substrFilter']),
+        ];
+    }
+
+    /**
      * Decide if input is array or not.
      *
-     * @param $input
+     * @param mixed $input
      * @return bool
      */
-    public function isArrayFunction($input){
+    public function isArrayFunction($input): bool {
         return is_array($input);
     }
 
@@ -74,6 +85,18 @@ class TemplateHelperExtension extends \Twig_Extension {
     }
 
     /**
+     * Substring filter.
+     *
+     * @param string $string
+     * @param int $start
+     * @param int $length
+     * @return string
+     */
+    public function substrFilter(string $string, int $start, int $length): string {
+        return substr($string, $start, $length);
+    }
+
+    /**
      * Merge values of specified entity attributes into a single string. Values are delimited by specified delimiter.
      *
      * @param string $delimiter delimiter
@@ -87,7 +110,7 @@ class TemplateHelperExtension extends \Twig_Extension {
             $result .= $delimiter;
         }
 
-        return substr($result, 0, strlen($result) - 2);
+        return substr($result, 0, -2);
     }
 
     /**

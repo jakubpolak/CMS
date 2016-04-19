@@ -130,8 +130,8 @@ class TranslationMapperRepository extends EntityRepository {
     /**
      * Get grouped by entity
      *
-     * @param int $firstResult
-     * @param int $maxResults
+     * @param int $firstResult first result
+     * @param int $maxResults max results
      * @return array
      */
     public function getLimitedAndGroupedByEntityIdAndEntity(int $firstResult, int $maxResults): array {
@@ -139,8 +139,8 @@ class TranslationMapperRepository extends EntityRepository {
             ->createQuery('
                 SELECT tm 
                 FROM AppBundle:TranslationMapper tm                  
-                ORDER BY tm.entity DESC, tm.entityId ASC
                 GROUP BY tm.entity, tm.entityId
+                ORDER BY tm.entity DESC, tm.entityId ASC
             ')->setFirstResult($firstResult)
             ->setMaxResults($maxResults)
             ->getResult();

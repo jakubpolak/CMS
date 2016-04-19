@@ -62,17 +62,43 @@ class TranslationService {
         }
     }
 
-    public function getPagination(int $firstResult, int $maxResults) {
+    /**
+     * Get entries for paginated list of results.
+     *
+     * @param int $firstResult first result
+     * @param int $maxResults max results
+     * @return array
+     */
+    public function getPagination(int $firstResult, int $maxResults): array {
         $entries = $this->translationMapperRepository
             ->getLimitedAndGroupedByEntityIdAndEntity(--$firstResult * $maxResults, $maxResults);
 
         $result = [];
         foreach ($entries as $entry) {
-            $result[] = $this->translationMapperRepository
-                ->getByEntityAndEntityId($entries['entity'], $entries['entity_id'], true);
+            $entities = $this->translationMapperRepository
+                ->getByEntityAndEntityId($entry->getEntity(), $entry->getEntityId(), true);
+            $result[] = ['entities' => $entities, 'details' => []];
+        }
+
+        $displayNames = $this->config['display_names'];
+        foreach ($result as $group => &$entitiesAndDetails) {
+            $entityName = $entitiesAndDetails['entities'][0]['entity'];
+            $entitiesAndDetails['details']['entityDisplayName'] = $displayNames[$entityName];
+            foreach ($entitiesAndDetails['entities'] as &$entity) {
+                $entity['attributeDisplayName'] = $displayNames[$entity['attribute']];
+            }
         }
 
         return $result;
+    }
+
+    /**
+     * Get count of entries for paginated list of results.
+     *
+     * @return int
+     */
+    public function getPagesCount() {
+        return $this->translationMapperRepository->getCountGroupedByEntityIdAndEntity();
     }
 
     /**

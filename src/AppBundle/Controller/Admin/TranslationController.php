@@ -16,16 +16,21 @@ use Symfony\Component\HttpFoundation\Request;
  * @Route("/admin/translation")
  */
 class TranslationController extends Controller {
-
     /**
      * Index action.
      *
-     * @Route("", name="admin_translation_index")
+     * @Route("/{page}", defaults={"page" = 1}, name="admin_translation_index")
      * @Template("@App/admin/translation/index.html.twig")
      * @Method("GET")
      */
-    public function indexAction() {
-        return [];
+    public function indexAction(int $page) {
+        $maxResults = $this->getParameter('translation_config')['max_results'];
+        $translationService = $this->get('app.service.translation');
+
+        return [
+            'translations' => $translationService->getPagination($page, $maxResults),
+            'pagesCount' => $translationService->getPagesCount(),
+        ];
     }
 
     /**

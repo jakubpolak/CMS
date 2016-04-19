@@ -4,12 +4,15 @@ parameters:
    upload_dir: upload
    cache_location: '/../../../var/cache'
    translation_config:
+      max_results: 100
       entities:
           Article:
               heading: text
               content: ckeditor
       display_names:
-          article: 'Článok'
+          Article: 'Článok'
+          content: 'Obsah'
+          heading: 'Nadpis'
 
 services:
     app.service.user:

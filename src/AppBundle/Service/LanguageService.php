@@ -43,12 +43,12 @@ class LanguageService {
     }
 
     /**
-     * Get all entities.
+     * Get all languages. First language is default.
      *
      * @return array
      */
     public function getAll(): array {
-        return $this->getRepository()->findAll();
+        return $this->languageRepository->getAll();
     }
 
     /**

@@ -63,14 +63,21 @@ class TranslationService {
     }
 
     /**
-     * Get entity group.
+     * Get entity groups.
      * 
      * @param string $entity entity name
      * @param int $entityId entity id
      * @return array
      */
-    public function getEntityGroup(string $entity, int $entityId): array {
-        return $this->translationMapperRepository->getByEntityAndEntityId($entity, $entityId, true);
+    public function getEntityGroups(string $entity, int $entityId): array {
+        $entityGroups = $this->translationMapperRepository->getByEntityAndEntityId($entity, $entityId, true);
+        $displayNames = $this->config['display_names'];
+        
+        foreach ($entityGroups as &$entityGroup) {
+            $entityGroup['attributeDisplayName'] = $displayNames[$entityGroup['attribute']];
+        }
+
+        return $entityGroups;
     }
 
     /**
@@ -92,6 +99,7 @@ class TranslationService {
         }
 
         $displayNames = $this->config['display_names'];
+
         foreach ($result as $group => &$entitiesAndDetails) {
             $entityName = $entitiesAndDetails['entities'][0]['entity'];
             $entityId = $entitiesAndDetails['entities'][0]['entityId'];

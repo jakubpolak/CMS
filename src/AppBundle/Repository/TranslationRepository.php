@@ -10,5 +10,5 @@ use Doctrine\ORM\EntityRepository;
  * @author Jakub Polák, Jana Poláková
  */
 class TranslationRepository extends EntityRepository {
-
+    
 }

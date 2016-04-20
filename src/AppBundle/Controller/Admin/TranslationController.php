@@ -41,14 +41,17 @@ class TranslationController extends Controller {
      * @Method("GET")
      */
     public function updateAction(string $entity, int $entityId) {
-        $entityGroup = $this->get('app.service.translation')->getEntityGroup($entity, $entityId);
+        $entityGroups = $this->get('app.service.translation')->getEntityGroups($entity, $entityId);
 
-        if ($entityGroup === null) {
+        if ($entityGroups === null) {
             $this->get('session')->getFlashBag()->add(Message::TYPE_DANGER, 'Preklad neexistuje.');
             return $this->redirect($this->generateUrl('admin_translation_index'));
         }
 
-        return ['entityGroup' => $entityGroup];
+        return [
+            'entityGroups' => $entityGroups,
+            'languages' => $this->get('app.service.language')->getAll(),
+        ];
     }
 
     /**

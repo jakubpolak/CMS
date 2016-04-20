@@ -1,0 +1,12 @@
+<div class="control-group">
+    <label class="control-label">{{ entityGroup.attributeDisplayName }}</label>
+    <div class="controls">
+        {% if (entityGroup.attributeType == 'text') %}
+            <input type="text" value="{{ entityGroup.attributeContent }}">
+        {% elseif (entityGroup.attributeType == 'textarea') %}
+            <textarea>{{ entityGroup.attributeContent }}</textarea>
+        {% elseif (entityGroup.attributeType == 'ckeditor') %}
+            <textarea>{{ entityGroup.attributeContent }}</textarea>
+        {% endif %}
+    </div>
+</div>

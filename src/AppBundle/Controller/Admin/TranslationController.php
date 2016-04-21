@@ -30,6 +30,7 @@ class TranslationController extends Controller {
         return [
             'translations' => $translationService->getPagination($page, $resultsPerPage),
             'pagesCount' => $translationService->getPagesCount($resultsPerPage),
+            'page' => $page,
         ];
     }
 
@@ -41,7 +42,7 @@ class TranslationController extends Controller {
      * @Method("GET")
      */
     public function updateAction(string $entity, int $entityId) {
-        $entityGroups = $this->get('app.service.translation')->getEntityGroups($entity, $entityId);
+        $entityGroups = $this->get('app.service.translation')->getTranslationMapperGroups($entity, $entityId);
 
         if ($entityGroups === null) {
             $this->get('session')->getFlashBag()->add(Message::TYPE_DANGER, 'Preklad neexistuje.');
@@ -68,10 +69,11 @@ class TranslationController extends Controller {
     /**
      * Synchronize action.
      *
-     * @Route("/synchronize", name="admin_translation_synchronize")
+     * @Route("/{page}/synchronize", defaults={"page" = 1}, name="admin_translation_synchronize")
      * @Method("GET")
      */
-    public function synchronizeAction() {
-        return $this->redirect($this->generateUrl('admin_translation_index'));
+    public function synchronizeAction(int $page) {
+        $this->get('app.service.translation')->synchronize();
+        return $this->redirect($this->generateUrl('admin_translation_index', ['page' => $page]));
     }
 }

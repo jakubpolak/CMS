@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Entity\TranslationMapper;
+use AppBundle\Repository\LanguageRepository;
 use AppBundle\Repository\TranslationMapperRepository;
 use Doctrine\ORM\EntityManager;
 
@@ -33,17 +34,30 @@ class TranslationService {
     private $translationMapperRepository;
 
     /**
+     * @var LanguageRepository
+     */
+    private $languageRepository;
+
+    /**
+     * @var LanguageService
+     */
+    private $languageService;
+
+    /**
      * Constructor.
      *
      * @param EntityManager $em entity manager
+     * @param LanguageService $languageService language service
      * @param CacheService $cacheService cache service
      * @param array $config
      */
-    public function __construct(EntityManager $em, CacheService $cacheService, array $config) {
+    public function __construct(EntityManager $em, LanguageService $languageService, CacheService $cacheService, array $config) {
         $this->em = $em;
+        $this->languageService = $languageService;
         $this->cacheService = $cacheService;
         $this->config = $config;
         $this->translationMapperRepository = $em->getRepository('AppBundle:TranslationMapper');
+        $this->languageRepository = $em->getRepository('AppBundle:Language');
     }
 
     /**
@@ -56,9 +70,13 @@ class TranslationService {
         foreach ($entities as $entityName => $entityAttributes) {
             $namesOfEntityAttributes = array_keys($entityAttributes);
 
-            $this->removeInvalidEntries($entityName, $namesOfEntityAttributes);
-            $this->updateExistingEntries($entityName, $namesOfEntityAttributes);
-            $this->createNewEntries($entityName, $namesOfEntityAttributes, $entityAttributes);
+            $this->removeInvalidTranslationMappers($entityName, $namesOfEntityAttributes);
+            $this->updateExistingTranslationMappers($entityName, $namesOfEntityAttributes);
+            $this->createTranslationMappers($entityName, $namesOfEntityAttributes, $entityAttributes);
+
+            $translationMapper = $this->translationMapperRepository->find(1);
+
+            $this->createTranslations($translationMapper);
         }
     }
 
@@ -69,15 +87,19 @@ class TranslationService {
      * @param int $entityId entity id
      * @return array
      */
-    public function getEntityGroups(string $entity, int $entityId): array {
-        $entityGroups = $this->translationMapperRepository->getByEntityAndEntityId($entity, $entityId, true);
+    public function getTranslationMapperGroups(string $entity, int $entityId): array {
+        $groups = $this->translationMapperRepository->getByEntityAndEntityId($entity, $entityId, true);
         $displayNames = $this->config['display_names'];
-        
-        foreach ($entityGroups as &$entityGroup) {
-            $entityGroup['attributeDisplayName'] = $displayNames[$entityGroup['attribute']];
-        }
 
-        return $entityGroups;
+        foreach ($groups as &$group) {
+            $group['attributeDisplayName'] = $displayNames[$group['attribute']];
+        }
+        
+        return $groups;
+    }
+
+    public function createTranslations(TranslationMapper $translationMapper) {
+        // TODO: Implement. @jpo
     }
 
     /**
@@ -132,7 +154,7 @@ class TranslationService {
      * @param string $entity entity name
      * @param array $namesOfEntityAttributes names of entity attributes
      */
-    private function updateExistingEntries(string $entity, array $namesOfEntityAttributes) {
+    private function updateExistingTranslationMappers(string $entity, array $namesOfEntityAttributes) {
         $idsOfEntities = $this->translationMapperRepository->getEntityIdByEntity($entity);
 
         if (count($idsOfEntities) === 0) {
@@ -168,7 +190,7 @@ class TranslationService {
      * @param array $namesOfEntityAttributes names of entity attributes
      * @param array $entityAttributes entity attributes
      */
-    private function createNewEntries(string $entity, array $namesOfEntityAttributes, array $entityAttributes) {
+    private function createTranslationMappers(string $entity, array $namesOfEntityAttributes, array $entityAttributes) {
         $idsOfEntities = $this->translationMapperRepository->getEntityIdByEntity($entity);
         $namesOfAttributesWithAliasDQL = $this->getAttributesWithAliasDQL($namesOfEntityAttributes);
 
@@ -217,7 +239,7 @@ class TranslationService {
      * @param string $entityName entity name
      * @param array $namesOfEntityAttributes names of entity attributes
      */
-    private function removeInvalidEntries(string $entityName, array $namesOfEntityAttributes) {
+    private function removeInvalidTranslationMappers(string $entityName, array $namesOfEntityAttributes) {
         $idsOfEntities = $this->getIds($entityName);
         $idsOfEntitiesVector = $this->convertToVector($idsOfEntities, 'id');
         $idsOfEntitiesDQL = $this->convertToString($idsOfEntitiesVector, ',');

@@ -2,9 +2,10 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Translation;
 use AppBundle\Entity\TranslationMapper;
-use AppBundle\Repository\LanguageRepository;
 use AppBundle\Repository\TranslationMapperRepository;
+use AppBundle\Repository\TranslationRepository;
 use Doctrine\ORM\EntityManager;
 
 /**
@@ -19,14 +20,14 @@ class TranslationService {
     private $em;
 
     /**
+     * @var LanguageService
+     */
+    private $languageService;
+
+    /**
      * @var CacheService
      */
     private $cacheService;
-
-    /**
-     * @var array
-     */
-    private $config;
 
     /**
      * @var TranslationMapperRepository
@@ -34,14 +35,14 @@ class TranslationService {
     private $translationMapperRepository;
 
     /**
-     * @var LanguageRepository
+     * @var TranslationRepository
      */
-    private $languageRepository;
+    private $translationRepository;
 
     /**
-     * @var LanguageService
+     * @var array
      */
-    private $languageService;
+    private $config;
 
     /**
      * Constructor.
@@ -56,8 +57,9 @@ class TranslationService {
         $this->languageService = $languageService;
         $this->cacheService = $cacheService;
         $this->config = $config;
+
         $this->translationMapperRepository = $em->getRepository('AppBundle:TranslationMapper');
-        $this->languageRepository = $em->getRepository('AppBundle:Language');
+        $this->translationRepository = $em->getRepository('AppBundle:Translation');
     }
 
     /**
@@ -67,22 +69,35 @@ class TranslationService {
     public function synchronize() {
         $entities = $this->config['entities'];
 
+        // TODO: Remove. @jpo
+        $groups = $this->getGroups('Article', 216);
+        echo '<pre>'; print_r($groups); die();
+
         foreach ($entities as $entityName => $entityAttributes) {
             $namesOfEntityAttributes = array_keys($entityAttributes);
 
             $this->removeInvalidTranslationMappers($entityName, $namesOfEntityAttributes);
+            $this->removeInvalidTranslations();
             $this->updateExistingTranslationMappers($entityName, $namesOfEntityAttributes);
             $this->createTranslationMappers($entityName, $namesOfEntityAttributes, $entityAttributes);
-
-            $translationMapper = $this->translationMapperRepository->find(1);
-
-            $this->createTranslations($translationMapper);
         }
+    }
+
+    public function getGroups(string $entity, int $entityId): array {
+        $groups = $this->translationRepository->getByEntityAndEntityId($entity, $entityId, true);
+        $displayNames = $this->config['display_names'];
+
+        foreach ($groups as &$group) {
+            $group['attributeDisplayName'] = $displayNames[$group['attribute']];
+        }
+
+        return $groups;
     }
 
     /**
      * Get entity groups.
-     * 
+     *
+     * @deprecated
      * @param string $entity entity name
      * @param int $entityId entity id
      * @return array
@@ -98,8 +113,41 @@ class TranslationService {
         return $groups;
     }
 
-    public function createTranslations(TranslationMapper $translationMapper) {
-        // TODO: Implement. @jpo
+    /**
+     * Create translations.
+     *
+     * @param TranslationMapper $translationMapper translation mapper
+     */
+    private function persistTranslations(TranslationMapper $translationMapper) {
+        $languages = $this->languageService->getAll();
+        $defaultLanguage = $this->languageService->getDefaultLanguage();
+
+        foreach ($languages as $language) {
+            $translation = new Translation();
+            $translation->setLanguage($language);
+            $translation->setTranslationMapper($translationMapper);
+
+            if ($language === $defaultLanguage) {
+                $translation->setContent($translationMapper->getAttributeContent());
+            }
+
+            $this->em->persist($translation);
+        }
+    }
+
+    /**
+     * Remove invalid translations.
+     */
+    private function removeInvalidTranslations() {
+        $languages = $this->languageService->getAll();
+        $ids = [];
+
+        foreach ($languages as $language) {
+            $ids[] = $language->getId();
+        }
+
+        $idsDQL = $this->convertToString($ids, ',');
+        $this->translationRepository->delete($idsDQL);
     }
 
     /**
@@ -217,10 +265,12 @@ class TranslationService {
                     ->setAttributeContent($attributeValue)
                     ->setAttributeType($attributeType);
                 $this->em->persist($translationMapper);
+                $this->persistTranslations($translationMapper);
+                $this->em->flush();
             }
         }
 
-        $this->em->flush();
+
     }
 
     /**

@@ -58,11 +58,19 @@ class Language implements Entity {
     private $translations;
 
     /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="TranslationMapper", mappedBy="language")
+     */
+    private $translationMappers;
+
+    /**
      * Constructor.
      */
     public function __construct() {
         $this->slugs = new ArrayCollection();
         $this->translations = new ArrayCollection();
+        $this->translationMappers = new ArrayCollection();
         $this->isDefault = false;
     }
 
@@ -201,6 +209,27 @@ class Language implements Entity {
      */
     public function setTranslations(Collection $translations): self {
         $this->translations = $translations;
+
+        return $this;
+    }
+
+    /**
+     * Get translation mappers.
+     *
+     * @return Collection
+     */
+    public function getTranslationMappers() {
+        return $this->translationMappers;
+    }
+
+    /**
+     * Set translation mappers.
+     *
+     * @param Collection $translationMappers
+     * @return self
+     */
+    public function setTranslationMappers(Collection $translationMappers): self {
+        $this->translationMappers = $translationMappers;
 
         return $this;
     }

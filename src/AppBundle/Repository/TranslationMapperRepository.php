@@ -80,6 +80,7 @@ class TranslationMapperRepository extends EntityRepository {
     /**
      * Get entries by entity and entity id.
      *
+     * @deprecated 
      * @param string $entity entity
      * @param int $entityId entity id
      * @param bool $asArray as array

@@ -73,6 +73,13 @@ class TranslationMapper implements Entity {
     private $translations;
 
     /**
+     * @var Language
+     *
+     * @ORM\ManyToOne(targetEntity="Language", inversedBy="translationMappers")
+     */
+    private $language;
+
+    /**
      * Constructor.
      */
     public function __construct() {
@@ -244,6 +251,27 @@ class TranslationMapper implements Entity {
      */
     public function setTranslations(Collection $translations): self {
         $this->translations = $translations;
+
+        return $this;
+    }
+
+    /**
+     * Get language.
+     *
+     * @return Language
+     */
+    public function getLanguage() {
+        return $this->language;
+    }
+
+    /**
+     * Set language.
+     *
+     * @param Language $language
+     * @return self
+     */
+    public function setLanguage($language): self {
+        $this->language = $language;
 
         return $this;
     }

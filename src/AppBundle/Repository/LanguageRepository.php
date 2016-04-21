@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Language;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -42,5 +43,19 @@ class LanguageRepository extends EntityRepository {
         return $this->_em->createQuery('SELECT l FROM AppBundle:Language l ORDER BY l.isDefault DESC')
             ->useQueryCache(true)
             ->getResult();
+    }
+
+    /**
+     * Get single result.
+     *
+     * @param string $code
+     * @return Language
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getByCode(string $code) {
+        return $this->_em->createQuery('SELECT l FROM AppBundle:Language l WHERE l.code = :code')
+            ->setParameter('code', $code)
+            ->getSingleResult();
     }
 }

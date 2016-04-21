@@ -30,7 +30,7 @@ services:
         arguments: ['@doctrine.orm.default_entity_manager']
     app.service.language:
         class: AppBundle\Service\LanguageService
-        arguments: ['@doctrine.orm.default_entity_manager']
+        arguments: ['@doctrine.orm.default_entity_manager', '%locale%']
     app.service.image:
         class: AppBundle\Service\ImageService
         arguments: ['@doctrine.orm.default_entity_manager', '%www_root%', '%upload_dir%']
@@ -48,4 +48,4 @@ services:
             - { name: twig.extension }
     app.service.translation:
         class: AppBundle\Service\TranslationService
-        arguments: ['@doctrine.orm.default_entity_manager', '@app.service.cache', '%translation_config%']
+        arguments: ['@doctrine.orm.default_entity_manager', '@app.service.language', '@app.service.cache', '%translation_config%']

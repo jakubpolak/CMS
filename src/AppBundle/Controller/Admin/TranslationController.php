@@ -28,8 +28,8 @@ class TranslationController extends Controller {
         $translationService = $this->get('app.service.translation');
 
         return [
-            'translations' => $translationService->getPagination($page, $resultsPerPage),
-            'pagesCount' => $translationService->getPagesCount($resultsPerPage),
+            'translations' => $translationService->getTranslationMapperPagination($page, $resultsPerPage),
+            'pagesCount' => $translationService->getTranslationMapperPagesCount($resultsPerPage),
             'page' => $page,
         ];
     }

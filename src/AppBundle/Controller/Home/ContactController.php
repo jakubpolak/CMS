@@ -8,19 +8,21 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 /**
- * Default controller.
+ * Contact controller.
  *
  * @author Jakub Polák, Jana Poláková
+ *
+ * @Route("/contact")
  */
-class DefaultController extends Controller {
+class ContactController extends Controller {
     /**
-     * Index action.
+     * Contact action.
      *
-     * @Route("", name="home_default_index")
-     * @Template("@App/home/layout.html.twig")
+     * @Route("/", name="home_default_contact")
+     * @Template("@App/home/contact/contact.html.twig")
      * @Method("GET")
      */
-    public function indexAction(): array {
+    public function contactAction() {
         $menuTree = $this->get('app.service.menu')->getMenu(true);
 
         return ['menuTree' => $menuTree];

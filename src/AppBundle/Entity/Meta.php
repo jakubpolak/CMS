@@ -74,9 +74,9 @@ class Meta implements Entity {
     /**
      * Get metaKeywords.
      *
-     * @return string
+     * @return string|null
      */
-    public function getMetaKeywords(): string {
+    public function getMetaKeywords() {
         return $this->metaKeywords;
     }
 
@@ -95,9 +95,9 @@ class Meta implements Entity {
     /**
      * Get metaDescription.
      *
-     * @return string
+     * @return string|null
      */
-    public function getMetaDescription(): string {
+    public function getMetaDescription() {
         return $this->metaDescription;
     }
 

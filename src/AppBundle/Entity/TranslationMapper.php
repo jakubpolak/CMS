@@ -54,16 +54,9 @@ class TranslationMapper implements Entity {
     /**
      * @var string
      *
-     * @ORM\Column(name="attribute_original_content", type="text")
+     * @ORM\Column(name="attribute_content", type="text")
      */
-    private $attributeOriginalContent;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="attribute_current_content", type="text")
-     */
-    private $attributeCurrentContent;
+    private $attributeContent;
 
     /**
      * @var DateTime
@@ -78,6 +71,13 @@ class TranslationMapper implements Entity {
      * @ORM\OneToMany(targetEntity="Translation", mappedBy="translationMapper", cascade={"all"})
      */
     private $translations;
+
+    /**
+     * @var Language
+     *
+     * @ORM\ManyToOne(targetEntity="Language", inversedBy="translationMappers")
+     */
+    private $language;
 
     /**
      * Constructor.
@@ -193,43 +193,22 @@ class TranslationMapper implements Entity {
     }
 
     /**
-     * Get attribute original content.
+     * Get attribute content.
      *
      * @return string
      */
-    public function getAttributeOriginalContent(): string {
-        return $this->attributeOriginalContent;
+    public function getAttributeContent(): string {
+        return $this->attributeContent;
     }
 
     /**
-     * Set attribute original content.
+     * Set attribute content.
      *
-     * @param string $attributeOriginalContent
+     * @param string $attributeContent
      * @return self
      */
-    public function setAttributeOriginalContent(string $attributeOriginalContent): self {
-        $this->attributeOriginalContent = $attributeOriginalContent;
-
-        return $this;
-    }
-
-    /**
-     * Get attribute current content.
-     *
-     * @return string
-     */
-    public function getAttributeCurrentContent(): string {
-        return $this->attributeCurrentContent;
-    }
-
-    /**
-     * Set attribute current content.
-     *
-     * @param string $attributeCurrentContent
-     * @return self
-     */
-    public function setAttributeCurrentContent(string $attributeCurrentContent): self {
-        $this->attributeCurrentContent = $attributeCurrentContent;
+    public function setAttributeContent(string $attributeContent): self {
+        $this->attributeContent = $attributeContent;
 
         return $this;
     }
@@ -272,6 +251,27 @@ class TranslationMapper implements Entity {
      */
     public function setTranslations(Collection $translations): self {
         $this->translations = $translations;
+
+        return $this;
+    }
+
+    /**
+     * Get language.
+     *
+     * @return Language
+     */
+    public function getLanguage() {
+        return $this->language;
+    }
+
+    /**
+     * Set language.
+     *
+     * @param Language $language
+     * @return self
+     */
+    public function setLanguage($language): self {
+        $this->language = $language;
 
         return $this;
     }

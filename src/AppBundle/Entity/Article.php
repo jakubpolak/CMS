@@ -277,9 +277,9 @@ class Article implements Entity {
     /**
      * Get meta.
      *
-     * @return Meta
+     * @return Meta|null
      */
-    public function getMeta(): Meta {
+    public function getMeta() {
         return $this->meta;
     }
 

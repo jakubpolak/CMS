@@ -1,15 +1,16 @@
 parameters:
-   results_per_page: 1
-   www_root: web
-   upload_dir: upload
-   cache_location: '/../../../var/cache'
+   results_per_page: 10
+   upload_dir: "upload"
+   cache_location: "/../../../var/cache"
    translation_config:
       entities:
           Article:
-              heading: text
-              content: ckeditor
+              heading: "text"
+              content: "ckeditor"
       display_names:
-          article: 'Článok'
+          Article: "Článok"
+          content: "Obsah"
+          heading: "Nadpis"
 
 services:
     app.service.user:
@@ -29,7 +30,7 @@ services:
         arguments: ['@doctrine.orm.default_entity_manager']
     app.service.language:
         class: AppBundle\Service\LanguageService
-        arguments: ['@doctrine.orm.default_entity_manager']
+        arguments: ['@doctrine.orm.default_entity_manager', '%locale%']
     app.service.image:
         class: AppBundle\Service\ImageService
         arguments: ['@doctrine.orm.default_entity_manager', '%www_root%', '%upload_dir%']
@@ -47,4 +48,4 @@ services:
             - { name: twig.extension }
     app.service.translation:
         class: AppBundle\Service\TranslationService
-        arguments: ['@doctrine.orm.default_entity_manager', '@app.service.cache', '%translation_config%']
+        arguments: ['@doctrine.orm.default_entity_manager', '@app.service.language', '@app.service.cache', '%translation_config%']

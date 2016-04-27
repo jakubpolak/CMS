@@ -6,7 +6,7 @@ imports:
 # Put parameters here that don't need to change on each machine where the app is deployed
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
-    locale: en
+    locale: sk
 
 framework:
     #esi:             ~
@@ -40,7 +40,9 @@ twig:
     form_themes:
         - "bootstrap_3_layout.html.twig"
     globals:
-        upload_dir: %upload_dir%
+        upload_dir: "%upload_dir%"
+        locale: "%locale%"
+
 
 # Doctrine Configuration
 doctrine:

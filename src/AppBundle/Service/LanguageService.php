@@ -24,13 +24,19 @@ class LanguageService {
     private $em;
 
     /**
+     * @var string
+     */
+    private $locale;
+
+    /**
      * Constructor.
      *
      * @param EntityManager $entityManager
      */
-    public function __construct(EntityManager $entityManager) {
+    public function __construct(EntityManager $entityManager, string $locale) {
         $this->em = $entityManager;
         $this->languageRepository = $this->em->getRepository('AppBundle:Language');
+        $this->locale = $locale;
     }
 
     /**
@@ -43,12 +49,21 @@ class LanguageService {
     }
 
     /**
-     * Get all entities.
+     * Get default language.
+     * 
+     * @return Language
+     */
+    public function getDefaultLanguage() {
+        return $this->languageRepository->getByCode($this->locale);
+    }
+
+    /**
+     * Get all languages. First language is default.
      *
      * @return array
      */
     public function getAll(): array {
-        return $this->getRepository()->findAll();
+        return $this->languageRepository->getAll();
     }
 
     /**

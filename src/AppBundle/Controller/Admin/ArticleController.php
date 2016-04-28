@@ -4,7 +4,7 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\Article;
 use AppBundle\Form\Admin\ArticleType;
-use AppBundle\Helper\Message;
+use AppBundle\Helper\MessageHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -65,10 +65,10 @@ class ArticleController extends Controller {
         if ($form->isValid()) {
             try {
                 $this->get('app.service.article')->save($article);
-                $this->get('session')->getFlashBag()->add(Message::TYPE_SUCCESS, 'Článok bol uložený.');
+                $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_SUCCESS, 'Článok bol uložený.');
                 return $this->redirect($this->generateUrl('admin_article_index'));
             } catch (\Exception $e) {
-                $message = new Message(Message::TYPE_DANGER, 'Článok sa nepodarilo uložiť.');
+                $message = new MessageHelper(MessageHelper::TYPE_DANGER, 'Článok sa nepodarilo uložiť.');
             }
         }
 
@@ -87,7 +87,7 @@ class ArticleController extends Controller {
      */
     public function updateAction(Article $article, int $page) {
         if ($article === null) {
-            $this->get('session')->getFlashBag()->add(Message::TYPE_DANGER, 'Článok neexistuje.');
+            $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_DANGER, 'Článok neexistuje.');
             return $this->redirect($this->generateUrl('admin_article_index'));
         }
 
@@ -112,7 +112,7 @@ class ArticleController extends Controller {
         $redirect = $this->redirect($this->generateUrl('admin_article_index', ['page' => $page]));
 
         if ($article === null) {
-            $this->get('session')->getFlashBag()->add(Message::TYPE_DANGER, 'Článok neexistuje.');
+            $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_DANGER, 'Článok neexistuje.');
             return $redirect;
         }
 
@@ -123,10 +123,10 @@ class ArticleController extends Controller {
         if ($form->isValid()) {
             try {
                 $this->get('app.service.article')->save($article);
-                $this->get('session')->getFlashBag()->add(Message::TYPE_SUCCESS, 'Článok bol uložený.');
+                $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_SUCCESS, 'Článok bol uložený.');
                 return $redirect;
             } catch (\Exception $e) {
-                $message = new Message(Message::TYPE_DANGER, 'Článok sa nepodarilo uložiť.');
+                $message = new MessageHelper(MessageHelper::TYPE_DANGER, 'Článok sa nepodarilo uložiť.');
             }
         }
 
@@ -150,10 +150,10 @@ class ArticleController extends Controller {
         $redirect = $this->redirect($this->generateUrl('admin_article_index', ['page' => $page]));
         
         if ($article === null) {
-            $flashBag->add(Message::TYPE_DANGER, 'Článok sa nepodarilo zmazať, pretože neexistuje.');
+            $flashBag->add(MessageHelper::TYPE_DANGER, 'Článok sa nepodarilo zmazať, pretože neexistuje.');
         } else {
             $this->get('app.service.article')->delete($article);
-            $flashBag->add(Message::TYPE_SUCCESS, 'Článok bol zmazaný.');
+            $flashBag->add(MessageHelper::TYPE_SUCCESS, 'Článok bol zmazaný.');
         }
 
         return $redirect;

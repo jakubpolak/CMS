@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller\Admin;
 
-use AppBundle\Helper\Message;
+use AppBundle\Helper\MessageHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -26,10 +26,10 @@ class TranslationController extends Controller {
     public function indexAction(int $page): array {
         $resultsPerPage = $this->get('service_container')->getParameter('results_per_page');
         $translationService = $this->get('app.service.translation');
-
+        
         return [
-            'translations' => $translationService->getTranslationMapperPagination($page, $resultsPerPage),
-            'pagesCount' => $translationService->getTranslationMapperPagesCount($resultsPerPage),
+            'translations' => $translationService->getPagination($page, $resultsPerPage),
+            'pagesCount' => $translationService->getPagesCount($resultsPerPage),
             'page' => $page,
         ];
     }
@@ -45,7 +45,7 @@ class TranslationController extends Controller {
         $entityGroups = $this->get('app.service.translation')->getTranslationMapperGroups($entity, $entityId);
 
         if ($entityGroups === null) {
-            $this->get('session')->getFlashBag()->add(Message::TYPE_DANGER, 'Preklad neexistuje.');
+            $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_DANGER, 'Preklad neexistuje.');
             return $this->redirect($this->generateUrl('admin_translation_index'));
         }
 

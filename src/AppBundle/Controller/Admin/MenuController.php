@@ -4,7 +4,7 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\Menu;
 use AppBundle\Form\Admin\MenuType;
-use AppBundle\Helper\Message;
+use AppBundle\Helper\MessageHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -59,10 +59,10 @@ class MenuController extends Controller {
         if ($form->isValid()) {
             try {
                 $this->get('app.service.menu')->save($menu);
-                $this->get('session')->getFlashBag()->add(Message::TYPE_SUCCESS, 'Menu bolo uložené.');
+                $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_SUCCESS, 'Menu bolo uložené.');
                 return $this->redirect($this->generateUrl('admin_menu_index'));
             } catch (\Exception $e) {
-                $message = new Message(Message::TYPE_DANGER, 'Menu sa nepodarilo uložiť.');
+                $message = new MessageHelper(MessageHelper::TYPE_DANGER, 'Menu sa nepodarilo uložiť.');
             }
         }
 
@@ -81,7 +81,7 @@ class MenuController extends Controller {
      */
     public function updateAction(Menu $menu): array {
         if ($menu === null) {
-            $this->get('session')->getFlashBag()->add(Message::TYPE_DANGER, 'Menu neexistuje.');
+            $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_DANGER, 'Menu neexistuje.');
             return $this->redirect($this->generateUrl('admin_menu_index'));
         }
 
@@ -99,7 +99,7 @@ class MenuController extends Controller {
         $redirect = $this->redirect($this->generateUrl('admin_menu_index'));
 
         if ($menu === null) {
-            $this->get('session')->getFlashBag()->add(Message::TYPE_DANGER, 'Menu neexistuje.');
+            $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_DANGER, 'Menu neexistuje.');
             return $redirect;
         }
 
@@ -110,9 +110,9 @@ class MenuController extends Controller {
         if ($form->isValid()) {
             try {
                 $this->get('app.service.menu')->save($menu);
-                $this->get('session')->getFlashBag()->add(Message::TYPE_SUCCESS, 'Menu bolo uložené.');
+                $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_SUCCESS, 'Menu bolo uložené.');
             } catch (\Exception $e) {
-                $message = new Message(Message::TYPE_DANGER, 'Menu sa nepodarilo uložiť.');
+                $message = new MessageHelper(MessageHelper::TYPE_DANGER, 'Menu sa nepodarilo uložiť.');
             }
         }
 
@@ -133,10 +133,10 @@ class MenuController extends Controller {
         $redirect = $this->redirect($this->generateUrl('admin_menu_index'));
 
         if ($menu === null) {
-            $flashBag->add(Message::TYPE_DANGER, 'Menu sa nepodarilo zmazať, pretože neexistuje.');
+            $flashBag->add(MessageHelper::TYPE_DANGER, 'Menu sa nepodarilo zmazať, pretože neexistuje.');
         } else {
             $this->get('app.service.menu')->delete($menu);
-            $flashBag->add(Message::TYPE_SUCCESS, 'Menu bolo zmazané.');
+            $flashBag->add(MessageHelper::TYPE_SUCCESS, 'Menu bolo zmazané.');
         }
 
         return $redirect;

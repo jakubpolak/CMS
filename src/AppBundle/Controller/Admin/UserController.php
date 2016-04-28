@@ -4,7 +4,7 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\User;
 use AppBundle\Form\Admin\UserType;
-use AppBundle\Helper\Message;
+use AppBundle\Helper\MessageHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -59,10 +59,10 @@ class UserController extends Controller {
         if ($form->isValid()) {
             try {
                 $this->get('app.service.user')->save($user);
-                $this->get('session')->getFlashBag()->add(Message::TYPE_SUCCESS, 'Používateľ bol uložený.');
+                $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_SUCCESS, 'Používateľ bol uložený.');
                 return $this->redirect($this->generateUrl('admin_user_index'));
             } catch (\Exception $e) {
-                $message = new Message(Message::TYPE_DANGER, 'Používateľa sa nepodarilo uložiť.');
+                $message = new MessageHelper(MessageHelper::TYPE_DANGER, 'Používateľa sa nepodarilo uložiť.');
             }
         }
 
@@ -81,7 +81,7 @@ class UserController extends Controller {
      */
     public function updateAction(User $user): array {
         if ($user === null) {
-            $this->get('session')->getFlashBag()->add(Message::TYPE_DANGER, 'Používateľ neexistuje.');
+            $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_DANGER, 'Používateľ neexistuje.');
             return $this->redirect($this->generateUrl('admin_user_index'));
         }
 
@@ -99,7 +99,7 @@ class UserController extends Controller {
         $redirect = $this->redirect($this->generateUrl('admin_user_index'));
 
         if ($user === null) {
-            $this->get('session')->getFlashBag()->add(Message::TYPE_DANGER, 'Používateľ neexistuje.');
+            $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_DANGER, 'Používateľ neexistuje.');
             return $redirect;
         }
 
@@ -110,10 +110,10 @@ class UserController extends Controller {
         if ($form->isValid()) {
             try {
                 $this->get('app.service.user')->save($user);
-                $this->get('session')->getFlashBag()->add(Message::TYPE_SUCCESS, 'Používateľ bol uložený.');
+                $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_SUCCESS, 'Používateľ bol uložený.');
                 return $redirect;
             } catch (\Exception $e) {
-                $message = new Message(Message::TYPE_DANGER, $e->getMessage());
+                $message = new MessageHelper(MessageHelper::TYPE_DANGER, $e->getMessage());
                 //$message = new Message(Message::TYPE_DANGER, 'Používateľa sa nepodarilo uložiť.');
             }
         }
@@ -135,10 +135,10 @@ class UserController extends Controller {
         $redirect = $this->redirect($this->generateUrl('admin_user_index'));
 
         if ($user === null) {
-            $flashBag->add(Message::TYPE_DANGER, 'Používateľa sa nepodarilo zmazať, pretože neexistuje.');
+            $flashBag->add(MessageHelper::TYPE_DANGER, 'Používateľa sa nepodarilo zmazať, pretože neexistuje.');
         } else {
             $this->get('app.service.user')->delete($user);
-            $flashBag->add(Message::TYPE_SUCCESS, 'Používateľ bol zmazaný.');
+            $flashBag->add(MessageHelper::TYPE_SUCCESS, 'Používateľ bol zmazaný.');
         }
 
         return $redirect;

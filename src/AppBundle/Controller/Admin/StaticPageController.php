@@ -4,7 +4,7 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\StaticPage;
 use AppBundle\Form\Admin\StaticPageType;
-use AppBundle\Helper\Message;
+use AppBundle\Helper\MessageHelper;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -58,10 +58,10 @@ class StaticPageController extends Controller {
         if($form->isValid()){
             try {
                 $this->get('app.service.staticPage')->save($staticPage);
-                $this->get('session')->getFlashBag()->add(Message::TYPE_SUCCESS, 'Statická stránka bola uložená.');
+                $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_SUCCESS, 'Statická stránka bola uložená.');
                 return $this->redirect($this->generateUrl('admin_staticPage_index'));
             } catch (\Exception $e) {
-                $message = new Message(Message::TYPE_DANGER, 'Statickú stránku sa nepodarilo uložiť.');
+                $message = new MessageHelper(MessageHelper::TYPE_DANGER, 'Statickú stránku sa nepodarilo uložiť.');
             }
         }
 
@@ -80,7 +80,7 @@ class StaticPageController extends Controller {
      */
     public function updateAction(StaticPage $staticPage): array {
         if ($staticPage === null) {
-            $this->get('session')->getFlashBag()->add(Message::TYPE_DANGER, 'Statická stránka neexistuje.');
+            $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_DANGER, 'Statická stránka neexistuje.');
             return $this->redirect($this->generateUrl('admin_staticPage_index'));
         }
 
@@ -98,7 +98,7 @@ class StaticPageController extends Controller {
         $redirect = $this->redirect($this->generateUrl('admin_staticPage_index'));
 
         if ($staticPage === null) {
-            $this->get('session')->getFlashBag()->add(Message::TYPE_DANGER, 'Statická stránka neexistuje.');
+            $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_DANGER, 'Statická stránka neexistuje.');
             return $redirect;
         }
 
@@ -109,10 +109,10 @@ class StaticPageController extends Controller {
         if ($form->isValid()) {
             try {
                 $this->get('app.service.staticPage')->save($staticPage);
-                $this->get('session')->getFlashBag()->add(Message::TYPE_SUCCESS, 'Statická stránka bola uložená.');
+                $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_SUCCESS, 'Statická stránka bola uložená.');
                 return $redirect;
             } catch (\Exception $e) {
-                $message = new Message(Message::TYPE_DANGER, 'Statickú stránku sa nepodarilo uložiť.');
+                $message = new MessageHelper(MessageHelper::TYPE_DANGER, 'Statickú stránku sa nepodarilo uložiť.');
             }
         }
 
@@ -133,10 +133,10 @@ class StaticPageController extends Controller {
         $redirect = $this->redirect($this->generateUrl('admin_staticPage_index'));
 
         if ($staticPage === null) {
-            $flashBag->add(Message::TYPE_DANGER, 'Statickú stránku sa nepodarilo zmazať, pretože neexistuje.');
+            $flashBag->add(MessageHelper::TYPE_DANGER, 'Statickú stránku sa nepodarilo zmazať, pretože neexistuje.');
         } else {
             $this->get('app.service.staticPage')->delete($staticPage);
-            $flashBag->add(Message::TYPE_SUCCESS, 'Statická stránka bola zmazaná.');
+            $flashBag->add(MessageHelper::TYPE_SUCCESS, 'Statická stránka bola zmazaná.');
         }
 
         return $redirect;

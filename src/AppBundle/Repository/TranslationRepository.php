@@ -28,10 +28,8 @@ class TranslationRepository extends EntityRepository {
      * @param string $entity entity
      * @param int $languageId language id
      * @param int $entityId entity id
-     * @param bool $asArray if true then array of arrays is returned,
-     *      otherwise array of objects is returned
-     * @return array if $asArray true then an array is returned, otherwise a Collection
-     *      is returned.
+     * @param bool $asArray if true then array of arrays is returned, otherwise array of objects is returned
+     * @return array if $asArray true then an array is returned, otherwise a Collection is returned.
      */
     public function getByLanguageIdAndEntityAndEntityId(int $languageId, string $entity, int $entityId, bool $asArray = false) {
         $query = $this->getEntityManager()
@@ -69,10 +67,35 @@ class TranslationRepository extends EntityRepository {
                 SELECT t 
                 FROM AppBundle:Translation t
                 JOIN t.translationMapper tm
-                WHERE t.language = :languageId                
+                WHERE t.language = :languageId
+                GROUP BY tm.entityId
             ')->setParameter('languageId', $languageId)
             ->setFirstResult($firstResult)
             ->setMaxResults($maxResults)
             ->getResult();
+    }
+
+    /**
+     * Get entries by entity and entity id.
+     *
+     * @param string $entity entity
+     * @param int $entityId entity id
+     * @param bool $asArray as array
+     * @return array|Collection if $asArray true then an array is returned, otherwise a Collection
+     *      is returned.
+     */
+    public function getByEntityAndEntityId(string $entity, int $entityId, bool $asArray = false) {
+        $query = $this->getEntityManager()
+            ->createQuery('
+                SELECT t
+                JOIN t.translationMapper tm
+                FROM AppBundle:TranslationMapper tm 
+                WHERE tm.entity = :entity AND tm.entityId = :entityId 
+                ORDER BY tm.entity DESC, tm.entityId ASC
+            ')->setParameters(['entity' => $entity, 'entityId' => $entityId]);
+
+        return ($asArray === true)
+            ? $query->getArrayResult()
+            : $query->getResult();
     }
 }

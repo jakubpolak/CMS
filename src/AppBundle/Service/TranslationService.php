@@ -87,7 +87,7 @@ class TranslationService {
 
             $this->removeInvalidTranslationMappers($entityName, $namesOfEntityAttributes);
             $this->removeInvalidTranslations();
-            $this->updateExistingTranslationMappers($entityName, $namesOfEntityAttributes);
+            $this->updateTranslationMappers($entityName, $namesOfEntityAttributes);
             $this->createTranslationMappers($entityName, $namesOfEntityAttributes, $entityAttributes);
         }
     }
@@ -103,12 +103,68 @@ class TranslationService {
     }
 
     /**
+     * Get translations limited by first result and max results.
+     *
+     * @param int $firstResult first result
+     * @param int $maxResults max results
+     * @return array
+     */
+    public function getPagination(int $firstResult, int $maxResults): array {
+        $defaultLanguage = $this->languageService->getDefaultLanguage();
+        $entries = $this->translationRepository
+            ->getLimitedByLanguageId($defaultLanguage->getId(), --$firstResult * $maxResults, $maxResults);
+
+
+        $result = [];
+        foreach ($entries as $entry) {
+            $translationMapper = $entry->getTranslationMapper();
+
+            $entities = $this->translationRepository->getByLanguageIdAndEntityAndEntityId(
+                $defaultLanguage->getId(),
+                $translationMapper->getEntity(),
+                $translationMapper->getEntityId(),
+                true
+            );
+
+            $result[] = ['entities' => $entities, 'details' => []];
+        }
+
+        $displayNames = $this->config['display_names'];
+
+        foreach ($result as $group => &$entitiesAndDetails) {
+            $entityName = $entitiesAndDetails['entities'][0]['entity'];
+            $entityId = $entitiesAndDetails['entities'][0]['entityId'];
+
+            $entitiesAndDetails['details']['entityDisplayName'] = $displayNames[$entityName];
+            $entitiesAndDetails['details']['entity'] = $entityName;
+            $entitiesAndDetails['details']['entityId'] = $entityId;
+
+            foreach ($entitiesAndDetails['entities'] as &$entity) {
+                $entity['attributeDisplayName'] = $displayNames[$entity['attribute']];
+            }
+        }
+
+        return $result;
+    }
+
+    public function getTranslationGroups(string $entity, int $entityId) {
+        $groups = $this->translationRepository->getByEntityAndEntityId($entity, $entityId);
+        $displayNames = $this->config['display_names'];
+        
+        foreach ($groups as &$group) {
+            $group['attributeDisplayName'] = $displayNames[$group['attribute']];
+        }
+
+        return $groups;
+    }
+
+    /**
      * Update existing entries.
      *
      * @param string $entity entity name
      * @param array $namesOfEntityAttributes names of entity attributes
      */
-    public function updateExistingTranslationMappers(string $entity, array $namesOfEntityAttributes) {
+    private function updateTranslationMappers(string $entity, array $namesOfEntityAttributes) {
         $idsOfEntities = $this->translationMapperRepository->getEntityIdByEntity($entity);
 
         if (count($idsOfEntities) === 0) {
@@ -144,7 +200,7 @@ class TranslationService {
      * @param array $namesOfEntityAttributes names of entity attributes
      * @param array $entityAttributes entity attributes
      */
-    public function createTranslationMappers(string $entity, array $namesOfEntityAttributes, array $entityAttributes) {
+    private function createTranslationMappers(string $entity, array $namesOfEntityAttributes, array $entityAttributes) {
         $idsOfEntities = $this->translationMapperRepository->getEntityIdByEntity($entity);
         $namesOfAttributesWithAliasDQL = $this->DQLHelper->getAttributesWithAliasDQL($namesOfEntityAttributes);
         $defaultLanguage = $this->languageService->getDefaultLanguage();
@@ -178,68 +234,6 @@ class TranslationService {
                 $this->em->flush();
             }
         }
-    }
-    
-    /**
-     * Get translation groups for single entity.
-     * 
-     * @param string $entity entity
-     * @param int $entityId entity id     
-     * @return array
-     */
-    public function getGroupsForSingleEntity(string $entity, int $entityId): array {
-        $groups = $this->translationRepository->getByLanguageIdAndEntityAndEntityId($entity, $entityId, true);
-        $displayNames = $this->config['display_names'];
-
-        foreach ($groups as &$group) {
-            $group['attributeDisplayName'] = $displayNames[$group['attribute']];
-        }
-
-        return $groups;
-    }
-
-    /**
-     * Get translations limited by first result and max results.
-     * 
-     * @param int $firstResult first result
-     * @param int $maxResults max results
-     * @return array
-     */
-    public function getPagination(int $firstResult, int $maxResults): array {
-        $defaultLanguage = $this->languageService->getDefaultLanguage();
-        $entries = $this->translationRepository
-            ->getLimitedByLanguageId($defaultLanguage->getId(), --$firstResult * $maxResults, $maxResults);
-
-        $result = [];
-        foreach ($entries as $entry) {
-            $translationMapper = $entry->getTranslationMapper();
-
-            $entities = $this->translationRepository->getByLanguageIdAndEntityAndEntityId(
-                $defaultLanguage->getId(),
-                $translationMapper->getEntity(),
-                $translationMapper->getEntityId(),
-                true
-            );
-
-            $result[] = ['entities' => $entities, 'details' => []];
-        }
-
-        $displayNames = $this->config['display_names'];
-
-        foreach ($result as $group => &$entitiesAndDetails) {
-            $entityName = $entitiesAndDetails['entities'][0]['entity'];
-            $entityId = $entitiesAndDetails['entities'][0]['entityId'];
-
-            $entitiesAndDetails['details']['entityDisplayName'] = $displayNames[$entityName];
-            $entitiesAndDetails['details']['entity'] = $entityName;
-            $entitiesAndDetails['details']['entityId'] = $entityId;
-
-            foreach ($entitiesAndDetails['entities'] as &$entity) {
-                $entity['attributeDisplayName'] = $displayNames[$entity['attribute']];
-            }
-        }
-
-        return $result;
     }
 
     /**

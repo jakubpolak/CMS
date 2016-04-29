@@ -42,7 +42,7 @@ class TranslationController extends Controller {
      * @Method("GET")
      */
     public function updateAction(string $entity, int $entityId) {
-        $entityGroups = $this->get('app.service.translation')->getTranslationMapperGroups($entity, $entityId);
+        $entityGroups = $this->get('app.service.translation')->getTranslationGroups($entity, $entityId);
 
         if ($entityGroups === null) {
             $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_DANGER, 'Preklad neexistuje.');

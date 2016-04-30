@@ -91,28 +91,4 @@ class TranslationMapperRepository extends EntityRepository {
 
         return count($result);
     }
-
-    /**
-     * Get entries by entity and entity id.
-     *
-     * @deprecated
-     * @param string $entity entity
-     * @param int $entityId entity id
-     * @param bool $asArray as array
-     * @return array|Collection if $asArray true then an array is returned, otherwise a Collection
-     *      is returned.
-     */
-    public function getByEntityAndEntityId(string $entity, int $entityId, bool $asArray = false) {
-        $query = $this->getEntityManager()
-            ->createQuery('
-                SELECT tm 
-                FROM AppBundle:TranslationMapper tm 
-                WHERE tm.entity = :entity AND tm.entityId = :entityId 
-                ORDER BY tm.entity DESC, tm.entityId ASC
-            ')->setParameters(['entity' => $entity, 'entityId' => $entityId]);
-
-        return ($asArray === true)
-            ? $query->getArrayResult()
-            : $query->getResult();
-    }
 }

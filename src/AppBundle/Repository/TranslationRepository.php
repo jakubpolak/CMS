@@ -88,8 +88,8 @@ class TranslationRepository extends EntityRepository {
         $query = $this->getEntityManager()
             ->createQuery('
                 SELECT t
+                FROM AppBundle:Translation t 
                 JOIN t.translationMapper tm
-                FROM AppBundle:TranslationMapper tm 
                 WHERE tm.entity = :entity AND tm.entityId = :entityId 
                 ORDER BY tm.entity DESC, tm.entityId ASC
             ')->setParameters(['entity' => $entity, 'entityId' => $entityId]);

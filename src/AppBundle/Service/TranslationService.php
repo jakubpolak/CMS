@@ -147,6 +147,13 @@ class TranslationService {
         return $result;
     }
 
+    /**
+     * Get translation groups.
+     *
+     * @param string $entity entity
+     * @param int $entityId entity id
+     * @return \AppBundle\Repository\Collection|array
+     */
     public function getTranslationGroups(string $entity, int $entityId) {
         $groups = $this->translationRepository->getByEntityAndEntityId($entity, $entityId);
         $displayNames = $this->config['display_names'];

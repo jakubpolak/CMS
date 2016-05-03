@@ -1,10 +1,10 @@
 <div class="form-group">
     <label>{{ entityGroup.attributeDisplayName }}</label>
     {% if (entityGroup.attributeType == 'text') %}
-        <input class="form-control" type="text" value="{{ entityGroup.attributeContent }}">
+        <input class="form-control" type="text" value="{{ entityGroup.content }}">
     {% elseif (entityGroup.attributeType == 'textarea') %}
-        <textarea class="form-control">{{ entityGroup.attributeContent }}</textarea>
+        <textarea class="form-control">{{ entityGroup.content }}</textarea>
     {% elseif (entityGroup.attributeType == 'ckeditor') %}
-        <textarea class="form-control">{{ entityGroup.attributeContent }}</textarea>
+        <textarea class="form-control">{{ entityGroup.content }}</textarea>
     {% endif %}
 </div>

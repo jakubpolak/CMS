@@ -41,18 +41,14 @@ class TranslationController extends Controller {
      * @Template("@App/admin/translation/update.html.twig")
      * @Method("GET")
      */
-    public function updateAction(string $entity, int $entityId) {
-        $entityGroups = $this->get('app.service.translation')->getTranslationGroups($entity, $entityId);
+    public function updateAction(string $entity, int $entityId): array {
+        $languageEntityGroups = $this->get('app.service.translation')
+            ->getLanguageEntityGroups($entity, $entityId);
 
-        if ($entityGroups === null) {
-            $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_DANGER, 'Preklad neexistuje.');
-            return $this->redirect($this->generateUrl('admin_translation_index'));
-        }
+        // TODO: Remove. @jpo
+        // echo '<pre>'; print_r($languageEntityGroups); die();
 
-        return [
-            'entityGroups' => $entityGroups,
-            'languages' => $this->get('app.service.language')->getAll(),
-        ];
+        return ['languageEntityGroups' => $languageEntityGroups];
     }
 
     /**

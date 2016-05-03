@@ -84,15 +84,20 @@ class TranslationRepository extends EntityRepository {
      * @return array|Collection if $asArray true then an array is returned, otherwise a Collection
      *      is returned.
      */
-    public function getByEntityAndEntityId(string $entity, int $entityId, bool $asArray = false) {
+    public function getByEntityAndEntityIdAndLanguageId(string $entity, int $entityId, int $languageId, bool $asArray = false) {
         $query = $this->getEntityManager()
             ->createQuery('
-                SELECT t
+                SELECT t.id, t.content, tm.attribute, tm.attributeType, tm.entityId, l.code
                 FROM AppBundle:Translation t 
                 JOIN t.translationMapper tm
-                WHERE tm.entity = :entity AND tm.entityId = :entityId 
-                ORDER BY tm.entity DESC, tm.entityId ASC
-            ')->setParameters(['entity' => $entity, 'entityId' => $entityId]);
+                JOIN t.language l
+                WHERE tm.entity = :entity AND tm.entityId = :entityId AND t.language = :languageId                 
+                ORDER BY l.isDefault DESC, t.translationMapper ASC, tm.entityId ASC
+            ')->setParameters([
+                'entity' => $entity, 
+                'entityId' => $entityId, 
+                'languageId' => $languageId
+            ]);
 
         return ($asArray === true)
             ? $query->getArrayResult()

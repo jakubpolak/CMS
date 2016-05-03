@@ -9,7 +9,7 @@ use Doctrine\ORM\EntityManager;
  *
  * @author Jakub Polák, Jana Poláková
  */
-class DQLHelper {
+class DqlHelper {
     /**
      * Get ids of entities by entity name.
      *

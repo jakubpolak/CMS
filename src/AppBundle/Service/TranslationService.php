@@ -4,7 +4,7 @@ namespace AppBundle\Service;
 
 use AppBundle\Entity\Translation;
 use AppBundle\Entity\TranslationMapper;
-use AppBundle\Helper\DQLHelper;
+use AppBundle\Helper\DqlHelper;
 use AppBundle\Repository\TranslationMapperRepository;
 use AppBundle\Repository\TranslationRepository;
 use Doctrine\ORM\EntityManager;
@@ -41,7 +41,7 @@ class TranslationService {
     private $translationMapperRepository;
 
     /**
-     * @var DQLHelper
+     * @var DqlHelper
      */
     private $DQLHelper;
 
@@ -56,20 +56,20 @@ class TranslationService {
      * @param EntityManager $entityManager entity manager
      * @param LanguageService $languageService language service
      * @param CacheService $cacheService cache service
-     * @param $DQLHelper $DQLHelper DQL helper
-     * @param array $config
+     * @param DqlHelper $DqlHelper dql helper
+     * @param array $config translation configuration
      */
     public function __construct(
         EntityManager $entityManager,
         LanguageService $languageService,
         CacheService $cacheService,
-        DQLHelper $DQLHelper,
+        DqlHelper $DqlHelper,
         array $config
     ) {
         $this->em = $entityManager;
         $this->languageService = $languageService;
         $this->cacheService = $cacheService;
-        $this->DQLHelper = $DQLHelper;
+        $this->DQLHelper = $DqlHelper;
         $this->config = $config;
         $this->translationRepository = $entityManager->getRepository('AppBundle:Translation');
         $this->translationMapperRepository = $entityManager->getRepository('AppBundle:TranslationMapper');
@@ -148,21 +148,33 @@ class TranslationService {
     }
 
     /**
-     * Get translation groups.
+     * Get language entity groups.
      *
      * @param string $entity entity
      * @param int $entityId entity id
-     * @return \AppBundle\Repository\Collection|array
+     * @return array
      */
-    public function getTranslationGroups(string $entity, int $entityId) {
-        $groups = $this->translationRepository->getByEntityAndEntityId($entity, $entityId);
-        $displayNames = $this->config['display_names'];
-        
-        foreach ($groups as &$group) {
-            $group['attributeDisplayName'] = $displayNames[$group['attribute']];
+    public function getLanguageEntityGroups(string $entity, int $entityId): array {
+        $languages = $this->languageService->getAll();
+        $languageEntityGroups = [];
+
+        foreach ($languages as $language) {
+            $languageEntityGroups[$language->getName()] = $this->translationRepository
+                ->getByEntityAndEntityIdAndLanguageId($entity, $entityId, $language->getId(), true);
         }
 
-        return $groups;
+        $displayNames = $this->config['display_names'];
+
+        foreach ($languageEntityGroups as &$languageGroup) {
+            foreach ($languageGroup as &$entityGroup) {
+                $entityGroup['attributeDisplayName'] = $displayNames[$entityGroup['attribute']];
+            }
+        }
+
+        // TODO: Remove. @jpo
+        // echo '<pre>'; print_r($languageEntityGroups); die();
+
+        return $languageEntityGroups;
     }
 
     /**
@@ -195,7 +207,8 @@ class TranslationService {
                     continue;
                 }
 
-                $this->translationMapperRepository->updateAttributeContent($content, $name, (int) $attributes['id'], $entity);
+                $this->translationMapperRepository
+                    ->updateAttributeContent($content, $name, (int) $attributes['id'], $entity);
             }
         }
     }
@@ -234,8 +247,7 @@ class TranslationService {
                     ->setAttribute($attributeName)
                     ->setAttributeContent($attributeValue)
                     ->setAttributeType($attributeType)
-                    ->setLanguage($defaultLanguage)
-                ;
+                    ->setLanguage($defaultLanguage);
                 $this->em->persist($translationMapper);
                 $this->persistTranslations($translationMapper);
                 $this->em->flush();

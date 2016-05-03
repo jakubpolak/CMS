@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller\Admin;
 
-use AppBundle\Helper\MessageHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -28,8 +27,8 @@ class TranslationController extends Controller {
         $translationService = $this->get('app.service.translation');
         
         return [
-            'translations' => $translationService->getPagination($page, $resultsPerPage),
-            'pagesCount' => $translationService->getPagesCount($resultsPerPage),
+            'translations' => $translationService->getPaginationPage($page, $resultsPerPage),
+            'pagesCount' => $translationService->getPaginationPagesCount($resultsPerPage),
             'page' => $page,
         ];
     }
@@ -42,24 +41,32 @@ class TranslationController extends Controller {
      * @Method("GET")
      */
     public function updateAction(string $entity, int $entityId): array {
-        $languageEntityGroups = $this->get('app.service.translation')
-            ->getLanguageEntityGroups($entity, $entityId);
+        $languageEntityGroups = $this->get('app.service.translation')->getUpdateTranslationsFormData($entity, $entityId);
 
-        // TODO: Remove. @jpo
-        // echo '<pre>'; print_r($languageEntityGroups); die();
-
-        return ['languageEntityGroups' => $languageEntityGroups];
+        return [
+            'languageEntityGroups' => $languageEntityGroups,
+            'entity' => $entity,
+            'entityId' => $entityId,
+        ];
     }
 
     /**
      * Update process action.
      *
-     * @Route("/update", name="admin_translation_updateProcess")
+     * @Route("/{entity}/{entityId}/update", name="admin_translation_updateProcess")
      * @Template("@App/admin/translation/update.html.twig")
      * @Method("POST")
      */
     public function updateProcessAction(string $entity, int $entityId, Request $request) {
-        return [];
+        $translationService = $this->get('app.service.translation');
+        $languageEntityGroups = $translationService->getUpdateTranslationsFormData($entity, $entityId);
+        $translationService->updateTranslations($request);
+
+        return [
+            'languageEntityGroups' => $languageEntityGroups,
+            'entity' => $entity,
+            'entityId' => $entityId,
+        ];
     }
 
     /**

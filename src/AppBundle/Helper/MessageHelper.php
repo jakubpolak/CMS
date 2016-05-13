@@ -3,9 +3,11 @@
 namespace AppBundle\Helper;
 
 /**
+ * Message helper.
+ * 
  * @author Jakub Polák
  */
-class Message {
+class MessageHelper {
     const TYPE_SUCCESS = 'success';
     const TYPE_DANGER = 'danger';
     const TYPE_INFO = 'info';

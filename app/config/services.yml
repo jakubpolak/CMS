@@ -52,6 +52,8 @@ services:
         arguments: ['@doctrine.orm.default_entity_manager']
         tags:
             - { name: twig.extension }
+    app.helper.dql:
+        class: AppBundle\Helper\DqlHelper
     app.service.translation:
         class: AppBundle\Service\TranslationService
-        arguments: ['@doctrine.orm.default_entity_manager', '@app.service.language', '@app.service.cache', '%translation_config%']
+        arguments: ['@doctrine.orm.default_entity_manager', '@app.service.language', '@app.service.cache', '@app.helper.dql', '%translation_config%']

@@ -2,12 +2,13 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\Language;
 use AppBundle\Entity\Translation;
 use AppBundle\Entity\TranslationMapper;
+use AppBundle\Helper\DqlHelper;
 use AppBundle\Repository\TranslationMapperRepository;
 use AppBundle\Repository\TranslationRepository;
 use Doctrine\ORM\EntityManager;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Translation service.
@@ -18,7 +19,7 @@ class TranslationService {
     /**
      * @var EntityManager
      */
-    private $em;
+    private $entityManager;
 
     /**
      * @var LanguageService
@@ -31,14 +32,19 @@ class TranslationService {
     private $cacheService;
 
     /**
+     * @var TranslationRepository
+     */
+    private $translationRepository;
+
+    /**
      * @var TranslationMapperRepository
      */
     private $translationMapperRepository;
 
     /**
-     * @var TranslationRepository
+     * @var DqlHelper
      */
-    private $translationRepository;
+    private $dqlHelper;
 
     /**
      * @var array
@@ -48,19 +54,26 @@ class TranslationService {
     /**
      * Constructor.
      *
-     * @param EntityManager $em entity manager
+     * @param EntityManager $entityManager entity manager
      * @param LanguageService $languageService language service
      * @param CacheService $cacheService cache service
-     * @param array $config
+     * @param DqlHelper $DqlHelper dql helper
+     * @param array $config translation configuration
      */
-    public function __construct(EntityManager $em, LanguageService $languageService, CacheService $cacheService, array $config) {
-        $this->em = $em;
+    public function __construct(
+        EntityManager $entityManager,
+        LanguageService $languageService,
+        CacheService $cacheService,
+        DqlHelper $DqlHelper,
+        array $config
+    ) {
+        $this->entityManager = $entityManager;
         $this->languageService = $languageService;
         $this->cacheService = $cacheService;
+        $this->dqlHelper = $DqlHelper;
         $this->config = $config;
-
-        $this->translationMapperRepository = $em->getRepository('AppBundle:TranslationMapper');
-        $this->translationRepository = $em->getRepository('AppBundle:Translation');
+        $this->translationRepository = $entityManager->getRepository('AppBundle:Translation');
+        $this->translationMapperRepository = $entityManager->getRepository('AppBundle:TranslationMapper');
     }
 
     /**
@@ -70,51 +83,93 @@ class TranslationService {
     public function synchronize() {
         $entities = $this->config['entities'];
 
-        // TODO: Remove. @jpo
-        //$groups = $this->getGroups('Article', 1);
-        //echo '<pre>'; print_r($groups); die();
-
         foreach ($entities as $entityName => $entityAttributes) {
             $namesOfEntityAttributes = array_keys($entityAttributes);
 
             $this->removeInvalidTranslationMappers($entityName, $namesOfEntityAttributes);
             $this->removeInvalidTranslations();
-            $this->updateExistingTranslationMappers($entityName, $namesOfEntityAttributes);
+            $this->updateTranslationMappers($entityName, $namesOfEntityAttributes);
             $this->createTranslationMappers($entityName, $namesOfEntityAttributes, $entityAttributes);
         }
     }
-    
-    /**
-     * Get translation groups for single entity.
-     * 
-     * @param string $entity entity
-     * @param int $entityId entity id     
-     * @return array
-     */
-    public function getGroupsForSingleEntity(string $entity, int $entityId): array {
-        $groups = $this->translationRepository->getByEntityAndEntityId($entity, $entityId, true);
-        $displayNames = $this->config['display_names'];
 
-        foreach ($groups as &$group) {
-            $group['attributeDisplayName'] = $displayNames[$group['attribute']];
+    /**
+     * Update translations.
+     *
+     * @param Request $request
+     */
+    public function updateTranslations(Request $request) {
+        $translations = $request->request->all();
+
+        foreach ($translations as $id => $value) {
+            $translation = $this->translationRepository->find($id);
+            $translation->setContent($value);
         }
 
-        return $groups;
-    }
-    
-    public function getGroupsForDefaultLanguagePagination(int $firstResult, int $maxResults): array {
-        
+        $this->entityManager->flush();
     }
 
-    /*
-    public function getTranslationMapperPagination(int $firstResult, int $maxResults): array {
-        $entries = $this->translationMapperRepository
-            ->getLimitedAndGroupedByEntityIdAndEntity(--$firstResult * $maxResults, $maxResults);
+    /**
+     * Get language entity groups.
+     *
+     * @param string $entity entity
+     * @param int $entityId entity id
+     * @return array
+     */
+    public function getUpdateTranslationsFormData(string $entity, int $entityId): array {
+        $languages = $this->languageService->getAll();
+        $languageEntityGroups = [];
+
+        foreach ($languages as $language) {
+            $languageEntityGroups[$language->getName()] = $this->translationRepository
+                ->getByEntityAndEntityIdAndLanguageId($entity, $entityId, $language->getId(), true);
+        }
+
+        $displayNames = $this->config['display_names'];
+
+        foreach ($languageEntityGroups as &$languageGroup) {
+            foreach ($languageGroup as &$entityGroup) {
+                $entityGroup['attributeDisplayName'] = $displayNames[$entityGroup['attribute']];
+            }
+        }
+
+        return $languageEntityGroups;
+    }
+
+    /**
+     * Get count of pages.
+     *
+     * @param int $maxResults max results
+     * @return int
+     */
+    public function getPaginationPagesCount(int $maxResults): int {
+        return ceil($this->translationMapperRepository->getCountGroupedByEntityIdAndEntity() / $maxResults);
+    }
+
+    /**
+     * Get translations limited by first result and max results.
+     *
+     * @param int $firstResult first result
+     * @param int $maxResults max results
+     * @return array
+     */
+    public function getPaginationPage(int $firstResult, int $maxResults): array {
+        $defaultLanguage = $this->languageService->getDefaultLanguage();
+        $entries = $this->translationRepository
+            ->getLimitedByLanguageId($defaultLanguage->getId(), --$firstResult * $maxResults, $maxResults);
+
 
         $result = [];
         foreach ($entries as $entry) {
-            $entities = $this->translationMapperRepository
-                ->getByEntityAndEntityId($entry->getEntity(), $entry->getEntityId(), true);
+            $translationMapper = $entry->getTranslationMapper();
+
+            $entities = $this->translationRepository->getByLanguageIdAndEntityAndEntityId(
+                $defaultLanguage->getId(),
+                $translationMapper->getEntity(),
+                $translationMapper->getEntityId(),
+                true
+            );
+
             $result[] = ['entities' => $entities, 'details' => []];
         }
 
@@ -135,25 +190,83 @@ class TranslationService {
 
         return $result;
     }
-    */
 
     /**
-     * Get entity groups.
+     * Update existing entries.
      *
-     * @deprecated
      * @param string $entity entity name
-     * @param int $entityId entity id
-     * @return array
+     * @param array $namesOfEntityAttributes names of entity attributes
      */
-    public function getTranslationMapperGroups(string $entity, int $entityId): array {
-        $groups = $this->translationMapperRepository->getByEntityAndEntityId($entity, $entityId, true);
-        $displayNames = $this->config['display_names'];
+    private function updateTranslationMappers(string $entity, array $namesOfEntityAttributes) {
+        $idsOfEntities = $this->translationMapperRepository->getEntityIdByEntity($entity);
 
-        foreach ($groups as &$group) {
-            $group['attributeDisplayName'] = $displayNames[$group['attribute']];
+        if (count($idsOfEntities) === 0) {
+            return;
         }
-        
-        return $groups;
+
+        $idsOfEntitiesVector = $this->dqlHelper->convertToVector($idsOfEntities, 'entityId');
+        $idsOfEntitiesDQL = $this->dqlHelper->convertToString($idsOfEntitiesVector);
+        $namesOfAttributesWithAliasDQL = $this->dqlHelper->getAttributesWithAliasDQL($namesOfEntityAttributes);
+
+        $valuesOfEntities = $this->entityManager
+            ->createQuery("
+                SELECT {$namesOfAttributesWithAliasDQL} 
+                FROM AppBundle:$entity e 
+                WHERE e.id IN ($idsOfEntitiesDQL)
+            ")->getArrayResult();
+
+        foreach ($valuesOfEntities as $attributes) {
+            foreach ($attributes as $name => $content) {
+                if ($name === 'id') {
+                    continue;
+                }
+
+                $this->translationMapperRepository
+                    ->updateAttributeContent($content, $name, (int) $attributes['id'], $entity);
+            }
+        }
+    }
+
+    /**
+     * Create new entries.
+     *
+     * @param string $entity entity name
+     * @param array $namesOfEntityAttributes names of entity attributes
+     * @param array $entityAttributes entity attributes
+     */
+    private function createTranslationMappers(string $entity, array $namesOfEntityAttributes, array $entityAttributes) {
+        $idsOfEntities = $this->translationMapperRepository->getEntityIdByEntity($entity);
+        $namesOfAttributesWithAliasDQL = $this->dqlHelper->getAttributesWithAliasDQL($namesOfEntityAttributes);
+        $defaultLanguage = $this->languageService->getDefaultLanguage();
+
+        $dql = "SELECT $namesOfAttributesWithAliasDQL FROM AppBundle:$entity e";
+        if (count($idsOfEntities) !== 0) {
+            $idsOfEntitiesVector = $this->dqlHelper->convertToVector($idsOfEntities, 'entityId');
+            $idsOfEntitiesDQL = $this->dqlHelper->convertToString($idsOfEntitiesVector);
+
+            $dql = "SELECT $namesOfAttributesWithAliasDQL FROM AppBundle:$entity e WHERE e.id NOT IN($idsOfEntitiesDQL)";
+        }
+
+        $valuesOfEntities = $this->entityManager->createQuery($dql)->getArrayResult();
+
+        foreach ($valuesOfEntities as $valuesOfAttributes) {
+            foreach ($valuesOfAttributes as $attributeName => $attributeValue) {
+                if ($attributeName === 'id') {
+                    continue;
+                }
+                $attributeType = $entityAttributes[$attributeName];
+                $translationMapper = new TranslationMapper();
+                $translationMapper->setEntity($entity)
+                    ->setEntityId($valuesOfAttributes['id'])
+                    ->setAttribute($attributeName)
+                    ->setAttributeContent($attributeValue)
+                    ->setAttributeType($attributeType)
+                    ->setLanguage($defaultLanguage);
+                $this->entityManager->persist($translationMapper);
+                $this->persistTranslations($translationMapper);
+                $this->entityManager->flush();
+            }
+        }
     }
 
     /**
@@ -174,7 +287,7 @@ class TranslationService {
                 $translation->setContent($translationMapper->getAttributeContent());
             }
 
-            $this->em->persist($translation);
+            $this->entityManager->persist($translation);
         }
     }
 
@@ -189,146 +302,8 @@ class TranslationService {
             $ids[] = $language->getId();
         }
 
-        $idsDQL = $this->convertToString($ids, ',');
+        $idsDQL = $this->dqlHelper->convertToString($ids, ',');
         $this->translationRepository->delete($idsDQL);
-    }
-
-    /**
-     * Get entries for paginated list of results.
-     *
-     * @deprecated 
-     * @param int $firstResult first result
-     * @param int $maxResults max results
-     * @return array
-     */
-    public function getTranslationMapperPagination(int $firstResult, int $maxResults): array {
-        $entries = $this->translationMapperRepository
-            ->getLimitedAndGroupedByEntityIdAndEntity(--$firstResult * $maxResults, $maxResults);
-
-        $result = [];
-        foreach ($entries as $entry) {
-            $entities = $this->translationMapperRepository
-                ->getByEntityAndEntityId($entry->getEntity(), $entry->getEntityId(), true);
-            $result[] = ['entities' => $entities, 'details' => []];
-        }
-
-        $displayNames = $this->config['display_names'];
-
-        foreach ($result as $group => &$entitiesAndDetails) {
-            $entityName = $entitiesAndDetails['entities'][0]['entity'];
-            $entityId = $entitiesAndDetails['entities'][0]['entityId'];
-            
-            $entitiesAndDetails['details']['entityDisplayName'] = $displayNames[$entityName];
-            $entitiesAndDetails['details']['entity'] = $entityName;
-            $entitiesAndDetails['details']['entityId'] = $entityId;
-
-            foreach ($entitiesAndDetails['entities'] as &$entity) {
-                $entity['attributeDisplayName'] = $displayNames[$entity['attribute']];
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Get count of entries for paginated list of results.
-     *
-     * @deprecated
-     * @param int $maxResults max results
-     * @return int
-     */
-    public function getTranslationMapperPagesCount(int $maxResults): int {
-        return ceil($this->translationMapperRepository->getCountGroupedByEntityIdAndEntity() / $maxResults);
-    }
-
-    /**
-     * Update existing entries.
-     *
-     * @param string $entity entity name
-     * @param array $namesOfEntityAttributes names of entity attributes
-     */
-    private function updateExistingTranslationMappers(string $entity, array $namesOfEntityAttributes) {
-        $idsOfEntities = $this->translationMapperRepository->getEntityIdByEntity($entity);
-
-        if (count($idsOfEntities) === 0) {
-            return;
-        }
-
-        $idsOfEntitiesVector = $this->convertToVector($idsOfEntities, 'entityId');
-        $idsOfEntitiesDQL = $this->convertToString($idsOfEntitiesVector);
-        $namesOfAttributesWithAliasDQL = $this->getAttributesWithAliasDQL($namesOfEntityAttributes);
-
-        $valuesOfEntities = $this->em
-            ->createQuery("
-                SELECT {$namesOfAttributesWithAliasDQL} 
-                FROM AppBundle:$entity e 
-                WHERE e.id IN ($idsOfEntitiesDQL)
-            ")->getArrayResult();
-
-        foreach ($valuesOfEntities as $attributes) {
-            foreach ($attributes as $name => $content) {
-                if ($name === 'id') {
-                    continue;
-                }
-
-                $this->translationMapperRepository->updateAttributeContent($content, $name, (int) $attributes['id'], $entity);
-            }
-        }
-    }
-
-    /**
-     * Create new entries.
-     *
-     * @param string $entity entity name
-     * @param array $namesOfEntityAttributes names of entity attributes
-     * @param array $entityAttributes entity attributes
-     */
-    private function createTranslationMappers(string $entity, array $namesOfEntityAttributes, array $entityAttributes) {
-        $idsOfEntities = $this->translationMapperRepository->getEntityIdByEntity($entity);
-        $namesOfAttributesWithAliasDQL = $this->getAttributesWithAliasDQL($namesOfEntityAttributes);
-        $defaultLanguage = $this->languageService->getDefaultLanguage();
-
-        $dql = "SELECT $namesOfAttributesWithAliasDQL FROM AppBundle:$entity e";
-        if (count($idsOfEntities) !== 0) {
-            $idsOfEntitiesVector = $this->convertToVector($idsOfEntities, 'entityId');
-            $idsOfEntitiesDQL = $this->convertToString($idsOfEntitiesVector);
-
-            $dql = "SELECT $namesOfAttributesWithAliasDQL FROM AppBundle:$entity e WHERE e.id NOT IN($idsOfEntitiesDQL)";
-        }
-
-        $valuesOfEntities = $this->em->createQuery($dql)->getArrayResult();
-
-        foreach ($valuesOfEntities as $valuesOfAttributes) {
-            foreach ($valuesOfAttributes as $attributeName => $attributeValue) {
-                if ($attributeName === 'id') {
-                    continue;
-                }
-                $attributeType = $entityAttributes[$attributeName];
-                $translationMapper = new TranslationMapper();
-                $translationMapper->setEntity($entity)
-                    ->setEntityId($valuesOfAttributes['id'])
-                    ->setAttribute($attributeName)
-                    ->setAttributeContent($attributeValue)
-                    ->setAttributeType($attributeType)
-                    ->setLanguage($defaultLanguage)
-                ;
-                $this->em->persist($translationMapper);
-                $this->persistTranslations($translationMapper);
-                $this->em->flush();
-            }
-        }
-
-
-    }
-
-    /**
-     * Get ids of entities by entity name.
-     *
-     * @param string $entityName entity name
-     * @return array
-     */
-    private function getIds(string $entityName): array {
-        return $this->em->createQuery("SELECT e.id FROM AppBundle:$entityName e")->getArrayResult();
     }
 
     /**
@@ -338,55 +313,10 @@ class TranslationService {
      * @param array $namesOfEntityAttributes names of entity attributes
      */
     private function removeInvalidTranslationMappers(string $entityName, array $namesOfEntityAttributes) {
-        $idsOfEntities = $this->getIds($entityName);
-        $idsOfEntitiesVector = $this->convertToVector($idsOfEntities, 'id');
-        $idsOfEntitiesDQL = $this->convertToString($idsOfEntitiesVector, ',');
-        $namesOfAttributesWrappedDQL = $this->convertToString($namesOfEntityAttributes, ',', "'");
+        $idsOfEntities = $this->dqlHelper->getIds($this->entityManager, $entityName);
+        $idsOfEntitiesVector = $this->dqlHelper->convertToVector($idsOfEntities, 'id');
+        $idsOfEntitiesDQL = $this->dqlHelper->convertToString($idsOfEntitiesVector, ',');
+        $namesOfAttributesWrappedDQL = $this->dqlHelper->convertToString($namesOfEntityAttributes, ',', "'");
         $this->translationMapperRepository->delete($idsOfEntitiesDQL, $namesOfAttributesWrappedDQL, $entityName);
-    }
-
-    /**
-     * Get attributes for DQL.
-     *
-     * @param array $namesOfAttributes names of entity attributes
-     * @return string
-     */
-    private function getAttributesWithAliasDQL(array $namesOfAttributes): string {
-        $result = 'e.id,';
-        foreach ($namesOfAttributes as $attribute) {
-            $result .= "e.{$attribute},";
-        }
-        return substr($result, 0, - 1);
-    }
-
-    /**
-     * Convert two dimensional array to one dimensional array.
-     *
-     * @param array $twoDimension two dimensional array
-     * @param string $key array key of second dimension of two dimensional array
-     * @return array
-     */
-    private function convertToVector(array $twoDimension, string $key): array {
-        $oneDimension = array();
-        foreach ($twoDimension as $entry) {
-            $oneDimension[] = $entry[$key];
-        }
-        return $oneDimension;
-    }
-
-    /**
-     * Convert array to a string.
-     *
-     * @param array $array array of values to be converted to a string
-     * @param string $delimiter string to delimit array values by
-     * @param string $wrap string to wrap array values in
-     * @return string
-     */
-    private function convertToString(array $array, string $delimiter = ',', string $wrap = ''): string {
-        $result = '';
-        foreach ($array as $value) {
-            $result .= "{$wrap}{$value}{$wrap}{$delimiter}";
-        }
-        return substr($result, 0, - 1);
     }
 }

@@ -5,7 +5,7 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\Language;
 use AppBundle\Form\Admin\LanguageType;
-use AppBundle\Helper\Message;
+use AppBundle\Helper\MessageHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -59,10 +59,10 @@ class LanguageController extends Controller {
         if ($form->isValid()) {
             try {
                 $this->get('app.service.language')->save($language);
-                $this->get('session')->getFlashBag()->add(Message::TYPE_SUCCESS, 'Jazyk bol uložený.');
+                $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_SUCCESS, 'Jazyk bol uložený.');
                 return $this->redirect($this->generateUrl('admin_language_index'));
             } catch (\Exception $e) {
-                $message = new Message(Message::TYPE_DANGER, 'Jazyk sa nepodarilo uložiť.');
+                $message = new MessageHelper(MessageHelper::TYPE_DANGER, 'Jazyk sa nepodarilo uložiť.');
             }
         }
 
@@ -81,7 +81,7 @@ class LanguageController extends Controller {
      */
     public function updateAction(Language $language) {
         if ($language === null) {
-            $this->get('session')->getFlashBag()->add(Message::TYPE_DANGER, 'Jazyk neexistuje.');
+            $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_DANGER, 'Jazyk neexistuje.');
             return $this->redirect($this->generateUrl('admin_language_index'));
         }
 
@@ -104,7 +104,7 @@ class LanguageController extends Controller {
         $redirect = $this->redirect($this->generateUrl('admin_language_index'));
 
         if ($language === null) {
-            $this->get('session')->getFlashBag()->add(Message::TYPE_DANGER, 'Jazyk neexistuje.');
+            $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_DANGER, 'Jazyk neexistuje.');
             return $redirect;
         }
 
@@ -115,10 +115,10 @@ class LanguageController extends Controller {
         if ($form->isValid()) {
             try {
                 $this->get('app.service.language')->save($language);
-                $this->get('session')->getFlashBag()->add(Message::TYPE_SUCCESS, 'Jazyk sa nepodarilo uložiť.');
+                $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_SUCCESS, 'Jazyk sa nepodarilo uložiť.');
                 return $redirect;
             } catch (\Exception $e) {
-                $message = new Message(Message::TYPE_DANGER, 'Jazyk sa nepodarilo uložiť.');
+                $message = new MessageHelper(MessageHelper::TYPE_DANGER, 'Jazyk sa nepodarilo uložiť.');
             }
         }
 
@@ -139,10 +139,10 @@ class LanguageController extends Controller {
         $redirect = $this->redirect($this->generateUrl('admin_language_index'));
 
         if ($language === null) {
-            $flashBag->add(Message::TYPE_DANGER, 'Jazyk sa nepodarilo zmazať, pretože neexistuje.');
+            $flashBag->add(MessageHelper::TYPE_DANGER, 'Jazyk sa nepodarilo zmazať, pretože neexistuje.');
         } else {
             $this->get('app.service.language')->delete($language);
-            $flashBag->add(Message::TYPE_SUCCESS, 'Jazyk bol zmazaný.');
+            $flashBag->add(MessageHelper::TYPE_SUCCESS, 'Jazyk bol zmazaný.');
         }
 
         return $redirect;

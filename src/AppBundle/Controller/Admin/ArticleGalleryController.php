@@ -5,7 +5,7 @@ namespace AppBundle\Controller\Admin;
 use AppBundle\Entity\Article;
 use AppBundle\Entity\Image;
 use AppBundle\Form\Admin\ImageType;
-use AppBundle\Helper\Message;
+use AppBundle\Helper\MessageHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -61,10 +61,10 @@ class ArticleGalleryController extends Controller {
         if ($form->isValid()) {
             try {
                 $imageService->save($image);
-                $this->get('session')->getFlashBag()->add(Message::TYPE_SUCCESS, 'Obrázok bol uložený.');
+                $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_SUCCESS, 'Obrázok bol uložený.');
                 return $this->redirect($this->generateUrl('admin_article_update', ['id' => $articleId]));
             } catch (\Exception $e) {
-                $message = new Message(Message::TYPE_DANGER, 'Obrázok sa nepodarilo uložiť.');
+                $message = new MessageHelper(MessageHelper::TYPE_DANGER, 'Obrázok sa nepodarilo uložiť.');
             }
         }
 
@@ -85,7 +85,7 @@ class ArticleGalleryController extends Controller {
      */
     public function updateAction(Image $image, int $articleId) {
         if ($image === null) {
-            $this->get('session')->getFlashBag()->add(Message::TYPE_DANGER, 'Obrázok neexistuje.');
+            $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_DANGER, 'Obrázok neexistuje.');
             return $this->redirect($this->generateUrl('admin_article_update', ['id' => $articleId]));
         }
 
@@ -108,7 +108,7 @@ class ArticleGalleryController extends Controller {
         $redirect = $this->redirect($this->generateUrl('admin_article_update', ['id' => $articleId]));
 
         if ($image === null) {
-            $flashBag->add(Message::TYPE_DANGER, 'Obrázok neexistuje.');
+            $flashBag->add(MessageHelper::TYPE_DANGER, 'Obrázok neexistuje.');
             return $redirect;
         }
 
@@ -119,10 +119,10 @@ class ArticleGalleryController extends Controller {
         if ($form->isValid()) {
             try {
                 $this->get('app.service.image')->save($image);
-                $flashBag->add(Message::TYPE_SUCCESS, 'Obrázok bol uložený.');
+                $flashBag->add(MessageHelper::TYPE_SUCCESS, 'Obrázok bol uložený.');
                 return $redirect;
             } catch (\Exception $e) {
-                $message = new Message(Message::TYPE_DANGER, 'Obrázok sa nepodarilo uložiť.');
+                $message = new MessageHelper(MessageHelper::TYPE_DANGER, 'Obrázok sa nepodarilo uložiť.');
             }
         }
 
@@ -145,16 +145,16 @@ class ArticleGalleryController extends Controller {
         $flashBag = $this->get('session')->getFlashBag();
 
         if ($image === null) {
-            $flashBag->add(Message::TYPE_DANGER, 'Obrázok neexistuje.');
+            $flashBag->add(MessageHelper::TYPE_DANGER, 'Obrázok neexistuje.');
             return $redirect;
         }
 
         $imageService = $this->get('app.service.image');
         try {
             $imageService->delete($image);
-            $flashBag->add(Message::TYPE_SUCCESS, 'Obrázok bol zmazaný.');
+            $flashBag->add(MessageHelper::TYPE_SUCCESS, 'Obrázok bol zmazaný.');
         } catch (\Exception $e) {
-            $flashBag->add(Message::TYPE_DANGER, 'Obrázok sa nepodarilo zmazať.');
+            $flashBag->add(MessageHelper::TYPE_DANGER, 'Obrázok sa nepodarilo zmazať.');
         }
 
         return $redirect;

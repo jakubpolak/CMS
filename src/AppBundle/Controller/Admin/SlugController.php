@@ -4,7 +4,7 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\Slug;
 use AppBundle\Form\Admin\SlugType;
-use AppBundle\Helper\Message;
+use AppBundle\Helper\MessageHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -32,7 +32,7 @@ class SlugController extends Controller {
         $entity = $slugService->getEntity($entityName, $entityId);
 
         if ($entity === null || !$slugService->hasSlugs($entity)) {
-            $flashBag->add(Message::TYPE_DANGER, 'Vyskytla sa chybe.');
+            $flashBag->add(MessageHelper::TYPE_DANGER, 'Vyskytla sa chybe.');
             return $this->redirect($this->generateUrl('admin_dashboard_index'));
         }
 
@@ -58,7 +58,7 @@ class SlugController extends Controller {
         $entity = $slugService->getEntity($entityName, $entityId);
 
         if ($entity === null || !$slugService->hasSlugs($entity)) {
-            $flashBag->add(Message::TYPE_DANGER, 'Došlo k chybe.');
+            $flashBag->add(MessageHelper::TYPE_DANGER, 'Došlo k chybe.');
             return $this->redirect($this->generateUrl('admin_dashboard_index'));
         }
 
@@ -70,10 +70,10 @@ class SlugController extends Controller {
         if ($form->isValid()) {
             try {
                 $slugService->save($slug, $entity);
-                $flashBag->add(Message::TYPE_SUCCESS, 'Slug bol uložený.');
+                $flashBag->add(MessageHelper::TYPE_SUCCESS, 'Slug bol uložený.');
                 return $this->redirect($this->generateUrl("admin_{$entityName}_update", ['id' => $entityId]));
             } catch (\Exception $e) {
-                $message = new Message(Message::TYPE_DANGER, 'Slug sa nepodarilo uložiť.');
+                $message = new MessageHelper(MessageHelper::TYPE_DANGER, 'Slug sa nepodarilo uložiť.');
             }
         }
 
@@ -98,7 +98,7 @@ class SlugController extends Controller {
         $entity = $slugService->getEntity($entityName, $entityId);
 
         if ($entity === null || !$slugService->hasSlugs($entity) || $slug === null) {
-            $flashBag->add(Message::TYPE_DANGER, 'Došlo k chybe.');
+            $flashBag->add(MessageHelper::TYPE_DANGER, 'Došlo k chybe.');
             return $this->redirect($this->generateUrl('admin_dashboard_index'));
         }
 
@@ -124,7 +124,7 @@ class SlugController extends Controller {
         $entity = $slugService->getEntity($entityName, $entityId);
 
         if ($entity === null || !$slugService->hasSlugs($entity) || $slug === null) {
-            $flashBag->add(Message::TYPE_DANGER, 'Došlo k chybe.');
+            $flashBag->add(MessageHelper::TYPE_DANGER, 'Došlo k chybe.');
             return $this->redirect($this->generateUrl('admin_dashboard_index'));
         }
 
@@ -135,10 +135,10 @@ class SlugController extends Controller {
         if ($form->isValid()) {
             try {
                 $slugService->save($slug, $entity);
-                $flashBag->add(Message::TYPE_SUCCESS, 'Slug bol uložený.');
+                $flashBag->add(MessageHelper::TYPE_SUCCESS, 'Slug bol uložený.');
                 return $this->redirect($this->generateUrl("admin_{$entityName}_index", ['id' => $entityId]));
             } catch (\Exception $e) {
-                $message = new Message(Message::TYPE_DANGER, 'Pre daný jazyk môže byť najviac jeden slug a zároveň musí byť pre daný jazyk unikátny.');
+                $message = new MessageHelper(MessageHelper::TYPE_DANGER, 'Pre daný jazyk môže byť najviac jeden slug a zároveň musí byť pre daný jazyk unikátny.');
             }
         }
 
@@ -162,14 +162,14 @@ class SlugController extends Controller {
         $entity = $slugService->getEntity($entityName, $entityId);
 
         if ($entity === null || !$slugService->hasSlugs($entity) || $slug === null) {
-            $flashBag->add(Message::TYPE_DANGER, 'Došlo k chybe.');
+            $flashBag->add(MessageHelper::TYPE_DANGER, 'Došlo k chybe.');
             return $this->redirect($this->generateUrl('admin_dashboard_index'));
         }
 
         try {
             $slugService->delete($slug);
         } catch (\Exception $e) {
-            $flashBag->add(Message::TYPE_SUCCESS, 'Slug bol zmazaný.');
+            $flashBag->add(MessageHelper::TYPE_SUCCESS, 'Slug bol zmazaný.');
         }
 
         return $this->redirect($this->generateUrl("admin_{$entityName}_update", ['id' => $entityId]));

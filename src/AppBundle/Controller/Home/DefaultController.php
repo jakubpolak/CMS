@@ -21,8 +21,6 @@ class DefaultController extends Controller {
      * @Method("GET")
      */
     public function indexAction(): array {
-        $menuTree = $this->get('app.service.menu')->getMenu(true);
-
-        return ['menuTree' => $menuTree];
+        return [];
     }
 }

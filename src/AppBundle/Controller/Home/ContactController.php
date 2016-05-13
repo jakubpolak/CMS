@@ -23,8 +23,6 @@ class ContactController extends Controller {
      * @Method("GET")
      */
     public function contactAction() {
-        $menuTree = $this->get('app.service.menu')->getMenu(true);
-
-        return ['menuTree' => $menuTree];
+        return [];
     }
 }

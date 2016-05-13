@@ -24,13 +24,8 @@ class ArticleController extends Controller {
      * @Method("GET")
      */
     public function listAction() {
-        $menuTree = $this->get('app.service.menu')->getMenu(true);
         $articleList = $this->get('app.service.article')->getAllByIsPublished(true);
-
-        return [
-            'menuTree' => $menuTree,
-            'articleList' => $articleList
-        ];
+        return ['articleList' => $articleList];
     }
 
     /**
@@ -40,12 +35,6 @@ class ArticleController extends Controller {
      * @Template("@App/home/article/article.html.twig")
      */
     public function showAction(Article $article) {
-        $menuTree = $this->get('app.service.menu')->getMenu(true);
-        $articlea = $article;
-
-        return [
-            'menuTree' => $menuTree,
-            'article' => $articlea
-        ];
+        return ['article' => $article];
     }
 }

@@ -11,6 +11,7 @@
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
+                {% set menuTree = getMenuTree(true) %}
                 {% for menu in menuTree %}
                     {% if isArray(menu.menus) == 1 %}
                         <li class="dropdown">

@@ -46,6 +46,12 @@ services:
         arguments: ['@translator.default', '@doctrine.orm.default_entity_manager']
         tags:
             - { name: twig.extension }
+    app.twig.menu_helper:
+        class: AppBundle\Twig\MenuHelperExtension
+        public: false
+        arguments: ['@doctrine.orm.default_entity_manager']
+        tags:
+            - { name: twig.extension }
     app.helper.dql:
         class: AppBundle\Helper\DqlHelper
     app.service.translation:

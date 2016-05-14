@@ -1,0 +1,44 @@
+{% extends '@App/home/layout.html.twig' %}
+
+{% block heading %}
+    <h1 class="page-header">{{ 'Články'|trans }}
+        <small>{{ 'podnadpis'|trans }}</small>
+    </h1>
+{% endblock %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li><a href="{{ path('home_default_index') }}">{{ 'CMS'|trans }}</a>
+        </li>
+        <li class="active">{{ 'Články' }}</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+    {% for article in articleList %}
+        <div class="row">
+            <div class="col-md-1 text-center">
+                <p><i class="fa fa-camera fa-4x"></i>
+                </p>
+                <p>{{ article.writtenOn|date }}</p>
+            </div>
+            <div class="col-md-5">
+                <a href="#">
+                    <img class="img-responsive img-hover" src="http://placehold.it/600x300" alt="">
+                </a>
+            </div>
+            <div class="col-md-6">
+                <h3>
+                    <a href="{{ path('home_article_show', {'id': article.id}) }}">{{ article.heading }}</a>
+                </h3>
+                <p>by <a href="#">Start Bootstrap</a>
+                </p>
+                <p>{{ article.content|slice(0,50)|raw }}</p>
+                <a class="btn btn-primary" href="{{ path('home_article_show', {'id': article.id}) }}">{{ 'Čítaj viac ' }}<i class="fa fa-angle-right"></i></a>
+            </div>
+        </div>
+        {% if articleList|length > 1 %}
+            <hr>
+        {% endif %}
+    {% endfor %}
+{% endblock %}

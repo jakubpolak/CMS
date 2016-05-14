@@ -180,7 +180,7 @@ class Menu implements Entity {
      *
      * @return self
      */
-    public function getMenu(): Menu {
+    public function getMenu() {
         return $this->menu;
     }
 

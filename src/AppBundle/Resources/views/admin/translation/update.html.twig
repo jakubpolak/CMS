@@ -2,10 +2,10 @@
 
 {% block heading %}{{ 'Preklady'|trans({}, 'admin') }}{% endblock %}
 
-{% block breadcrumbs %}&raquo; <a href="{{ path('admin_translation_index') }}">{{ 'Preklady'|trans({}, 'admin') }}</a> &raquo; {{ 'Preložiť text' }} {% endblock %}
+{% block breadcrumbs %}&raquo; <a href="{{ path('admin_translation_index', {'page': page}) }}">{{ 'Preklady'|trans({}, 'admin') }}</a> &raquo; {{ 'Preložiť text' }} {% endblock %}
 
 {% block content %}
-<form method="post" action="{{ url('admin_translation_updateProcess', {'entity': entity, 'entityId': entityId}) }}">
+<form method="post" action="{{ url('admin_translation_updateProcess', {'entity': entity, 'entityId': entityId, 'page': page}) }}">
     {% for language,languageEntityGroup in languageEntityGroups %}
         <div class="row">
             <div class="col-lg-12">

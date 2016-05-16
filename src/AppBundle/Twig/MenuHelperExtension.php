@@ -10,8 +10,7 @@ use Doctrine\ORM\EntityManager;
  *
  * @author Jakub Polák, Jana Poláková
  */
-class MenuHelperExtension extends \Twig_Extension
-{
+class MenuHelperExtension extends \Twig_Extension {
     /**
      * @var EntityManager
      */
@@ -49,7 +48,7 @@ class MenuHelperExtension extends \Twig_Extension
      * @param $isActive
      * @return array
      */
-    public function getMenuTreeFunction($isActive): array {
+    public function getMenuTreeFunction(bool $isActive): array {
         return $this->menuRepository->getMenu($isActive);
     }
 

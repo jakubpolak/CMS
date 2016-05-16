@@ -42,7 +42,7 @@
                                     {% endfor %}
                                     <tr>
                                         <td colspan="2">
-                                            <a class="btn btn-primary pull-right" href="{{ path('admin_translation_update', { 'entity': translation.details.entity, 'entityId': translation.details.entityId }) }}">{{ 'Upraviť'|trans({}, 'admin') }}</a>
+                                            <a class="btn btn-primary pull-right" href="{{ path('admin_translation_update', { 'entity': translation.details.entity, 'entityId': translation.details.entityId, 'page': page }) }}">{{ 'Upraviť'|trans({}, 'admin') }}</a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -58,7 +58,7 @@
 
         </div>
         <div class="col-lg-6">
-            {% include 'AppBundle:admin/layout:pagination.html.twig' with {'pagesCount': pagesCount, 'currentPage': app.request.get('page'), 'route': 'admin_translation_index'} %}
+            {% include 'AppBundle:admin/layout:pagination.html.twig' with {'pagesCount': pagesCount, 'currentPage': page, 'route': 'admin_translation_index'} %}
         </div>
     </div>
 {% endblock %}

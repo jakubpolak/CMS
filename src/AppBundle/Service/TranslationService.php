@@ -84,12 +84,12 @@ class TranslationService {
         $entities = $this->config['entities'];
 
         foreach ($entities as $entityName => $entityAttributes) {
-            $namesOfEntityAttributes = array_keys($entityAttributes);
+            $namesOfAttributes = array_keys($entityAttributes);
 
-            $this->removeInvalidTranslationMappers($entityName, $namesOfEntityAttributes);
+            $this->removeInvalidTranslationMappers($entityName, $namesOfAttributes);
             $this->removeInvalidTranslations();
-            $this->updateTranslationMappers($entityName, $namesOfEntityAttributes);
-            $this->createTranslationMappers($entityName, $namesOfEntityAttributes, $entityAttributes);
+            $this->updateTranslationMappers($entityName, $namesOfAttributes);
+            $this->createTranslationMappers($entityName, $namesOfAttributes, $entityAttributes);
         }
     }
 
@@ -101,9 +101,26 @@ class TranslationService {
     public function updateTranslations(Request $request) {
         $translations = $request->request->all();
 
-        foreach ($translations as $id => $value) {
+        foreach ($translations as $id => $content) {
             $translation = $this->translationRepository->find($id);
-            $translation->setContent($value);
+            $translation->setContent($content);
+            $language = $translation->getLanguage();
+
+            if ($language->getIsDefault()) {
+                $translationMapper = $translation->getTranslationMapper();
+                $entityName = $translationMapper->getEntity();
+                $attributeName = $translationMapper->getAttribute();
+                $entityId = $translationMapper->getEntityId();
+
+                $entity = $this->entityManager
+                    ->getRepository("AppBundle:$entityName")
+                    ->find($entityId);
+
+                $entitySetterName = 'set' . ucfirst($attributeName);
+                $entity->$entitySetterName($content);
+
+                $translationMapper->setAttributeContent($content);
+            }
         }
 
         $this->entityManager->flush();
@@ -116,24 +133,29 @@ class TranslationService {
      * @param int $entityId entity id
      * @return array
      */
-    public function getUpdateTranslationsFormData(string $entity, int $entityId): array {
+    public function getTranslations(string $entity, int $entityId): array {
         $languages = $this->languageService->getAll();
-        $languageEntityGroups = [];
+        $entitiesByLanguage = [];
 
         foreach ($languages as $language) {
-            $languageEntityGroups[$language->getName()] = $this->translationRepository
-                ->getByEntityAndEntityIdAndLanguageId($entity, $entityId, $language->getId(), true);
+            $entitiesByLanguage[$language->getName()] = $this->translationRepository
+                ->getByEntityAndEntityIdAndLanguageId(
+                    $entity,
+                    $entityId,
+                    $language->getId(),
+                    true
+                );
         }
 
         $displayNames = $this->config['display_names'];
 
-        foreach ($languageEntityGroups as &$languageGroup) {
+        foreach ($entitiesByLanguage as &$languageGroup) {
             foreach ($languageGroup as &$entityGroup) {
                 $entityGroup['attributeDisplayName'] = $displayNames[$entityGroup['attribute']];
             }
         }
 
-        return $languageEntityGroups;
+        return $entitiesByLanguage;
     }
 
     /**
@@ -192,7 +214,7 @@ class TranslationService {
     }
 
     /**
-     * Update existing entries.
+     * Update translation mappers.
      *
      * @param string $entity entity name
      * @param array $namesOfEntityAttributes names of entity attributes
@@ -228,7 +250,7 @@ class TranslationService {
     }
 
     /**
-     * Create new entries.
+     * Create new translation mappers.
      *
      * @param string $entity entity name
      * @param array $namesOfEntityAttributes names of entity attributes
@@ -270,7 +292,7 @@ class TranslationService {
     }
 
     /**
-     * Create translations.
+     * Persist translations.
      *
      * @param TranslationMapper $translationMapper translation mapper
      */

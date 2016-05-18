@@ -1,0 +1,35 @@
+{% extends '@App/home/layout.html.twig' %}
+
+{% block slider %}
+    <header id="myCarousel" class="carousel slide">
+        <ol class="carousel-indicators">
+        {% for image in sliderImages %}
+            {% if loop.first %}
+                <li data-target="#myCarousel" data-slide-to="{{ loop.index - 1 }}" class="active"></li>
+            {% else %}
+                <li data-target="#myCarousel" data-slide-to="{{ loop.index - 1 }}" class=""></li>
+            {% endif %}
+        {% endfor %}
+        </ol>
+        <div class="carousel-inner">
+        {% for image in sliderImages %}
+            {% if loop.first %}
+                <div class="item active">
+            {% else %}
+                <div class="item">
+            {% endif %}
+                    <div class="fill" style="background-image:url({{ (upload_dir ~ '/' ~ image.name)|imagine_filter('thumb_small') }});"></div>
+                    <div class="carousel-caption">
+                        <h2>{{ image.heading }}</h2>
+                    </div>
+                </div>
+        {% endfor %}
+        </div>
+        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+            <span class="icon-prev"></span>
+        </a>
+        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+            <span class="icon-next"></span>
+        </a>
+    </header>
+{% endblock %}

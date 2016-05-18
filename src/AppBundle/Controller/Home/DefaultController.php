@@ -17,10 +17,12 @@ class DefaultController extends Controller {
      * Index action.
      *
      * @Route("", name="home_default_index")
-     * @Template("@App/home/layout.html.twig")
+     * @Template("@App/home/default/index.html.twig")
      * @Method("GET")
      */
     public function indexAction(): array {
-        return [];
+        $sliderImages = $this->get('app.service.image')->getAllToSliderOrderByPosition();
+
+        return ['sliderImages' => $sliderImages];
     }
 }

@@ -1,0 +1,54 @@
+{% extends '@App/admin/layout.html.twig' %}
+
+{% block heading %}{{ 'Banner'|trans({}, 'admin') }}{% endblock %}
+
+{% block breadcrumbs %}&raquo; {{ 'Banner'|trans({}, 'admin') }}{% endblock %}
+
+{% block content %}
+    <div class="row app-margin-bottom-15">
+        <div class="col-lg-12">
+            <div class="btn-group pull-right" role="group">
+                <a href="{{ path('admin_sliderGallery_create') }}" type="button" class="btn btn-default btn-md">{{ 'Pridať obrázok'|trans({}, 'admin') }}</a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">{{ 'Banner'|trans({}, 'admin') }}</div>
+                <div class="panel-body">
+                    {% if images|length == 0 %}
+                        <div class="alert alert-info">{{ 'Žiadne obrázky.'|trans({}, 'admin') }}</div>
+                    {% else %}
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th class="col-lg-3">{{ 'Obrázok'|trans({}, 'admin') }}</th>
+                                <th class="col-lg-5">{{ 'Nadpis'|trans({}, 'admin') }}</th>
+                                <th class="col-lg-2 app-center">{{ 'Pozícia'|trans({}, 'admin') }}</th>
+                                <th class="col-lg-1">&nbsp;</th>
+                                <th class="col-lg-1">&nbsp;</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for image in images %}
+                                <tr>
+                                    <td><img src="{{ (upload_dir ~ '/' ~ image.name)|imagine_filter('thumb_small') }}"></td>
+                                    <td>{{ image.heading }}</td>
+                                    <td class="app-center">{{ image.position }}</td>
+                                    <td class="app-center">
+                                        <a href="{{ url('admin_sliderGallery_update', {'imageId': image.id}) }}">{{ 'Upraviť'|trans({}, 'admin') }}</a>
+                                    </td>
+                                    <td class="app-center">
+                                        <a href="{{ url('admin_sliderGallery_delete', {'imageId': image.id}) }}">{{ 'Zmazať'|trans({}, 'admin') }}</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

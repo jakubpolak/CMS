@@ -29,6 +29,13 @@ class Image implements Entity {
     private $name;
 
     /**
+     * @var string
+     * 
+     * @ORM\Column(name="heading", type="string", length=255, nullable=true)
+     */
+    private $heading;
+
+    /**
      * @var int
      *
      * @ORM\Column(name="position", type="integer")
@@ -99,7 +106,6 @@ class Image implements Entity {
         return $this;
     }
 
-
     /**
      * Get id.
      *
@@ -131,6 +137,27 @@ class Image implements Entity {
     }
 
     /**
+     * Get heading.
+     * 
+     * @return string
+     */
+    public function getHeading() {
+        return $this->heading;
+    }
+
+    /**
+     * Set heading.
+     * 
+     * @param string $heading
+     * @return $self
+     */
+    public function setHeading($heading): self {
+        $this->heading = $heading;
+        
+        return $this;
+    }
+    
+    /**
      * Set position.
      *
      * @param int $position
@@ -156,7 +183,7 @@ class Image implements Entity {
      *
      * @return File
      */
-    public function getFile(): File {
+    public function getFile() {
         return $this->file;
     }
 
@@ -184,7 +211,7 @@ class Image implements Entity {
      *
      * @return Article
      */
-    public function getArticle(): Article {
+    public function getArticle() {
         return $this->article;
     }
 

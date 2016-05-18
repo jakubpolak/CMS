@@ -2,7 +2,9 @@
 
 namespace AppBundle\Service;
 use AppBundle\Entity\Image;
+use AppBundle\Entity\ImageType;
 use AppBundle\Repository\ImageRepository;
+use AppBundle\Repository\ImageTypeRepository;
 use AppBundle\Service\Exception\ServiceException;
 use Doctrine\ORM\EntityManager;
 
@@ -21,6 +23,11 @@ class ImageService {
      * @var ImageRepository
      */
     private $imageRepository;
+
+    /**
+     * @var ImageTypeRepository
+     */
+    private $imageTypeRepository;
 
     /**
      * @var string
@@ -42,6 +49,7 @@ class ImageService {
     public function __construct(EntityManager $entityManager, string $wwwRoot, string $uploadDir) {
         $this->em = $entityManager;
         $this->imageRepository = $this->em->getRepository('AppBundle:Image');
+        $this->imageTypeRepository = $this->em->getRepository('AppBundle:ImageType');
         $this->wwwRoot = $wwwRoot;
         $this->uploadDir = $uploadDir;
     }
@@ -53,6 +61,16 @@ class ImageService {
      */
     public function getInstance() {
         return new Image($this->wwwRoot, $this->uploadDir);
+    }
+
+    /**
+     * Get all images order by position.
+     * 
+     * @return array
+     */
+    public function getAllToSliderOrderByPosition(): array {
+        $imageType = $this->imageTypeRepository->getByName(ImageType::SLIDER);
+        return $this->imageRepository->getAllToSliderOrderByPosition($imageType);
     }
 
     /**
@@ -69,8 +87,16 @@ class ImageService {
             $image->upload();
         }
 
-        if ($image->getId() === null) { $this->em->persist($image); }
+        $imageTypeGallery = $this->imageTypeRepository->getByName(ImageType::GALLERY);
+        $imageTypeSlider = $this->imageTypeRepository->getByName(ImageType::SLIDER);
+        if ($image->getArticle()) {
+            $image->setImageType($imageTypeGallery);
+        } else {
+            $image->setImageType($imageTypeSlider);
+        }
 
+        if ($image->getId() === null) { $this->em->persist($image); }
+        
         try {
             $this->em->flush();
         } catch (\Exception $e) {

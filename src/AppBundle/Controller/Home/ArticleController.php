@@ -13,7 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  *
  * @author Jakub Polák, Jana Poláková
  *
- * @Route("/article")
+ * @Route("/articles")
  */
 class ArticleController extends Controller {
     /**
@@ -23,9 +23,10 @@ class ArticleController extends Controller {
      * @Template("@App/home/article/list.html.twig")
      * @Method("GET")
      */
-    public function listAction() {
-        $articleList = $this->get('app.service.article')->getAllByIsPublished(true);
-        return ['articleList' => $articleList];
+    public function listAction() : array {
+        return [
+            'articleList' => $this->get('app.service.article')->getByIsPublished(true)
+        ];
     }
 
     /**
@@ -34,7 +35,7 @@ class ArticleController extends Controller {
      * @Route("/{id}/show", name="home_article_show")
      * @Template("@App/home/article/article.html.twig")
      */
-    public function showAction(Article $article) {
+    public function showAction(Article $article) : array {
         return ['article' => $article];
     }
 }

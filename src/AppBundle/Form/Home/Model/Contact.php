@@ -2,6 +2,8 @@
 
 namespace AppBundle\Form\Home\Model;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * Class Contact
  *
@@ -10,6 +12,7 @@ namespace AppBundle\Form\Home\Model;
 class Contact {
     /**
      * @var string
+     * @Assert\NotBlank()
      */
     private $name;
 
@@ -20,6 +23,8 @@ class Contact {
 
     /**
      * @var string
+     * @Assert\NotBlank()
+     * @Assert\Email()
      */
     private $email;
 

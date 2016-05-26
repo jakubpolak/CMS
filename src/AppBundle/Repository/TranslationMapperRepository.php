@@ -28,6 +28,19 @@ class TranslationMapperRepository extends EntityRepository {
     }
 
     /**
+     * Get by entity.
+     * 
+     * @param string $entity
+     * @return array
+     */
+    public function getByEntity(string $entity) : array {
+        return $this->getEntityManager()
+            ->createQuery('SELECT tm FROM AppBundle:TranslationMapper tm WHERE tm.entity = :entity')
+            ->setParameter('entity', $entity)
+            ->getResult();
+    }
+
+    /**
      * Update attributeContent to $attributeContent of an entry with attributeName equal to $attributeName
      * and attributeName equal to $attributeName and entityId equal to $entityId and entity equal to $entity.
      * 
@@ -42,17 +55,16 @@ class TranslationMapperRepository extends EntityRepository {
         int $entityId,
         string $entity
     ) {
-        $this->getEntityManager()
-            ->createQuery('
-                UPDATE AppBundle:TranslationMapper tm 
-                SET tm.attributeContent = :attributeContent 
-                WHERE tm.entityId = :entityId AND tm.attribute = :attributeName AND tm.entity = :entity
-            ')->setParameters([
-                'attributeContent' => $attributeContent,
-                'attributeName' => $attributeName,
-                'entityId' => $entityId,
-                'entity' => $entity
-            ])->execute();
+        $this->_em->createQuery('
+            UPDATE AppBundle:TranslationMapper tm 
+            SET tm.attributeContent = :attributeContent 
+            WHERE tm.entityId = :entityId AND tm.attribute = :attributeName AND tm.entity = :entity
+        ')->execute([
+            'attributeContent' => $attributeContent,
+            'attributeName' => $attributeName,
+            'entityId' => $entityId,
+            'entity' => $entity
+        ]);
     }
 
     /**

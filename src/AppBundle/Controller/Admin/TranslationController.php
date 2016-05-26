@@ -65,7 +65,7 @@ class TranslationController extends Controller {
         $flashBag = $this->get('session')->getFlashBag();
 
         try {
-            $this->get('app.service.translation')->updateTranslations($request);
+            $this->get('app.service.translation')->updateTranslationsByRequest($request);
             $flashBag->add(MessageHelper::TYPE_SUCCESS, 'Preklad bol uložený.');
         } catch (DBALException $e) {
             $flashBag->add(MessageHelper::TYPE_DANGER, 'Preklad sa nepodarilo uložiť.');
@@ -88,6 +88,7 @@ class TranslationController extends Controller {
      */
     public function synchronizeAction(int $page) {
         $this->get('app.service.translation')->synchronize();
+        
         return $this->redirect($this->generateUrl('admin_translation_index', ['page' => $page]));
     }
 }

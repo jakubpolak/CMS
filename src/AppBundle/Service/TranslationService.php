@@ -83,14 +83,17 @@ class TranslationService {
     public function synchronize() {
         $entities = $this->config['entities'];
 
-        foreach ($entities as $entityName => $entityAttributes) {
+        foreach ($entities as $entity => $entityAttributes) {
             $namesOfAttributes = array_keys($entityAttributes);
 
-            $this->removeInvalidTranslationMappers($entityName, $namesOfAttributes);
+            $this->removeInvalidTranslationMappers($entity, $namesOfAttributes);
             $this->removeInvalidTranslations();
-            $this->updateTranslationMappers($entityName, $namesOfAttributes);
-            $this->createTranslationMappers($entityName, $namesOfAttributes, $entityAttributes);
+            $this->updateTranslationMappers($entity, $namesOfAttributes);
+            $this->updateTranslations($entity);
+            $this->createTranslationMappers($entity, $namesOfAttributes, $entityAttributes);
         }
+
+        $this->cacheService->clearCache();
     }
 
     /**
@@ -98,7 +101,7 @@ class TranslationService {
      *
      * @param Request $request
      */
-    public function updateTranslations(Request $request) {
+    public function updateTranslationsByRequest(Request $request) {
         $translations = $request->request->all();
 
         foreach ($translations as $id => $content) {
@@ -106,7 +109,7 @@ class TranslationService {
             $translation->setContent($content);
             $language = $translation->getLanguage();
 
-            if ($language->getIsDefault()) {
+            if ($language->getIsDefault() === true) {
                 $translationMapper = $translation->getTranslationMapper();
                 $entityName = $translationMapper->getEntity();
                 $attributeName = $translationMapper->getAttribute();
@@ -180,7 +183,6 @@ class TranslationService {
         $entries = $this->translationRepository
             ->getLimitedByLanguageId($defaultLanguage->getId(), --$firstResult * $maxResults, $maxResults);
 
-
         $result = [];
         foreach ($entries as $entry) {
             $translationMapper = $entry->getTranslationMapper();
@@ -212,6 +214,7 @@ class TranslationService {
 
         return $result;
     }
+
 
     /**
      * Update translation mappers.
@@ -247,6 +250,26 @@ class TranslationService {
                     ->updateAttributeContent($content, $name, (int) $attributes['id'], $entity);
             }
         }
+    }
+
+    /**
+     * Update translations.
+     *
+     * @param string $entity entity name
+     */
+    private function updateTranslations(string $entity) {
+        $translationMappers = $this->translationMapperRepository->getByEntity($entity);
+
+        foreach ($translationMappers as &$translationMapper) {
+            $translations = $translationMapper->getTranslations();
+            foreach ($translations as &$translation) {
+                if ($translation->getLanguage()->getIsDefault() === true) {
+                    $translation->setContent($translationMapper->getAttributeContent());
+                }
+            }
+        }
+
+        $this->entityManager->flush();
     }
 
     /**

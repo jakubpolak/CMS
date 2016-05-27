@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -11,15 +12,31 @@ use Doctrine\ORM\EntityRepository;
  */
 class TranslationRepository extends EntityRepository {
     /**
-     * Delete entries with languageId not in $languageIdsDQL.
+     * Delete entries with language id not among language ids.
      *
-     * @param string $languageIdsDQL not in ids of languages DQL
+     * @param string $languageIds not in ids of languages DQL
      */
-    public function delete(string $languageIdsDQL) {
-        $this->_em->createQuery("
-            DELETE FROM AppBundle:Translation t 
-            WHERE t.language NOT IN($languageIdsDQL)
-        ")->execute();
+    public function delete(string $languageIds) {
+        $this->getEntityManager()
+            ->createQuery("
+                DELETE FROM AppBundle:Translation t 
+                WHERE t.language NOT IN($languageIds)
+            ")->execute();
+    }
+
+    /**
+     * Get entries by language id.
+     *
+     * @param int $languageId language id
+     * @return array
+     */
+    public function getByLanguageId(int $languageId) : array {
+        return $this->getEntityManager()
+            ->createQuery('
+                SELECT t FROM AppBundle:Translation t 
+                WHERE t.language = :language
+            ')->setParameter('language', $languageId)
+            ->getResult();
     }
 
     /**
@@ -31,7 +48,12 @@ class TranslationRepository extends EntityRepository {
      * @param bool $asArray if true then array of arrays is returned, otherwise array of objects is returned
      * @return array if $asArray true then an array is returned, otherwise a Collection is returned.
      */
-    public function getByLanguageIdAndEntityAndEntityId(int $languageId, string $entity, int $entityId, bool $asArray = false) {
+    public function getByLanguageIdAndEntityAndEntityId(
+        int $languageId,
+        string $entity,
+        int $entityId,
+        bool $asArray = false
+    ) {
         $query = $this->getEntityManager()
             ->createQuery('
                 SELECT
@@ -61,8 +83,8 @@ class TranslationRepository extends EntityRepository {
      * @param int $maxResults max results
      * @return array
      */
-    public function getLimitedByLanguageId(int $languageId, int $firstResult, int $maxResults): array {
-        return $this->_em
+    public function getLimitedByLanguageId(int $languageId, int $firstResult, int $maxResults) : array {
+        return $this->getEntityManager()
             ->createQuery('
                 SELECT t 
                 FROM AppBundle:Translation t
@@ -78,13 +100,19 @@ class TranslationRepository extends EntityRepository {
     /**
      * Get entries by entity and entity id.
      *
-     * @param string $entity entity
+     * @param string $entity entity name
      * @param int $entityId entity id
+     * @param int $languageId language id
      * @param bool $asArray as array
      * @return array|Collection if $asArray true then an array is returned, otherwise a Collection
      *      is returned.
      */
-    public function getByEntityAndEntityIdAndLanguageId(string $entity, int $entityId, int $languageId, bool $asArray = false) {
+    public function getByEntityAndEntityIdAndLanguageId(
+        string $entity,
+        int $entityId,
+        int $languageId,
+        bool $asArray = false
+    ) {
         $query = $this->getEntityManager()
             ->createQuery('
                 SELECT t.id, t.content, tm.attribute, tm.attributeType, tm.entityId, l.code
@@ -102,5 +130,16 @@ class TranslationRepository extends EntityRepository {
         return ($asArray === true)
             ? $query->getArrayResult()
             : $query->getResult();
+    }
+
+    /**
+     * Delete by translation mapper ids.
+     * 
+     * @param string $translationMapperIds translation mapper ids.
+     */
+    public function deleteByTranslationMapperIds(string $translationMapperIds) {
+        $this->getEntityManager()
+            ->createQuery("DELETE FROM AppBundle:Translation t WHERE t.translationMapper IN ($translationMapperIds)")
+            ->execute();
     }
 }

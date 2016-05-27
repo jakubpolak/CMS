@@ -11,51 +11,50 @@ use Doctrine\ORM\EntityRepository;
  */
 class TranslationMapperRepository extends EntityRepository {
     /**
-     * Get entityId of entries with entity equal to $entity.
+     * Get entity id by entity name.
      *
-     * @param string $entity entity
+     * @param string $entityName entity
      * @return array
      */
-    public function getEntityIdByEntity(string $entity): array {
+    public function getEntityIdByEntity(string $entityName) : array {
         return $this->getEntityManager()
             ->createQuery('
                 SELECT tm.entityId 
                 FROM AppBundle:TranslationMapper tm 
                 WHERE tm.entity = :entity 
                 GROUP BY tm.entityId
-            ')->setParameter('entity', $entity)
+            ')->setParameter('entity', $entityName)
             ->getArrayResult();
     }
 
     /**
-     * Get by entity.
+     * Get by entity name.
      * 
-     * @param string $entity
+     * @param string $entityName entity name
      * @return array
      */
-    public function getByEntity(string $entity) : array {
+    public function getByEntity(string $entityName) : array {
         return $this->getEntityManager()
             ->createQuery('SELECT tm FROM AppBundle:TranslationMapper tm WHERE tm.entity = :entity')
-            ->setParameter('entity', $entity)
+            ->setParameter('entity', $entityName)
             ->getResult();
     }
 
     /**
-     * Update attributeContent to $attributeContent of an entry with attributeName equal to $attributeName
-     * and attributeName equal to $attributeName and entityId equal to $entityId and entity equal to $entity.
+     * Update attribute content by entity id and attribute name and entity name.
      * 
      * @param string $attributeContent attribute content
      * @param string $attributeName attribute name
      * @param int $entityId entity id
-     * @param string $entity entity
+     * @param string $entityName entity name
      */
     public function updateAttributeContent(
         string $attributeContent,
         string $attributeName,
         int $entityId,
-        string $entity
+        string $entityName
     ) {
-        $this->_em->createQuery('
+        $this->getEntityManager()->createQuery('
             UPDATE AppBundle:TranslationMapper tm 
             SET tm.attributeContent = :attributeContent 
             WHERE tm.entityId = :entityId AND tm.attribute = :attributeName AND tm.entity = :entity
@@ -63,37 +62,47 @@ class TranslationMapperRepository extends EntityRepository {
             'attributeContent' => $attributeContent,
             'attributeName' => $attributeName,
             'entityId' => $entityId,
-            'entity' => $entity
+            'entity' => $entityName
         ]);
     }
 
     /**
-     * Delete entries with entityId not in $notInIdsOfEntitiesDQL or attribute not
-     * in $notInNamesOfAttributesDQL and with name equal to $entity.
+     * Delete by ids.
      * 
-     * @param string $notInIdsOfEntitiesDQL not in ids of entities DQL
-     * @param string $notInNamesOfAttributesDQL not in names of attributes DQL
-     * @param string $entity entity
+     * @param string $ids ids of entries
      */
-    public function delete(
-        string $notInIdsOfEntitiesDQL,
-        string $notInNamesOfAttributesDQL,
-        string $entity
-    ) {
+    public function deleteByIds(string $ids) {
         $this->getEntityManager()
-            ->createQuery("
-                DELETE FROM AppBundle:TranslationMapper tm 
-                WHERE (tm.entityId NOT IN($notInIdsOfEntitiesDQL) OR tm.attribute NOT IN($notInNamesOfAttributesDQL)) AND tm.entity = :entity
-            ")->setParameter('entity', $entity)
+            ->createQuery("DELETE FROM AppBundle:TranslationMapper tm WHERE tm.id IN ($ids)")
             ->execute();
     }
 
     /**
-     * Get groups count.
+     * Get ids of entries that do not have one of specified id or one of specified attributes
+     * and that do have specified entity name.
+     * 
+     * @param string $idsOfEntities ids of entities
+     * @param string $namesOfAttributes names of attributes
+     * @param string $entityName entity name
+     * @return array
+     */
+    public function getIdsToBeDeleted(string $idsOfEntities, string $namesOfAttributes, string $entityName) : array {
+        return $this->getEntityManager()
+            ->createQuery("
+                SELECT tm.id FROM AppBundle:TranslationMapper tm 
+                WHERE (tm.entityId NOT IN($idsOfEntities) 
+                    OR tm.attribute NOT IN($namesOfAttributes)) 
+                    AND tm.entity = :entity
+            ")->setParameter('entity', $entityName)
+            ->getArrayResult();
+    }
+
+    /**
+     * Get count of entries grouped by entity id and entity.
      * 
      * @return int
      */
-    public function getCountGroupedByEntityIdAndEntity(): int {
+    public function getCountGroupedByEntityIdAndEntity() : int {
         $result = $this->getEntityManager()
             ->createQuery('                
                 SELECT COUNT(tm.id) 

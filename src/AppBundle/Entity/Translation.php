@@ -27,7 +27,7 @@ class Translation {
     /**
      * @var string
      *
-     * @ORM\Column(name="content", type="text", nullable=true)
+     * @ORM\Column(name="content", type="text")
      */
     private $content;
 
@@ -48,6 +48,13 @@ class Translation {
     private $translationMapper;
 
     /**
+     * Constructor.
+     */
+    public function __construct() {
+        $this->content = '';
+    }
+
+    /**
      * Get id.
      *
      * @return int|null
@@ -62,7 +69,7 @@ class Translation {
      * @param int $id
      * @return Translation
      */
-    public function setId(int $id): self {
+    public function setId(int $id) : self {
         $this->id = $id;
 
         return $this;
@@ -73,7 +80,7 @@ class Translation {
      *
      * @return string
      */
-    public function getContent(): string {
+    public function getContent() : string {
         return $this->content;
     }
 
@@ -83,7 +90,7 @@ class Translation {
      * @param string $content
      * @return Translation
      */
-    public function setContent(string $content): self {
+    public function setContent(string $content) : self {
         $this->content = $content;
 
         return $this;
@@ -94,7 +101,7 @@ class Translation {
      *
      * @return Language
      */
-    public function getLanguage(): Language {
+    public function getLanguage() : Language {
         return $this->language;
     }
 
@@ -104,7 +111,7 @@ class Translation {
      * @param Language $language
      * @return Translation
      */
-    public function setLanguage(Language $language): self {
+    public function setLanguage(Language $language) : self {
         $this->language = $language;
 
         return $this;
@@ -115,7 +122,7 @@ class Translation {
      *
      * @return TranslationMapper
      */
-    public function getTranslationMapper(): TranslationMapper {
+    public function getTranslationMapper() : TranslationMapper {
         return $this->translationMapper;
     }
 
@@ -125,7 +132,7 @@ class Translation {
      * @param TranslationMapper $translationMapper
      * @return Translation
      */
-    public function setTranslationMapper(TranslationMapper $translationMapper): self {
+    public function setTranslationMapper(TranslationMapper $translationMapper) : self {
         $this->translationMapper = $translationMapper;
 
         return $this;

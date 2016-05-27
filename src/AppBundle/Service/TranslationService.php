@@ -9,6 +9,7 @@ use AppBundle\Repository\TranslationMapperRepository;
 use AppBundle\Repository\TranslationRepository;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Yaml\Dumper;
 
 /**
  * Translation service.
@@ -57,20 +58,20 @@ class TranslationService {
      * @param EntityManager $entityManager entity manager
      * @param LanguageService $languageService language service
      * @param CacheService $cacheService cache service
-     * @param DqlHelper $DqlHelper dql helper
+     * @param DqlHelper $dqlHelper dql helper
      * @param array $config translation configuration
      */
     public function __construct(
         EntityManager $entityManager,
         LanguageService $languageService,
         CacheService $cacheService,
-        DqlHelper $DqlHelper,
+        DqlHelper $dqlHelper,
         array $config
     ) {
         $this->entityManager = $entityManager;
         $this->languageService = $languageService;
         $this->cacheService = $cacheService;
-        $this->dqlHelper = $DqlHelper;
+        $this->dqlHelper = $dqlHelper;
         $this->config = $config;
         $this->translationRepository = $entityManager->getRepository('AppBundle:Translation');
         $this->translationMapperRepository = $entityManager->getRepository('AppBundle:TranslationMapper');
@@ -91,6 +92,7 @@ class TranslationService {
             $this->updateTranslationMappers($entity, $namesOfAttributes);
             $this->updateTranslations($entity);
             $this->createTranslationMappers($entity, $namesOfAttributes, $entityAttributes);
+            $this->synchronizeTranslationFiles();
         }
 
         $this->cacheService->clearCache();
@@ -229,9 +231,9 @@ class TranslationService {
             return;
         }
 
-        $idsOfEntitiesVector = $this->dqlHelper->convertToVector($idsOfEntities, 'entityId');
-        $idsOfEntitiesDQL = $this->dqlHelper->convertToString($idsOfEntitiesVector);
-        $namesOfAttributesWithAliasDQL = $this->dqlHelper->getAttributesWithAliasDQL($namesOfEntityAttributes);
+        $idsOfEntitiesVector = $this->dqlHelper->convertTwoDimensionalArrayToVector($idsOfEntities, 'entityId');
+        $idsOfEntitiesDQL = $this->dqlHelper->convertArrayToString($idsOfEntitiesVector);
+        $namesOfAttributesWithAliasDQL = $this->dqlHelper->getAttributesWithAliasDql($namesOfEntityAttributes);
 
         $valuesOfEntities = $this->entityManager
             ->createQuery("
@@ -281,13 +283,13 @@ class TranslationService {
      */
     private function createTranslationMappers(string $entity, array $namesOfEntityAttributes, array $entityAttributes) {
         $idsOfEntities = $this->translationMapperRepository->getEntityIdByEntity($entity);
-        $namesOfAttributesWithAliasDQL = $this->dqlHelper->getAttributesWithAliasDQL($namesOfEntityAttributes);
+        $namesOfAttributesWithAliasDQL = $this->dqlHelper->getAttributesWithAliasDql($namesOfEntityAttributes);
         $defaultLanguage = $this->languageService->getDefaultLanguage();
 
         $dql = "SELECT $namesOfAttributesWithAliasDQL FROM AppBundle:$entity e";
         if (count($idsOfEntities) !== 0) {
-            $idsOfEntitiesVector = $this->dqlHelper->convertToVector($idsOfEntities, 'entityId');
-            $idsOfEntitiesDQL = $this->dqlHelper->convertToString($idsOfEntitiesVector);
+            $idsOfEntitiesVector = $this->dqlHelper->convertTwoDimensionalArrayToVector($idsOfEntities, 'entityId');
+            $idsOfEntitiesDQL = $this->dqlHelper->convertArrayToString($idsOfEntitiesVector);
 
             $dql = "SELECT $namesOfAttributesWithAliasDQL FROM AppBundle:$entity e WHERE e.id NOT IN($idsOfEntitiesDQL)";
         }
@@ -347,7 +349,7 @@ class TranslationService {
             $ids[] = $language->getId();
         }
 
-        $idsDQL = $this->dqlHelper->convertToString($ids, ',');
+        $idsDQL = $this->dqlHelper->convertArrayToString($ids, ',');
         $this->translationRepository->delete($idsDQL);
     }
 
@@ -358,10 +360,49 @@ class TranslationService {
      * @param array $namesOfEntityAttributes names of entity attributes
      */
     private function removeInvalidTranslationMappers(string $entityName, array $namesOfEntityAttributes) {
-        $idsOfEntities = $this->dqlHelper->getIds($this->entityManager, $entityName);
-        $idsOfEntitiesVector = $this->dqlHelper->convertToVector($idsOfEntities, 'id');
-        $idsOfEntitiesDQL = $this->dqlHelper->convertToString($idsOfEntitiesVector, ',');
-        $namesOfAttributesWrappedDQL = $this->dqlHelper->convertToString($namesOfEntityAttributes, ',', "'");
-        $this->translationMapperRepository->delete($idsOfEntitiesDQL, $namesOfAttributesWrappedDQL, $entityName);
+        $idsOfEntities = $this->dqlHelper->getIdsAsString($this->entityManager, $entityName);
+        $attributesOfEntities = $this->dqlHelper->convertArrayToString($namesOfEntityAttributes, ',', "'");
+
+        $idsOfTranslationMappers
+            = $this->translationMapperRepository->getIdsToBeDeleted($idsOfEntities, $attributesOfEntities, $entityName);
+        $idsOfTranslationMappersString
+            = $this->dqlHelper->convertTwoDimensionalArrayToString($idsOfTranslationMappers, 'id', ',');
+
+        if (strlen($idsOfTranslationMappersString) > 0) {
+            $this->translationRepository->deleteByTranslationMapperIds($idsOfTranslationMappersString);
+            $this->translationMapperRepository->deleteByIds($idsOfTranslationMappersString);
+        }
+    }
+
+    /**
+     * Synchronize translation files.
+     */
+    private function synchronizeTranslationFiles() {
+        $translationsPath = __DIR__ . '/../../../app/Resources/AppBundle/translations/';
+        $dumper = new Dumper();
+
+        $languages = $this->languageService->getAll();
+        
+        foreach ($languages as &$language) {
+            $translationFilePath = "{$translationsPath}i18n.{$language->getCode()}.yml";
+            @unlink($translationFilePath);
+
+            $translations = $this->translationRepository->getByLanguageId($language->getId());
+            $translationToWrite = [];
+
+            foreach ($translations as &$translation) {
+                $content = $translation->getContent();
+                echo $content, "\n";
+
+                $content = str_replace("\t", '', $content);
+                $content = str_replace("\n", '', $content);
+                $content = str_replace("\r", '', $content);
+                $translationToWrite[$translation->getTranslationMapper()->getAttributeContent()] = $content;
+            }
+
+            $yaml = $dumper->dump($translationToWrite, 1);
+            $yaml = str_replace(' }', '', str_replace('- { ', '', $yaml));
+            file_put_contents($translationFilePath, $yaml);
+        }
     }
 }

@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -25,7 +26,7 @@ class ContactController extends Controller {
      * @Template("@App/home/contact/contact.html.twig")
      * @Method("GET")
      */
-    public function contactAction() {
+    public function contactAction() : array {
         return ['form' => $this->createContactForm(new Contact())->createView()];
     }
 
@@ -34,7 +35,7 @@ class ContactController extends Controller {
      *
      * @Route("/", name="home_contact_contactProcess")
      * @Template("@App/home/contact/contact.html.twig")
-     * @Method("GET")
+     * @Method("POST")
      */
     public function contactProcessAction(Request $request) {
         $contact = new Contact();
@@ -43,25 +44,33 @@ class ContactController extends Controller {
         $form->handleRequest($request);
 
         $message = [];
-        if ($form->isValid()){
+        if ($form->isValid()) {
             try {
                 $this->get('app.service.contact')->sendContactForm($contact);
                 $this->get('session')->getFlashBag()->add('success', 'Vaša správa bola odoslaná.');
 
                 return $this->redirect($this->generateUrl('home_contact_contact'));
-            } catch (Exception $e){
-                $message = ['type' => 'danger', 'message' => 'Správu sa nepodarilo odoslať.'];
+            } catch (\Exception $e) {
+                $message = ['type' => 'danger', 'text' => 'Správu sa nepodarilo odoslať.'];
             }
         }
 
-        return ['form' => $form->createView(), 'message' => $message];
+        return [
+            'form' => $form->createView(),
+            'message' => $message
+        ];
     }
 
-
-    public function createContactForm(Contact $contact) {
+    /**
+     * Create contact form.
+     *
+     * @param Contact $contact
+     * @return Form
+     */
+    public function createContactForm(Contact $contact) : Form {
         return $this->createForm(ContactType::class, $contact, [
             'action' => $this->generateUrl('home_contact_contactProcess'),
-            'method' => 'POST',
+            'method' => Request::METHOD_POST,
         ]);
     }
 }

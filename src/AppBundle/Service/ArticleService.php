@@ -37,7 +37,17 @@ class ArticleService extends CrudService {
         return $this->articleRepository;
     }
 
-    public function getAllByIsPublished(bool $isPublished) {
-        return $this->articleRepository->getAllByIsPublished($isPublished);
+    /**
+     * Get articles by is published.
+     * 
+     * @param bool $isPublished is published
+     * @return array
+     */
+    public function getByIsPublished(bool $isPublished) : array {
+        if ($isPublished === null) {
+            return $this->articleRepository->findAll();
+        } 
+        
+        return $this->articleRepository->getByPublished($isPublished);
     }
 }

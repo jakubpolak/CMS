@@ -115,7 +115,7 @@ class LanguageController extends Controller {
         if ($form->isValid()) {
             try {
                 $this->get('app.service.language')->save($language);
-                $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_SUCCESS, 'Jazyk sa nepodarilo uložiť.');
+                $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_SUCCESS, 'Jazyk bol uložený.');
                 return $redirect;
             } catch (\Exception $e) {
                 $message = new MessageHelper(MessageHelper::TYPE_DANGER, 'Jazyk sa nepodarilo uložiť.');

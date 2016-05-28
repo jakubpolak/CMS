@@ -5,6 +5,24 @@
     {% elseif (entityGroup.attributeType == 'textarea') %}
         <textarea name="{{ entityGroup.id }}" class="form-control">{{ entityGroup.content }}</textarea>
     {% elseif (entityGroup.attributeType == 'ckeditor') %}
-        <textarea name="{{ entityGroup.id }}" class="form-control">{{ entityGroup.content }}</textarea>
+        <textarea name="{{ entityGroup.id }}" id="{{ entityGroup.id }}" class="form-control">{{ entityGroup.content }}</textarea>
+
+        <script type="text/javascript">
+            var CKEDITOR_BASEPATH = '\x2Fbundles\x2Ftrsteelckeditor\x2F';
+        </script>
+        <script type="text/javascript" src="/bundles/trsteelckeditor/ckeditor.js"></script>
+        <script type="text/javascript">
+            CKEDITOR.replace('{{ entityGroup.id }}',{
+                width: '790',
+                height: '300',
+                language: 'en-au',
+                uiColor: "#cccccc",
+                startupOutlineBlocks: 1,
+                filebrowserImageBrowseUrl: '/bundles/app/admin/kcfinder/browse.php?type=images',
+                // TODO: Configure. @jpo
+                //customConfig: '/bundles/admin/admin/js/ck-custom.js',
+                toolbar: [{"name":"document","items":["Source","-","Save","-","Templates"]},{"name":"clipboard","items":["Cut","Copy","Paste","PasteText","PasteFromWord","-","Undo","Redo"]},{"name":"editing","items":["Find","Replace","-","SelectAll"]},"\/",{"name":"basicstyles","items":["Bold","Italic","Underline","Strike","Subscript","Superscript","-","RemoveFormat"]},{"name":"paragraph","items":["NumberedList","BulletedList","-","Outdent","Indent","-","JustifyLeft","JustifyCenter","JustifyRight","JustifyBlock"]},{"name":"links","items":["Link","Unlink","Anchor"]},"\/",{"name":"insert","items":["Image","Flash","Table","HorizontalRule"]},{"name":"styles","items":["Styles","Format"]},{"name":"tools","items":["Maximize","ShowBlocks"]}]
+            });
+        </script>
     {% endif %}
 </div>

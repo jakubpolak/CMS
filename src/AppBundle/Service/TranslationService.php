@@ -392,7 +392,6 @@ class TranslationService {
 
             foreach ($translations as &$translation) {
                 $content = $translation->getContent();
-                echo $content, "\n";
 
                 $content = str_replace("\t", '', $content);
                 $content = str_replace("\n", '', $content);

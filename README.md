@@ -23,7 +23,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see [http://www.gnu.org/licenses](http://www.gnu.org/licenses).
 
+
 # Development Guide
+
+## Translation
+
+* In order to translate text loaded from database use `|trans({}, 'i18n')` filter.
+* In order to translate text in administration, use `|trans({}, 'admin')` filter.
+* Otherwise use `|trans` filter.
 
 ## Pagination
 

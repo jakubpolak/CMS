@@ -19,3 +19,4 @@
 /web/media/
 /web/upload/
 composer.lock
+/src/AppBundle/Resources/public/lib/elFinder/files/

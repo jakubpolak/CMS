@@ -16,6 +16,8 @@ parameters:
     mailer_password:   ~
     mailer_address:    ~
 
+    date_format: j.n.Y
+
     # A secret key that's used to generate certain security-related tokens
     secret:            ThisTokenIsNotSoSecretChangeIt
 

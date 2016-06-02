@@ -11,11 +11,15 @@
         </div>
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="{{ path('home_article_list') }}">{{ 'Články'|trans }}</a>
+                </li>
+
                 {% set menuTree = getMenuTree(true) %}
                 {% for menu in menuTree %}
                     {% if isArray(menu.menus) == 1 %}
                         <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ menu.name }} <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ menu.name }} <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                     {% else %}
                         <li>
@@ -34,6 +38,9 @@
                         </li>
                     {% endif %}
                 {% endfor %}
+                <li>
+                    <a href="{{ path('home_contact_contact') }}">{{ 'Kontakt'|trans }}</a>
+                </li>
             </ul>
         </div>
     </div>

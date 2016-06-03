@@ -19,3 +19,5 @@
 /web/media/
 /web/upload/
 composer.lock
+/src/AppBundle/Resources/public/lib/elFinder/files/
+/app/Resources/AppBundle/translations/i18n.*

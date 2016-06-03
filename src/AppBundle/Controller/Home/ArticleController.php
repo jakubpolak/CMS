@@ -12,18 +12,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
  * Article controller.
  *
  * @author Jakub Polák, Jana Poláková
- *
- * @Route("/articles")
+ * @Route("/{_locale}", defaults={"_locale" = "%locale%"})
  */
 class ArticleController extends Controller {
     /**
      * List action.
      *
-     * @Route("/", name="home_article_list")
-     * @Template("@App/home/article/list.html.twig")
+     * @Route("/articles", name="home_article_index")
+     * @Template("@App/home/article/index.html.twig")
      * @Method("GET")
      */
-    public function listAction() : array {
+    public function indexAction() : array {
         return [
             'articleList' => $this->get('app.service.article')->getByIsPublished(true)
         ];
@@ -32,7 +31,7 @@ class ArticleController extends Controller {
     /**
      * Show action.
      *
-     * @Route("/{id}/show", name="home_article_show")
+     * @Route("/articles/{id}", name="home_article_show")
      * @Template("@App/home/article/article.html.twig")
      */
     public function showAction(Article $article) : array {

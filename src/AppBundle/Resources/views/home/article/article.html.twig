@@ -1,29 +1,26 @@
 {% extends '@App/home/layout.html.twig' %}
 
 {% block heading %}
-    <h1 class="page-header">{{ article.heading }}
-        <small>{{ 'od'|trans }} <a href="#">Start Bootstrap</a></small>
-    </h1>
+    <h1 class="page-header">{{ article.heading|trans({}, 'i18n') }}</h1>
 {% endblock %}
 
 {% block breadcrumbs %}
     <ol class="breadcrumb">
         <li><a href="{{ path('home_default_index') }}">{{ 'CMS'|trans }}</a></li>
-        <li><a href="{{ path('home_article_list') }}">{{ 'Články'|trans }}</a></li>
-        <li class="active">{{ article.heading }}</li>
+        <li><a href="{{ path('home_article_index') }}">{{ 'Články'|trans }}</a></li>
+        <li class="active">{{ article.heading|trans({}, 'i18n') }}</li>
     </ol>
 {% endblock %}
 
 {% block content %}
     <div class="row">
-            <div class="col-lg-12">
-                <hr>
-                <p><i class="fa fa-clock-o"></i> Napísané {{ article.writtenOn|date }}</p>
-                <hr>
-                <img class="img-responsive" src="http://placehold.it/900x300" alt="">
-                <hr>
-                <p class="lead">??</p>
-                <p>{{ article.content }}</p>
-                <hr>
+        <div class="col-lg-12">
+            <hr>
+            <p><i class="fa fa-clock-o"></i> {{ 'Napísané'|trans }} {{ article.writtenOn|date(date_format) }}</p>
+            <hr>
+            <img class="img-responsive" src="http://placehold.it/900x300" alt="">
+            <hr>
+            <p>{{ article.content|trans({}, 'i18n')|raw }}</p>
         </div>
+    </div>
 {% endblock %}

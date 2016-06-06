@@ -55,6 +55,12 @@ services:
         arguments: ['@doctrine.orm.default_entity_manager']
         tags:
             - { name: twig.extension }
+    app.twig.image_helper:
+        class: AppBundle\Twig\ImageHelperExtension
+        public: false
+        arguments: ['@doctrine.orm.default_entity_manager']
+        tags:
+            - { name: twig.extension }
     app.helper.dql:
         class: AppBundle\Helper\DqlHelper
     app.service.translation:

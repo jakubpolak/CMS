@@ -5,7 +5,7 @@ namespace AppBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * Slug repository.
+ * Image repository.
  *
  * @author Jakub Polák, Jana Poláková
  */
@@ -22,5 +22,24 @@ class ImageRepository extends EntityRepository {
             ->setParameter('imageType', $imageType);
         
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Get first image of images.
+     *
+     * @param $article
+     * @return array
+     */
+    public function getFirstImage($article) {
+        return $this->_em
+            ->createQuery('SELECT i
+              FROM AppBundle:Image i
+              WHERE i.article = :article
+              ORDER BY i.position ASC
+              ')
+            ->setParameter('article', $article)
+            ->setMaxResults(1)
+            ->useQueryCache(true)
+            ->getResult();
     }
 }

@@ -70,7 +70,11 @@ class ImageService {
      */
     public function getAllToSliderOrderByPosition(): array {
         $imageType = $this->imageTypeRepository->getByName(ImageType::SLIDER);
-        return $this->imageRepository->getAllToSliderOrderByPosition($imageType);
+        if ($imageType) {
+            return $this->imageRepository->getAllToSliderOrderByPosition($imageType);
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -89,6 +93,8 @@ class ImageService {
 
         $imageTypeGallery = $this->imageTypeRepository->getByName(ImageType::GALLERY);
         $imageTypeSlider = $this->imageTypeRepository->getByName(ImageType::SLIDER);
+        //TODO: zachytit vynimky
+
         if ($image->getArticle()) {
             $image->setImageType($imageTypeGallery);
         } else {

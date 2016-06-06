@@ -122,7 +122,7 @@ class ArticleGalleryController extends Controller {
                 $flashBag->add(MessageHelper::TYPE_SUCCESS, 'Obrázok bol uložený.');
                 return $redirect;
             } catch (\Exception $e) {
-                $message = new MessageHelper(MessageHelper::TYPE_DANGER, 'Obrázok sa nepodarilo uložiť.');
+                $message = new MessageHelper(MessageHelper::TYPE_DANGER, 'Obrázok sa nepodarilo uložiť.' . $e->getMessage());
             }
         }
 

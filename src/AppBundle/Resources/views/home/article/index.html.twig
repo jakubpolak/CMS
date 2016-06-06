@@ -14,23 +14,29 @@
 {% block content %}
     {% for article in articleList %}
         <div class="row">
-            <div class="col-md-1 text-center">
-                <p><i class="fa fa-camera fa-4x"></i></p>
-                <p>{{ article.writtenOn|date(date_format) }}</p>
-            </div>
             <div class="col-md-5">
-                <a href="#">
-                    <img class="img-responsive img-hover" src="http://placehold.it/600x300" alt="">
+                <a href="{{ path('home_article_show', {'id': article.id}) }}">
+                    {% set image = getFirstImage(article) %}
+                    {% if image is not null %}
+                        <img class="img-responsive img-hover" src="{{ (upload_dir ~ '/' ~ image[0].name)|imagine_filter('thumb_article') }}" alt="{{ article.heading }}">
+                    {% else %}
+                        <img class="img-responsive img-hover" src="http://placehold.it/600x300" alt="{{ article.heading }}">
+                    {% endif %}
                 </a>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-7">
                 <h3>
                     <a href="{{ path('home_article_show', {'id': article.id}) }}">{{ article.heading|trans({}, 'i18n') }}</a>
                 </h3>
+                <p>{{ article.writtenOn|date(date_format) }}</p>
                 <p>{{ article.content|trans({}, 'i18n')|slice(0,50)|raw }}</p>
                 <a class="btn btn-primary" href="{{ path('home_article_show', {'id': article.id}) }}">{{ 'Čítaj viac'|trans }} <i class="fa fa-angle-right"></i></a>
             </div>
         </div>
-        {% if articleList|length > 1 %}<hr>{% endif %}
+        {% if articleList|length > 1 %}
+            {% if not loop.last %}
+                <hr>
+            {% endif %}
+        {% endif %}
     {% endfor %}
 {% endblock %}

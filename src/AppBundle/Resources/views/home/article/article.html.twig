@@ -18,7 +18,12 @@
             <hr>
             <p><i class="fa fa-clock-o"></i> {{ 'Napísané'|trans }} {{ article.writtenOn|date(date_format) }}</p>
             <hr>
-            <img class="img-responsive" src="http://placehold.it/900x300" alt="">
+            {% set image = getFirstImage(article) %}
+            {% if image is not null %}
+                <img class="img-responsive img-hover" src="{{ (upload_dir ~ '/' ~ image[0].name)|imagine_filter('article') }}" alt="{{ article.heading }}">
+            {% else %}
+                <img class="img-responsive img-hover" src="http://placehold.it/900x300" alt="{{ article.heading }}">
+            {% endif %}
             <hr>
             <p>{{ article.content|trans({}, 'i18n')|raw }}</p>
         </div>

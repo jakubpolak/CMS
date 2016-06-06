@@ -106,6 +106,14 @@ liip_imagine:
             quality: 100
             filters:
                 thumbnail: { size: [555, 416], mode: outbound }
+        thumb_article:
+            quality: 100
+            filters:
+                thumbnail: { size: [600, 300], mode: outbound }
+        article:
+            quality: 100
+            filters:
+                thumbnail: { size: [900, 300], mode: outbound }
 
 fos_user:
     db_driver: orm

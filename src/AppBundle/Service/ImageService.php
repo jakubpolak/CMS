@@ -68,7 +68,7 @@ class ImageService {
      * 
      * @return array
      */
-    public function getAllToSliderOrderByPosition(): array {
+    public function getAllToSliderOrderByPosition() : array {
         $imageType = $this->imageTypeRepository->getByName(ImageType::SLIDER);
         return $this->imageRepository->getAllToSliderOrderByPosition($imageType);
     }
@@ -89,6 +89,7 @@ class ImageService {
 
         $imageTypeGallery = $this->imageTypeRepository->getByName(ImageType::GALLERY);
         $imageTypeSlider = $this->imageTypeRepository->getByName(ImageType::SLIDER);
+
         if ($image->getArticle()) {
             $image->setImageType($imageTypeGallery);
         } else {

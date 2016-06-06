@@ -2,8 +2,8 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\ImageType;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\UnexpectedResultException;
 
 /**
  * Image Type Repository.
@@ -14,18 +14,16 @@ class ImageTypeRepository extends EntityRepository {
     /**
      * Get by name.
      * 
-     * @param $name
-     * @return bool|mixed
+     * @param string $name image type name
+     * @return ImageType
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getByName($name){
+    public function getByName(string $name) : ImageType {
         $query = $this->_em->createQuery('SELECT it FROM AppBundle:ImageType it WHERE it.name = :name');
-        $query->setParameter('name', $name)
+        return $query->setParameter('name', $name)
             ->useQueryCache(true)
-            ->useResultCache(true);
-        try {
-            return $query->getSingleResult();
-        } catch (UnexpectedResultException $e) {
-            return false;
-        }
+            ->useResultCache(true)
+            ->getSingleResult();
     }
 }

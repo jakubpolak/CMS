@@ -4,12 +4,20 @@
     {% if entityName == 'article' %}
         {{ 'Články'|trans({}, 'admin') }}
     {% endif %}
+    {% if entityName == 'menu' %}
+        {{ 'Menu'|trans({}, 'admin') }}
+    {% endif %}
 {% endspaceless %}{% endblock %}
 
 {% block breadcrumbs %}{% spaceless %}
     {% if entityName == 'article' %}
         &raquo; <a href="{{ path('admin_article_index') }}">{{ 'Články'|trans({}, 'admin') }}</a>
         &raquo; <a href="{{ path('admin_article_update', {'id': entityId}) }}">{{ 'Upraviť článok'|trans({}, 'admin') }}</a>
+        &raquo; {{ 'Upraviť slug'|trans({}, 'admin') }}
+    {% endif %}
+    {% if entityName == 'menu' %}
+        &raquo; <a href="{{ path('admin_menu_index') }}">{{ 'Menu'|trans({}, 'admin') }}</a>
+        &raquo; <a href="{{ path('admin_menu_update', {'id': entityId}) }}">{{ 'Upraviť menu'|trans({}, 'admin') }}</a>
         &raquo; {{ 'Upraviť slug'|trans({}, 'admin') }}
     {% endif %}
 {% endspaceless %}{% endblock %}

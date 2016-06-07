@@ -4,7 +4,8 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\Article;
 use AppBundle\Entity\Image;
-use AppBundle\Form\Admin\ImageType;
+use AppBundle\Entity\ImageType;
+use AppBundle\Form\Admin\ImageType as ImageTypeForm;
 use AppBundle\Helper\MessageHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -60,7 +61,7 @@ class ArticleGalleryController extends Controller {
         $message = null;
         if ($form->isValid()) {
             try {
-                $imageService->save($image);
+                $imageService->save($image, ImageType::GALLERY);
                 $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_SUCCESS, 'Obrázok bol uložený.');
                 return $this->redirect($this->generateUrl('admin_article_update', ['id' => $articleId]));
             } catch (\Exception $e) {
@@ -168,7 +169,7 @@ class ArticleGalleryController extends Controller {
      * @return Form
      */
     private function createCreateForm(Image $image, int $articleId): Form {
-        return $this->createForm(ImageType::class, $image, [
+        return $this->createForm(ImageTypeForm::class, $image, [
             'action' => $this->generateUrl('admin_articleGallery_createProcess', ['articleId' => $articleId]),
             'method' => Request::METHOD_POST
         ]);
@@ -182,7 +183,7 @@ class ArticleGalleryController extends Controller {
      * @return Form
      */
     private function createUpdateForm(Image $image, int $articleId): Form {
-        return $this->createForm(ImageType::class, $image, [
+        return $this->createForm(ImageTypeForm::class, $image, [
             'action' => $this->generateUrl('admin_articleGallery_updateProcess', ['articleId' => $articleId, 'imageId' => $image->getId()]),
             'method' => Request::METHOD_POST
         ]);

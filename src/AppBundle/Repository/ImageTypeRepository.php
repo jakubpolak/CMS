@@ -20,8 +20,9 @@ class ImageTypeRepository extends EntityRepository {
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getByName(string $name) : ImageType {
-        $query = $this->_em->createQuery('SELECT it FROM AppBundle:ImageType it WHERE it.name = :name');
-        return $query->setParameter('name', $name)
+        return $this->getEntityManager()
+            ->createQuery('SELECT it FROM AppBundle:ImageType it WHERE it.name = :name')
+            ->setParameter('name', $name)
             ->useQueryCache(true)
             ->useResultCache(true)
             ->getSingleResult();

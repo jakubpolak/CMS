@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\Image;
+use AppBundle\Entity\ImageType;
 use AppBundle\Form\Admin\SliderImageType;
 use AppBundle\Helper\MessageHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -63,7 +64,7 @@ class SliderGalleryController extends Controller {
         $message = null;
         if ($form->isValid()) {
             try {
-                $imageService->save($image);
+                $imageService->save($image, ImageType::SLIDER);
                 $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_SUCCESS, 'Obrázok bol uložený.');
                 return $this->redirect($this->generateUrl('admin_sliderGallery_index'));
             } catch (\Exception $e) {

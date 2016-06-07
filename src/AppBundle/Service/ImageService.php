@@ -59,7 +59,7 @@ class ImageService {
      *
      * @return Image
      */
-    public function getInstance() {
+    public function getInstance() : Image {
         return new Image($this->wwwRoot, $this->uploadDir);
     }
 
@@ -70,7 +70,8 @@ class ImageService {
      */
     public function getAllToSliderOrderByPosition() : array {
         $imageType = $this->imageTypeRepository->getByName(ImageType::SLIDER);
-        if ($imageType) {
+
+        if ($imageType !== null) {
             return $this->imageRepository->getAllToSliderOrderByPosition($imageType);
         } else {
             return false;
@@ -80,10 +81,11 @@ class ImageService {
     /**
      * Save image.
      *
-     * @param Image $image
+     * @param Image $image image
+     * @param string $imageTypeName name of image type
      * @throws ServiceException
      */
-    public function save(Image $image) {
+    public function save(Image $image, string $imageTypeName) {
         $this->setPaths($image);
 
         if ($image->getFile() !== null) {
@@ -91,22 +93,19 @@ class ImageService {
             $image->upload();
         }
 
-        $imageTypeGallery = $this->imageTypeRepository->getByName(ImageType::GALLERY);
-        $imageTypeSlider = $this->imageTypeRepository->getByName(ImageType::SLIDER);
+        $imageType = $this->imageTypeRepository->getByName($imageTypeName);
+        $image->setImageType($imageType);
 
-
-        if ($image->getArticle()) {
-            $image->setImageType($imageTypeGallery);
-        } else {
-            $image->setImageType($imageTypeSlider);
+        if ($image->getId() === null) {
+            $this->em->persist($image);
         }
-
-        if ($image->getId() === null) { $this->em->persist($image); }
         
         try {
             $this->em->flush();
         } catch (\Exception $e) {
-            if ($image->getFile() !== null) { $image->removeFile(); }
+            if ($image->getFile() !== null) {
+                $image->removeFile();
+            }
 
             throw new ServiceException($e);
         }

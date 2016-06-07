@@ -85,7 +85,11 @@ class MenuController extends Controller {
             return $this->redirect($this->generateUrl('admin_menu_index'));
         }
 
-        return ['form' => $this->createUpdateForm($menu)->createView()];
+        return [
+            'form' => $this->createUpdateForm($menu)->createView(),
+            'slugs' => $menu->getSlugs(),
+            'menu' => $menu,
+        ];
     }
 
     /**
@@ -118,7 +122,9 @@ class MenuController extends Controller {
 
         return [
             'form' => $form->createView(),
-            'message' => $message
+            'message' => $message,
+            'slugs' => $menu->getSlugs(),
+            'menu' => $menu,
         ];
     }
 

@@ -17,7 +17,7 @@
                             <thead>
                                 <tr>
                                     <th class="col-lg-8">{{ 'Obrázok'|trans({}, 'admin') }}</th>
-                                    <th class="col-lg-2">{{ 'Pozícia'|trans({}, 'admin') }}</th>
+                                    <th class="col-lg-2 app-center">{{ 'Pozícia'|trans({}, 'admin') }}</th>
                                     <th class="col-lg-1">&nbsp;</th>
                                     <th class="col-lg-1">&nbsp;</th>
                                 </tr>
@@ -26,6 +26,7 @@
                                 {% for image in images %}
                                     <tr>
                                         <td><img src="{{ (upload_dir ~ '/' ~ image.name)|imagine_filter('thumb_small') }}"></td>
+                                        <td class="app-center">{{ image.position }}</td>
                                         <td class="app-center">
                                             <a href="{{ url('admin_articleGallery_update', {'imageId': image.id, 'articleId': image.article.id}) }}">{{ 'Upraviť'|trans({}, 'admin') }}</a>
                                         </td>

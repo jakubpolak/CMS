@@ -1,6 +1,5 @@
 {% extends '@App/home/layout.html.twig' %}
 
 {% block content %}
-    Hello World!
+    {{ menu.content|trans({}, 'i18n') }}
 {% endblock %}
-

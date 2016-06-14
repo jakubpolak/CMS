@@ -13,8 +13,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="AppBundle\Repository\SlugRepository")
  */
 class Slug implements Entity {
-    const MENU = "MENU";
-    const ARTICLE = "ARTICLE";
+    const MENU = "Menu";
+    const ARTICLE = "Article";
     
     /**
      * @var int

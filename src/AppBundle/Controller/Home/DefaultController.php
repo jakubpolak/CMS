@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Home;
 
 use AppBundle\Entity\Menu;
+use AppBundle\Entity\Slug;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -36,8 +37,8 @@ class DefaultController extends Controller {
      * @Method("GET")
      */
     public function menuAction(string $slugOrId) : array {
-        // TODO: Tomorrow!
-
-        return [];
+        return [
+            'menu' => $this->get('app.service.slug')->getEntityBySlugTypeAndSlugOrId(Slug::MENU, $slugOrId)
+        ];
     }
 }

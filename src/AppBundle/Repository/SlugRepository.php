@@ -16,6 +16,21 @@ use Doctrine\ORM\EntityRepository;
  */
 class SlugRepository extends EntityRepository {
     /**
+     * Get slug by content.
+     * 
+     * @param string $content slug content
+     * @return Slug
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getByContent($content) : Slug {
+        return $this->getEntityManager()
+            ->createQuery('SELECT s FROM AppBundle:Slug s WHERE s.content = :content')
+            ->setParameter('content', $content)
+            ->getSingleResult();
+    }
+
+    /**
      * Get slug content by menu and language.
      *
      * @param Menu $menu menu
@@ -37,7 +52,7 @@ class SlugRepository extends EntityRepository {
      * @param Language $language language
      * @return Slug
      */
-    public function getByArticleAndLanguage(Article $article, Language $language) : Slug {
+    public function getByArticleAndLanguage($article, Language $language) : Slug {
         return $this->getEntityManager()
             ->createQuery('SELECT s FROM AppBundle:Slug s WHERE s.article = :article AND s.language = :language')
             ->useQueryCache(true)

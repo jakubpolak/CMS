@@ -59,14 +59,14 @@ class SlugService {
 
     /**
      * Get entity by slug content or entity id.
-     *
+     * 
      * @param string $entityClass entity class
      * @param string $slugOrId slug content or entity id
      */
     public function getEntityBySlugContentOrEntityId(string $entityClass, string $slugOrId) {
-        // TODO:
+        // TODO
     }
-
+    
     /**
      * Get slug by entity and locale.
      * 

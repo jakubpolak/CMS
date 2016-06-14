@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Menu controller.
  *
  * @author Jakub Polák, Jana Poláková
- * @Route("/admin/menu")
+ * @Route("/{_locale}/admin/menu", defaults={"_locale" = "%locale%"})
  */
 class MenuController extends Controller {
     /**

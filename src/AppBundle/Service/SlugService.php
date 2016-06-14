@@ -2,14 +2,16 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Entity\Article;
 use AppBundle\Entity\Entity;
 use AppBundle\Entity\Language;
+use AppBundle\Entity\Menu;
 use AppBundle\Entity\Slug;
 use AppBundle\Helper\ReflectionHelper;
 use AppBundle\Repository\SlugRepository;
 use AppBundle\Service\Exception\ServiceException;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NoResultException;
 
 /**
  * Slug service.
@@ -28,13 +30,20 @@ class SlugService {
     private $slugRepository;
 
     /**
+     * @var LanguageService
+     */
+    private $languageService;
+
+    /**
      * SlugService constructor.
      *
      * @param EntityManager $entityManager
+     * @param LanguageService $languageService
      */
-    public function __construct(EntityManager $entityManager) {
+    public function __construct(EntityManager $entityManager, LanguageService $languageService) {
         $this->em = $entityManager;
         $this->slugRepository = $this->em->getRepository('AppBundle:Slug');
+        $this->languageService = $languageService;
     }
 
     /**
@@ -44,8 +53,43 @@ class SlugService {
      * @param int $entityId
      * @return null|Entity
      */
-    public function getEntity(string $entityName, int $entityId): Entity {
+    public function getEntity(string $entityName, int $entityId) : Entity {
         return $this->em->getRepository('AppBundle:' . ucfirst($entityName))->find($entityId);
+    }
+
+    /**
+     * Get entity by slug content or entity id.
+     *
+     * @param string $entityClass entity class
+     * @param string $slugOrId slug content or entity id
+     */
+    public function getEntityBySlugContentOrEntityId(string $entityClass, string $slugOrId) {
+        // TODO:
+    }
+
+    /**
+     * Get slug by entity and locale.
+     * 
+     * @param Entity $entity entity
+     * @param string $locale locale
+     * @return Slug|int 
+     * @throws NoResultException thrown in case that slug does not exist
+     */
+    public function getByEntityAndLocale(Entity $entity, string $locale) {
+        $language = $this->languageService->getByCode($locale);
+        $class = get_class($entity); 
+        $slug = null;
+        
+        switch ($class) {
+            case Article::class:
+                $slug = $this->slugRepository->getByArticleAndLanguage($entity, $language);
+                break;
+            case Menu::class:
+                $slug = $this->slugRepository->getByMenuAndLanguage($entity, $language);
+                break;
+        }
+        
+        return $slug;
     }
 
     /**

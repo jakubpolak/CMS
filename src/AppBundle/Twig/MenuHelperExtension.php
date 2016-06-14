@@ -36,9 +36,13 @@ class MenuHelperExtension extends \Twig_Extension {
      *
      * @return array
      */
-    public function getFunctions(): array {
+    public function getFunctions() : array {
         return [
-            new \Twig_SimpleFunction('getMenuTree', [$this, 'getMenuTreeFunction'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction(
+                'getMenuTree', 
+                [$this, 'getMenuTreeFunction'], 
+                ['is_safe' => ['html']]
+            ),
         ];
     }
 
@@ -48,16 +52,16 @@ class MenuHelperExtension extends \Twig_Extension {
      * @param $isActive
      * @return array
      */
-    public function getMenuTreeFunction(bool $isActive): array {
+    public function getMenuTreeFunction(bool $isActive) : array {
         return $this->menuRepository->getMenu($isActive);
     }
 
     /**
      * Get name.
      *
-     * @return string|string
+     * @return string
      */
-    public function getName(): string {
+    public function getName() : string {
         return 'menuHelper_extension';
     }
 }

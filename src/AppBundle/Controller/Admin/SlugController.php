@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Slug controller.
  *
  * @author Jakub Polák, Jana Poláková
- * @Route("/admin/slug")
+ * @Route("/{_locale}/admin/slug", defaults={"_locale" = "%locale%"})
  */
 class SlugController extends Controller {
     /**

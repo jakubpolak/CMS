@@ -13,6 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="AppBundle\Repository\SlugRepository")
  */
 class Slug implements Entity {
+    const MENU = "MENU";
+    const ARTICLE = "ARTICLE";
+    
     /**
      * @var int
      *
@@ -54,6 +57,13 @@ class Slug implements Entity {
     private $article;
 
     /**
+     * Constructor.
+     */
+    public function __construct() {
+        $this->content = '';
+    }
+
+    /**
      * Get id.
      *
      * @return int|null
@@ -68,7 +78,7 @@ class Slug implements Entity {
      * @param string $content
      * @return self
      */
-    public function setContent(string $content): self {
+    public function setContent(string $content) : self {
         $this->content = $content;
 
         return $this;
@@ -79,7 +89,7 @@ class Slug implements Entity {
      *
      * @return string
      */
-    public function getContent(): string {
+    public function getContent() : string {
         return $this->content;
     }
 
@@ -88,7 +98,7 @@ class Slug implements Entity {
      *
      * @return Menu
      */
-    public function getMenu(): Menu {
+    public function getMenu() : Menu {
         return $this->menu;
     }
 
@@ -98,7 +108,7 @@ class Slug implements Entity {
      * @param Menu $menu
      * @return self
      */
-    public function setMenu(Menu $menu): self {
+    public function setMenu(Menu $menu) : self {
         $this->menu = $menu;
 
         return $this;
@@ -107,9 +117,9 @@ class Slug implements Entity {
     /**
      * Get language.
      *
-     * @return Language
+     * @return null|Language
      */
-    public function getLanguage(): Language {
+    public function getLanguage() {
         return $this->language;
     }
 
@@ -119,7 +129,7 @@ class Slug implements Entity {
      * @param Language $language
      * @return self
      */
-    public function setLanguage(Language $language): self {
+    public function setLanguage(Language $language) : self {
         $this->language = $language;
 
         return $this;
@@ -130,7 +140,7 @@ class Slug implements Entity {
      *
      * @return Article
      */
-    public function getArticle(): Article {
+    public function getArticle() : Article {
         return $this->article;
     }
 
@@ -140,7 +150,7 @@ class Slug implements Entity {
      * @param Article $article
      * @return self
      */
-    public function setArticle(Article $article): self {
+    public function setArticle(Article $article) : self {
         $this->article = $article;
 
         return $this;

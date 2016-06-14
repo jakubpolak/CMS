@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Slider gallery controller.
  *
  * @author Jakub Polák, Jana Poláková
- * @Route("/admin/slider-gallery")
+ * @Route("/{_locale}/admin/slider-gallery", defaults={"_locale" = "%locale%"})
  */
 class SliderGalleryController extends Controller {
     /**

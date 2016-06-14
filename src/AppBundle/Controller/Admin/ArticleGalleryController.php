@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Article gallery controller.
  *
  * @author Jakub Polák, Jana Poláková
- * @Route("/admin/article/gallery")
+ * @Route("/{_locale}/admin/article/gallery", defaults={"_locale" = "%locale%"})
  */
 class ArticleGalleryController extends Controller {
     /**

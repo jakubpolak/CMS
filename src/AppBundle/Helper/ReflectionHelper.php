@@ -2,7 +2,11 @@
 
 namespace AppBundle\Helper;
 
-
+/**
+ * Class ReflectionHelper
+ *
+ * @author Jakub Polák, Jana Poláková
+ */
 class ReflectionHelper {
     /**
      * Get class name.

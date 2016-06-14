@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Translation controller.
  *
  * @author Jakub Polák, Jana Poláková
- * @Route("/admin/translation")
+ * @Route("/{_locale}/admin/translation", defaults={"_locale" = "%locale%"})
  */
 class TranslationController extends Controller {
     /**

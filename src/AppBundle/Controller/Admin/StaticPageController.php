@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Static page controller.
  *
  * @author Jakub Polák, Jana Poláková
- * @Route("/admin/static-page")
+ * @Route("/{_locale}/admin/static-page", defaults={"_locale" = "%locale%"})
  */
 class StaticPageController extends Controller {
     /**

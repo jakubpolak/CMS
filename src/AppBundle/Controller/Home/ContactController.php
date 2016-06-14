@@ -15,8 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Contact controller.
  *
  * @author Jakub Polák, Jana Poláková
- *
- * @Route("/contact")
+ * @Route("/{_locale}/contact", defaults={"_locale" = "%locale%"})
  */
 class ContactController extends Controller {
     /**

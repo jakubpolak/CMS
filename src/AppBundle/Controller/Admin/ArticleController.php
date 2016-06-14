@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Article controller.
  *
  * @author Jakub Polák, Jana Poláková
- * @Route("/admin/articles")
+ * @Route("/{_locale}/admin/articles", defaults={"_locale" = "%locale%"})
  */
 class ArticleController extends Controller {
     /**

@@ -17,7 +17,7 @@ class LanguageRepository extends EntityRepository {
      * @return int
      */
     public function getCount(): int {
-        return (int) $this->_em->createQuery('SELECT COUNT(l.id) FROM AppBundle:Language l')
+        return (int) $this->getEntityManager()->createQuery('SELECT COUNT(l.id) FROM AppBundle:Language l')
             ->useQueryCache(true)
             ->getSingleScalarResult();
     }
@@ -28,7 +28,7 @@ class LanguageRepository extends EntityRepository {
      * @param bool $isDefault is default
      */
     public function setDefault(bool $isDefault) {
-        $this->_em->createQuery('UPDATE AppBundle:Language l SET l.isDefault = :isDefault')
+        $this->getEntityManager()->createQuery('UPDATE AppBundle:Language l SET l.isDefault = :isDefault')
             ->useQueryCache(true)
             ->setParameter('isDefault', $isDefault)
             ->execute();
@@ -40,7 +40,7 @@ class LanguageRepository extends EntityRepository {
      * @return array
      */
     public function getAll(): array {
-        return $this->_em->createQuery('SELECT l FROM AppBundle:Language l ORDER BY l.isDefault DESC')
+        return $this->getEntityManager()->createQuery('SELECT l FROM AppBundle:Language l ORDER BY l.isDefault DESC')
             ->useQueryCache(true)
             ->getResult();
     }
@@ -54,7 +54,7 @@ class LanguageRepository extends EntityRepository {
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getByCode(string $code) {
-        return $this->_em->createQuery('SELECT l FROM AppBundle:Language l WHERE l.code = :code')
+        return $this->getEntityManager()->createQuery('SELECT l FROM AppBundle:Language l WHERE l.code = :code')
             ->setParameter('code', $code)
             ->getSingleResult();
     }

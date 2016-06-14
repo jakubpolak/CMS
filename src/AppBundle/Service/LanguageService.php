@@ -30,8 +30,9 @@ class LanguageService {
 
     /**
      * Constructor.
-     *
+     * 
      * @param EntityManager $entityManager
+     * @param string $locale
      */
     public function __construct(EntityManager $entityManager, string $locale) {
         $this->em = $entityManager;
@@ -49,11 +50,21 @@ class LanguageService {
     }
 
     /**
+     * Get language by it's code.
+     * 
+     * @param string $code language code
+     * @return Language
+     */
+    public function getByCode(string $code) : Language {
+        return $this->languageRepository->getByCode($code);
+    }
+
+    /**
      * Get default language.
      * 
      * @return Language
      */
-    public function getDefaultLanguage() {
+    public function getDefaultLanguage() : Language{
         return $this->languageRepository->getByCode($this->locale);
     }
 

@@ -17,23 +17,26 @@
 
                 {% set menuTree = getMenuTree(true) %}
                 {% for menu in menuTree %}
-                    {% if isArray(menu.menus) == 1 %}
+                    {% set menus = menu.menus %}
+                    {% if isArray(menus) == 1 %}
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ menu.name }} <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
+                            <ul class="dropdown-menu">
                     {% else %}
                         <li>
                             <a href="#">{{ menu.name }}</a>
                         </li>
                     {% endif %}
-                    {% if isArray(menu.menus) == 1 %}
+
+                    {% if isArray(menus) == 1 %}
                         {% for submenu in menu.menus %}
                             <li>
-                                <a href="#">{{ submenu.name }}</a>
+                                <a href="{{ path('home_default_menu', {'slugOrId' : slugOrId(submenu, app.request.locale)}) }}">{{ submenu.name }}</a>
                             </li>
                         {% endfor %}
                     {% endif %}
-                    {% if isArray(menu.menus) == 1 %}
+
+                    {% if isArray(menus) == 1 %}
                         </ul>
                         </li>
                     {% endif %}

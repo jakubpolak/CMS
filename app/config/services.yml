@@ -27,7 +27,7 @@ services:
         arguments: ['@doctrine.orm.default_entity_manager']
     app.service.slug:
         class: AppBundle\Service\SlugService
-        arguments: ['@doctrine.orm.default_entity_manager']
+        arguments: ['@doctrine.orm.default_entity_manager', '@app.service.language']
     app.service.filter:
         class: AppBundle\Service\FilterService
         arguments: ['@doctrine.orm.default_entity_manager']
@@ -59,6 +59,11 @@ services:
         class: AppBundle\Twig\ImageHelperExtension
         public: false
         arguments: ['@doctrine.orm.default_entity_manager']
+        tags:
+            - { name: twig.extension }
+    app.twig.slug:
+        class: AppBundle\Twig\SlugExtension
+        arguments: ['@app.service.slug', '@app.service.language']
         tags:
             - { name: twig.extension }
     app.helper.dql:

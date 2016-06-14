@@ -11,7 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  * Dashboard controller.
  *
  * @author Jakub Polák, Jana Poláková
- * @Route("/admin/dashboard")
+ * @Route("/{_locale}/admin/dashboard", defaults={"_locale" = "%locale%"})
  */
 class DashboardController extends Controller {
     /**

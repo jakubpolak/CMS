@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * User controller.
  *
  * @author Jakub Polák, Jana Poláková
- * @Route("/admin/users")
+ * @Route("/{_locale}/admin/users", defaults={"_locale" = "%locale%"})
  */
 class UserController extends Controller {
     /**

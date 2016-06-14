@@ -17,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
  * Language controller.
  *
  * @author Jakub Polák, Jana Poláková
- * @Route("/admin/language")
+ * @Route("/{_locale}/admin/language", defaults={"_locale" = "%locale%"})
  */
 class LanguageController extends Controller {
     /**

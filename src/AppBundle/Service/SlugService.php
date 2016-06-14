@@ -33,6 +33,11 @@ class SlugService {
      * @var LanguageService
      */
     private $languageService;
+    
+    /**
+     * @var array
+     */
+    private $slugTypes = [Slug::MENU, Slug::ARTICLE];
 
     /**
      * SlugService constructor.
@@ -60,11 +65,34 @@ class SlugService {
     /**
      * Get entity by slug content or entity id.
      *
-     * @param string $entityClass entity class
-     * @param string $slugOrId slug content or entity id
+     * @param string $slugType slug type
+     * @param string $slug slug content or a combination of entity class and entity id
+     * @return Entity
      */
-    public function getEntityBySlugContentOrEntityId(string $entityClass, string $slugOrId) {
-        // TODO:
+    public function getEntityBySlugTypeAndSlugOrId(string $slugType, string $slug) : Entity {
+        $classNameAndId = $this->getClassNameAndId($slug);
+        $result = null;
+
+        if ($classNameAndId !== false) {
+            switch ($slugType) {
+                case Slug::MENU:
+                    $result = $this->em
+                        ->getRepository('AppBundle:Menu')
+                        ->find($classNameAndId['id']);
+                    break;
+                case Slug::ARTICLE:
+                    $result = $this->em
+                        ->getRepository('AppBundle:Article')
+                        ->find($classNameAndId['id']);;
+                    break;
+            }
+        }
+        
+        if ($result === null) {
+            $result = $this->slugRepository->getByContent($slug);
+        }
+        
+        return $result;
     }
 
     /**
@@ -144,7 +172,7 @@ class SlugService {
      * @param Entity $entity entity
      * @return bool
      */
-    public function hasSlugs(Entity $entity): bool {
+    public function hasSlugs(Entity $entity) : bool {
         return method_exists($entity, 'getSlugs');
     }
 
@@ -155,7 +183,7 @@ class SlugService {
      * @param Language $language
      * @return bool
      */
-    private function slugExists(Entity $entity, Language $language): bool {
+    private function slugExists(Entity $entity, Language $language) : bool {
         $entityName = ReflectionHelper::getClassName($entity);
         $entityName = lcfirst($entityName);
         $count = $this->slugRepository->getCountByEntityAndLanguage($entity, $entityName, $language);
@@ -172,11 +200,30 @@ class SlugService {
      * @param Slug $slug
      * @return bool
      */
-    private function slugExistsExceptSpecifiedSlug(Entity $entity, Language $language, Slug $slug): bool {
+    private function slugExistsExceptSpecifiedSlug(Entity $entity, Language $language, Slug $slug) : bool {
         $entityName = ReflectionHelper::getClassName($entity);
         $entityName = lcfirst($entityName);
         $count = $this->slugRepository->getCountByEntityAndLanguageAndNotSlug($entity, $entityName, $language, $slug);
 
         return $count > 0;
+    }
+
+    /**
+     * Get class name and id from slug.
+     *
+     * @param string $slug
+     * @return array|false ['class_name' => ... , 'id' => ....] on success, false otherwise.
+     */
+    private function getClassNameAndId(string $slug) {
+        $classNameAndId = explode('-', $slug);
+
+        if (count($classNameAndId) !== 2 || !in_array($classNameAndId[0], $this->slugTypes)) {
+            return false;
+        }
+
+        return [
+            'class_name' => $classNameAndId[0],
+            'id' => $classNameAndId[1]
+        ];
     }
 }

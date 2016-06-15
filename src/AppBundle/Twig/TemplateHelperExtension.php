@@ -45,7 +45,6 @@ class TemplateHelperExtension extends \Twig_Extension {
             new \Twig_SimpleFunction('bool', [$this, 'boolFunction'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('merge', [$this, 'mergeFunction'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('languagesCount', [$this, 'languagesCountFunction'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('isArray', [$this, 'isArrayFunction'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -54,20 +53,10 @@ class TemplateHelperExtension extends \Twig_Extension {
      *
      * @return array
      */
-    public function getFilters(): array {
+    public function getFilters() : array {
         return [
             new \Twig_SimpleFilter('substr', [$this, 'substrFilter']),
         ];
-    }
-
-    /**
-     * Decide if input is array or not.
-     *
-     * @param mixed $input
-     * @return bool
-     */
-    public function isArrayFunction($input): bool {
-        return is_array($input);
     }
 
     /**
@@ -77,7 +66,7 @@ class TemplateHelperExtension extends \Twig_Extension {
      * @param string $domain
      * @return string
      */
-    public function boolFunction(bool $bool, string $domain = null): string {
+    public function boolFunction(bool $bool, string $domain = null) : string {
         return $bool
             ? $this->translator->trans('áno', [], $domain)
             : $this->translator->trans('nie', [], $domain)
@@ -92,17 +81,18 @@ class TemplateHelperExtension extends \Twig_Extension {
      * @param int $length
      * @return string
      */
-    public function substrFilter(string $string, int $start, int $length): string {
+    public function substrFilter(string $string, int $start, int $length) : string {
         return substr($string, $start, $length);
     }
 
     /**
      * Merge values of specified entity attributes into a single string. Values are delimited by specified delimiter.
      *
-     * @param string $delimiter delimiter
+     * @param array $values values to be merged into a string
+     * @param string $delimiter delimiter to delimit values being merged into a string
      * @return string
      */
-    public function mergeFunction(array $values, string $delimiter = ', '): string {
+    public function mergeFunction(array $values, string $delimiter = ', ') : string {
         $result = '';
 
         foreach ($values as $key => $value) {

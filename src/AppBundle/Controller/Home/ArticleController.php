@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Home;
 
 use AppBundle\Entity\Article;
+use AppBundle\Entity\Slug;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -31,10 +32,13 @@ class ArticleController extends Controller {
     /**
      * Show action.
      *
-     * @Route("/articles/{id}", name="home_article_show")
+     * @Route("/articles/{slugOrId}", name="home_article_show")
      * @Template("@App/home/article/article.html.twig")
      */
-    public function showAction(Article $article) : array {
-        return ['article' => $article];
+    public function showAction(string $slugOrId) : array {
+        return [
+            'article' => $this->get('app.service.slug')
+                ->getEntityBySlugTypeAndSlugOrId(Slug::ARTICLE, $slugOrId)
+        ];
     }
 }

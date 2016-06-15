@@ -15,7 +15,7 @@
     {% for article in articleList %}
         <div class="row">
             <div class="col-md-5">
-                <a href="{{ path('home_article_show', {'id': article.id}) }}">
+                <a href="{{ path('home_article_show', {'slugOrId': slugOrId(article, app.request.locale)}) }}">
                     {% set image = getFirstImage(article) %}
                     {% if image is not null %}
                         <img class="img-responsive img-hover" src="{{ (upload_dir ~ '/' ~ image[0].name)|imagine_filter('thumb_article') }}" alt="{{ article.heading }}">
@@ -26,11 +26,11 @@
             </div>
             <div class="col-md-7">
                 <h3>
-                    <a href="{{ path('home_article_show', {'id': article.id}) }}">{{ article.heading|trans({}, 'i18n') }}</a>
+                    <a href="{{ path('home_article_show', {'slugOrId': slugOrId(article, app.request.locale)}) }}">{{ article.heading|trans({}, 'i18n') }}</a>
                 </h3>
                 <p>{{ article.writtenOn|date(date_format) }}</p>
                 <p>{{ article.content|trans({}, 'i18n')|slice(0,50)|raw }}</p>
-                <a class="btn btn-primary" href="{{ path('home_article_show', {'id': article.id}) }}">{{ 'Čítaj viac'|trans }} <i class="fa fa-angle-right"></i></a>
+                <a class="btn btn-primary" href="{{ path('home_article_show', {'slugOrId': slugOrId(article, app.request.locale)}) }}">{{ 'Čítaj viac'|trans }} <i class="fa fa-angle-right"></i></a>
             </div>
         </div>
         {% if articleList|length > 1 %}

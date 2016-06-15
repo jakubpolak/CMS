@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityRepository;
 /**
  * Menu repository.
  *
- * @author Jakub Polák
+ * @author Jakub Polák, Jana Poláková
  */
 class MenuRepository extends EntityRepository {
     /**

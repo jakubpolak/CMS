@@ -43,6 +43,9 @@ services:
     app.service.cache:
         class: AppBundle\Service\CacheService
         arguments: ['%cache_location%']
+    app.service.settings:
+        class: AppBundle\Service\SettingsService
+        arguments: ['@doctrine.orm.default_entity_manager']
     app.twig.template_helper:
         class: AppBundle\Twig\TemplateHelperExtension
         public: false

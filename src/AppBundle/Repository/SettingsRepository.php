@@ -1,13 +1,14 @@
 <?php
 
 namespace AppBundle\Repository;
+
 use Doctrine\ORM\EntityRepository;
 
 /**
- * Role repository.
- * 
+ * Settings repository.
+ *
  * @author Jakub Polák, Jana Poláková
  */
-class RoleRepository extends EntityRepository {
-    
+class SettingsRepository extends EntityRepository {
+
 }

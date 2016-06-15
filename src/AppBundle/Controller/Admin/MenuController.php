@@ -68,7 +68,7 @@ class MenuController extends Controller {
 
         return [
             'form' => $form->createView(),
-            'message' => $message
+            'message' => $message,
         ];
     }
 

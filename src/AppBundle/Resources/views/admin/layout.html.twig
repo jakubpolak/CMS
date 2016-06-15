@@ -41,11 +41,9 @@
                         <ul class="dropdown-menu dropdown-user">
                             {# TODO: Add link. #}
                             <li><a href=""><i class="fa fa-user fa-fw"></i> {{ 'Profil'|trans({}, 'admin') }}</a></li>
-                            {# TODO: Add link. #}
-                            <li><a href=""><i class="fa fa-gear fa-fw"></i> {{ 'Nastavenia'|trans({}, 'admin') }}</a></li>
+                            <li><a href="{{ path('admin_settings_update') }}"><i class="fa fa-gear fa-fw"></i> {{ 'Nastavenia'|trans({}, 'admin') }}</a></li>
                             <li class="divider"></li>
-                            {# TODO: Add link. #}
-                            <li><a href=""><i class="fa fa-sign-out fa-fw"></i> {{ 'Odhlásiť sa'|trans({}, 'admin') }}</a></li>
+                            <li><a href="{{ path('fos_user_security_logout') }}"><i class="fa fa-sign-out fa-fw"></i> {{ 'Odhlásiť sa'|trans({}, 'admin') }}</a></li>
                         </ul>
                     </li>
                 </ul>

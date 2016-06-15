@@ -5,7 +5,7 @@ namespace AppBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 
 /**
- * StaticPage repository.
+ * Static page repository.
  *
  * @author Jakub Polák, Jana Poláková
  */

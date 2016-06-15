@@ -4,6 +4,7 @@ namespace AppBundle\Form\Admin;
 
 use AppBundle\Entity\Settings;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -20,7 +21,10 @@ class SettingsType extends AbstractType {
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
-        
+        $builder
+            ->add('isAdvancedMenuShown', null, ['label' => 'Zobraziť pokročilé menu'])
+            ->add('save', SubmitType::class, ['label' => 'Uložiť', 'attr' => ['class' => 'btn btn-primary']])
+        ;
     }
 
     /**

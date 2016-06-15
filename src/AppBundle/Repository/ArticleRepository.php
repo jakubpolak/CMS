@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityRepository;
 /**
  * Article repository.
  *
- * @author Jakub Polák
+ * @author Jakub Polák, Jana Poláková
  */
 class ArticleRepository extends EntityRepository {
     /**

@@ -4,6 +4,7 @@ namespace AppBundle\Controller\Admin;
 
 use AppBundle\Entity\Settings;
 use AppBundle\Form\Admin\SettingsType;
+use AppBundle\Helper\MessageHelper;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -26,7 +27,12 @@ class SettingsController  extends Controller {
      * @Method("GET")
      */
     public function indexAction() : array {
-        return [];
+        $settingsService = $this->get('app.service.settings');
+        $settings = $settingsService->getSettings();
+
+        return [
+            'form' => $this->createUpdateForm($settings)->createView()
+        ];
     }
 
     /**
@@ -37,7 +43,26 @@ class SettingsController  extends Controller {
      * @Method("POST")
      */
     public function indexProcessAction(Request $request) {
-        return [];
+        $settingsService = $this->get('app.service.settings');
+        $settings = $settingsService->getSettings();
+        $form = $this->createUpdateForm($settings);
+
+        $form->handleRequest($request);
+        
+        $message = null;
+        if ($form->isValid()) {
+            try {
+                $settingsService->save($settings);
+                $this->get('session')->getFlashBag()->add(MessageHelper::TYPE_SUCCESS, 'Nastavenia boli uložené.');
+            } catch (\Exception $e) {
+                $message = new MessageHelper(MessageHelper::TYPE_DANGER, 'Nastavenia sa nepodarilo uložiť.');
+            }
+        }
+
+        return [
+            'form' => $form->createView(),
+            'message' => $message,
+        ];
     }
 
     /**

@@ -25,7 +25,7 @@
                         </li>
                     {% else %}
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ menu.name }} <b class="caret"></b></a>
+                            <a href="{{ path('home_default_menu', {'slugOrId' : slugOrId(menu, app.request.locale)}) }}" class="dropdown-toggle" data-toggle="dropdown">{{ menu.name }} <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                             {% for submenu in menu.menus %}
                                 <li>

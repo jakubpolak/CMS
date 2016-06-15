@@ -37,7 +37,8 @@ class DefaultController extends Controller {
      */
     public function menuAction(string $slugOrId) : array {
         return [
-            'menu' => $this->get('app.service.slug')->getEntityBySlugTypeAndSlugOrId(Slug::MENU, $slugOrId)
+            'menu' => $this->get('app.service.slug')
+                ->getEntityBySlugTypeAndSlugOrId(Slug::MENU, $slugOrId)
         ];
     }
 }

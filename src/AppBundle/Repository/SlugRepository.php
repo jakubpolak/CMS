@@ -52,7 +52,7 @@ class SlugRepository extends EntityRepository {
      * @param Language $language language
      * @return Slug
      */
-    public function getByArticleAndLanguage($article, Language $language) : Slug {
+    public function getByArticleAndLanguage(Article $article, Language $language) : Slug {
         return $this->getEntityManager()
             ->createQuery('SELECT s FROM AppBundle:Slug s WHERE s.article = :article AND s.language = :language')
             ->useQueryCache(true)

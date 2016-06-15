@@ -106,10 +106,10 @@ class SlugService {
         
         switch ($class) {
             case Slug::MENU:
-                $slug = $this->slugRepository->getByArticleAndLanguage($entity, $language);
+                $slug = $this->slugRepository->getByMenuAndLanguage($entity, $language);
                 break;
             case Slug::ARTICLE:
-                $slug = $this->slugRepository->getByMenuAndLanguage($entity, $language);
+                $slug = $this->slugRepository->getByArticleAndLanguage($entity, $language);
                 break;
         }
 

@@ -11,6 +11,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -27,7 +29,7 @@ class SliderGalleryController extends Controller {
      * @Template("@App/admin/slider-gallery/index.html.twig")
      * @Method("GET")
      */
-    public function indexAction(): array {
+    public function indexAction() : array {
         $images = $this->get('app.service.image')->getAllToSliderOrderByPosition();
 
         return ['images' => $images];
@@ -40,7 +42,7 @@ class SliderGalleryController extends Controller {
      * @Template("@App/admin/slider-gallery/create.html.twig")
      * @Method("GET")
      */
-    public function createAction() {
+    public function createAction() : array {
         $image = $this->get('app.service.image')->getInstance();
         $form = $this->createCreateForm($image);
         
@@ -139,7 +141,7 @@ class SliderGalleryController extends Controller {
      * @ParamConverter("image", options={"mapping": {"imageId": "id"}})
      * @Method("GET")
      */
-    public function deleteAction(Image $image) {
+    public function deleteAction(Image $image) : RedirectResponse {
         $flashBag = $this->get('session')->getFlashBag();
         $redirect = $this->redirect($this->generateUrl('admin_sliderGallery_index'));
 
@@ -162,9 +164,9 @@ class SliderGalleryController extends Controller {
      * Create create form.
      * 
      * @param Image $image
-     * @return \Symfony\Component\Form\Form
+     * @return Form
      */
-    private function createCreateForm(Image $image) {
+    private function createCreateForm(Image $image) : Form {
         return $this->createForm(SliderImageType::class, $image, [
             'action' => $this->generateUrl('admin_sliderGallery_createProcess'),
             'method' => Request::METHOD_POST
@@ -175,9 +177,9 @@ class SliderGalleryController extends Controller {
      * Create update form.
      * 
      * @param Image $image
-     * @return \Symfony\Component\Form\Form
+     * @return Form
      */
-    private function createUpdateForm(Image $image) {
+    private function createUpdateForm(Image $image) : Form {
         return $this->createForm(SliderImageType::class, $image, [
             'action' => $this->generateUrl('admin_sliderGallery_updateProcess', ['imageId' => $image->getId()]),
             'method' => Request::METHOD_POST

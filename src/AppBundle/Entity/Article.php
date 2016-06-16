@@ -195,7 +195,7 @@ class Article implements Entity {
      * Set slugs.
      *
      * @param Collection $slugs
-     * @return self
+     * @return Article
      */
     public function setSlugs(Collection $slugs): self {
         $this->slugs = $slugs;
@@ -207,7 +207,7 @@ class Article implements Entity {
      * Add slug.
      *
      * @param Slug $slug
-     * @return self
+     * @return Article
      */
     public function addSlug(Slug $slug): self {
         $this->slugs->add($slug);
@@ -220,7 +220,7 @@ class Article implements Entity {
      * Remove slug.
      *
      * @param Slug $slug
-     * @return self
+     * @return Article
      */
     public function removeSlug(Slug $slug): self {
         $this->slugs->remove($slug);

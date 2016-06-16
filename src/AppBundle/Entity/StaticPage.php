@@ -59,7 +59,7 @@ class StaticPage implements Entity {
     /**
      * @var Collection
      *
-     * @ORM\OneToMany(targetEntity="Slug", mappedBy="article")
+     * @ORM\OneToMany(targetEntity="Slug", mappedBy="staticPage")
      */
     private $slugs;
 
@@ -146,7 +146,7 @@ class StaticPage implements Entity {
     /**
      * Get meta.
      *
-     * @return null|string
+     * @return Meta
      */
     public function getMeta() {
         return $this->meta;
@@ -155,10 +155,10 @@ class StaticPage implements Entity {
     /**
      * Set meta.
      *
-     * @param string $meta meta
+     * @param Meta $meta meta
      * @return StaticPage
      */
-    public function setMeta(string $meta) : self {
+    public function setMeta(Meta $meta) : self {
         $this->meta = $meta;
 
         return $this;

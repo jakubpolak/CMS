@@ -66,11 +66,142 @@ Change `admin_article_index` for you route name and include the following snippe
 
 ## Slugs
 
-In order to enable slugs for a new entity it is needed to:
+In order to enable slugs for a new entity it is needed to update your model, SlugService and Administration.
 
-* update Slug entity with new const and ManyToOne relation to a new entity,
-* update SlugService#getByEntityAndLocale(Entity $entity, string $locale) method,
-* update SlugService attribute slugTypes.
+### Model
+
+Update `Slug` entity with new `const` and `ManyToOne` relation to a new entity.
+
+```
+class Slug implements Entity {
+    const MENU = 'Menu';
+    const ARTICLE = 'Article';
+    // ...
+    const My_ENTITY = 'MyEntity';
+    
+    // ...
+    
+    /**
+     * @var MyEntity
+     *
+     * @ORM\ManyToOne(targetEntity="MyEntity", inversedBy="slugs")
+     * @ORM\JoinColumn(referencedColumnName="id", name="my_entity_id")
+     */
+    private $myEntity;
+    
+    // ...
+    
+    public function getMyEntity() : MyEntity {
+        return $this->myEntity;
+    }
+    
+    public function setMyEntity(MyEntity $myEntity) : self {
+        $this->myEntity = $myEntity;
+        return $this;
+    }
+    
+    // ...
+}
+```
+
+Update your entity with:
+
+```
+class MyEntity implements Entity {
+    /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="Slug", mappedBy="article")
+     */
+    private $slugs;
+
+    // ...
+
+    public function __construct() {
+        $this->slugs = new ArrayCollection();
+    }
+
+    // ...
+    
+    public function getSlugs() : Collection {
+        return $this->slugs;
+    }
+
+    public function setSlugs(Collection $slugs) : self {
+        $this->slugs = $slugs;
+
+        return $this;
+    }
+
+    public function addSlug(Slug $slug) : self {
+        $this->slugs->add($slug);
+        $slug->setArticle($this);
+
+        return $this;
+    }
+
+    public function removeSlug(Slug $slug) : self {
+        $this->slugs->remove($slug);
+
+        return $this;
+    }
+    
+    // ...
+}
+```
+
+### SlugService
+
+Update `SlugService#getByEntityAndLocale(Entity $entity, string $locale)` method.
+
+Update `SlugService` attribute `slugTypes`.
+
+
+### Administration
+
+Update your Controller with: 
+
+```
+class MyController extends Controller {
+    // ...
+    
+    public function update(MyEntity $myEntity) {
+        // ...
+    
+        return [
+            // ...
+            'myEntity' => $myEntity,
+            'slugs' => $myEntity->getSlugs(),
+        ];
+    }
+
+    public function updateProcess(MyEntity $myEntity, Request $request) {
+        // ...
+    
+        return [
+            // ...
+            'myEntity' => $myEntity,
+            'slugs' => $myEntity->getSlugs(),
+        ];
+    }
+    
+    // ...
+}
+```
+
+Replace `MyEntity` and `$myEntity` with name of your entity and yout entity variable:
+
+
+Update update.html.twig with:
+
+```
+{% include '@App/admin/slug/list-of-slugs.html.twig' with {'entityName' : 'myEntityName', 'entityId' : myEntity.id, 'slugs' : slugs} %}
+
+    {% include '@App/admin/slug/new-slug.html.twig' with {'entityName' : 'myEntityName', 'entityId' : myEntity.id } %}
+```
+
+Replace `myEntityName` and `myEntity.id` with name of your entity and name of your entity variable passed to view in your controller's update and updateProcess actions.
+
 
 
 

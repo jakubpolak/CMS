@@ -5,6 +5,10 @@
 {% block breadcrumbs %}&raquo; <a href="{{ path('admin_staticPage_index') }}">{{ 'Statické stránky'|trans({}, 'admin') }}</a> &raquo; {{ 'Upraviť statickú stránku'|trans({}, 'admin') }}{% endblock %}
 
 {% block content %}
+    {% include '@App/admin/slug/list-of-slugs.html.twig' with {'entityName' : 'staticPage', 'entityId' : staticPage.id, 'slugs' : slugs} %}
+
+    {% include '@App/admin/slug/new-slug.html.twig' with {'entityName' : 'staticPage', 'entityId' : staticPage.id } %}
+
     <div class="row">
         <div class="col-lg-12">
             <div class="panel panel-default">

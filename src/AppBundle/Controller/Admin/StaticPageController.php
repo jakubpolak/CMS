@@ -84,7 +84,11 @@ class StaticPageController extends Controller {
             return $this->redirect($this->generateUrl('admin_staticPage_index'));
         }
 
-        return ['form' => $this->createUpdateForm($staticPage)->createView()];
+        return [
+            'form' => $this->createUpdateForm($staticPage)->createView(),
+            'slugs' => $staticPage->getSlugs(),
+            'staticPage' => $staticPage,
+        ];
     }
 
     /**
@@ -118,7 +122,9 @@ class StaticPageController extends Controller {
 
         return [
             'form' => $form,
-            'message' => $message
+            'message' => $message,
+            'slugs' => $staticPage->getSlugs(),
+            'staticPage' => $staticPage,
         ];
     }
 

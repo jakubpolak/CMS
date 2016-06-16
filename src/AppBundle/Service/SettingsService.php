@@ -12,12 +12,7 @@ use Doctrine\ORM\EntityRepository;
  *
  * @author Jakub Polák, Jana Poláková
  */
-class SettingsService extends CrudService{
-    /**
-     * @var Settings
-     */
-    private static $settings;
-
+class SettingsService extends CrudService {
     /**
      * @var SettingsRepository
      */
@@ -48,14 +43,14 @@ class SettingsService extends CrudService{
      * @return Settings
      */
     public function getSettings() {
-        if (self::$settings === null) {
-            self::$settings = new Settings();
-            $this->em->persist(self::$settings);
+        $settings = $this->settingsRepository->find(Settings::ID);
+
+        if ($settings === null) {
+            $settings = new Settings();
+            $this->em->persist($settings);
             $this->em->flush();
-        } else {
-            self::$settings = $this->settingsRepository->find(self::$settings->getId());
         }
 
-        return self::$settings;
+        return $settings;
     }
 }

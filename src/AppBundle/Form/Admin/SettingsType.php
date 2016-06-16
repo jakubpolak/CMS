@@ -22,7 +22,10 @@ class SettingsType extends AbstractType {
      */
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder
-            ->add('isAdvancedMenuShown', null, ['label' => 'Zobraziť pokročilé menu'])
+            ->add('isAdvancedMenuEnabled', null, ['label' => 'Povoliť pokročilé menu'])
+            ->add('isTranslationsEnabled', null, ['label' => 'Povoliť preklady'])
+            ->add('isLanguagesEnabled', null, ['label' => 'Povoliť jazyky'])
+            ->add('isSlugsEnabled', null, ['label' => 'Povoliť slugy'])
             ->add('save', SubmitType::class, ['label' => 'Uložiť', 'attr' => ['class' => 'btn btn-primary']])
         ;
     }

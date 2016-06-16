@@ -54,7 +54,10 @@ class TemplateHelperExtension extends \Twig_Extension {
             new \Twig_SimpleFunction('bool', [$this, 'boolFunction'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('merge', [$this, 'mergeFunction'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('languagesCount', [$this, 'languagesCountFunction'], ['is_safe' => ['html']]),
-            new \Twig_SimpleFunction('showAdvancedMenu', [$this, 'showAdvancedMenuFunction'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('isAdvancedMenuEnabled', [$this, 'isAdvancedMenuEnabledFunction'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('isTranslationsEnabled', [$this, 'isTranslationsEnabledFunction'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('isSlugsEnabled', [$this, 'isSlugsEnabledFunction'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('isLanguagesEnabled', [$this, 'isLanguagesEnabledFunction'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -70,12 +73,39 @@ class TemplateHelperExtension extends \Twig_Extension {
     }
 
     /**
-     * Show advanced menu function.
+     * Is translations enabled function.
+     * 
+     * @return bool
+     */
+    public function isTranslationsEnabledFunction() : bool {
+        return $this->settingsService->getSettings()->getIsTranslationsEnabled();
+    }
+
+    /**
+     * Is slugs enabled function.
+     * 
+     * @return bool
+     */
+    public function isSlugsEnabledFunction() : bool {
+        return $this->settingsService->getSettings()->getIsSlugsEnabled();
+    }
+
+    /**
+     * Is languages enabled function.
+     * 
+     * @return bool
+     */
+    public function isLanguagesEnabledFunction() : bool {
+        return $this->settingsService->getSettings()->getIsLanguagesEnabled();
+    }
+    
+    /**
+     * Is advanced menu enabled.
      * 
      * @return bool true if advanced menu is shown, false otherwise.
      */
-    public function showAdvancedMenuFunction() : bool {
-        return $this->settingsService->getSettings()->getIsAdvancedMenuShown();
+    public function isAdvancedMenuEnabledFunction() : bool {
+        return $this->settingsService->getSettings()->getIsAdvancedMenuEnabled();
     }
 
     /**

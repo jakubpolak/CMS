@@ -20,13 +20,13 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SettingsController  extends Controller {
     /**
-     * Index action.
+     * Update action.
      *
      * @Route("", name="admin_settings_update")
      * @Template("@App/admin/settings/update.html.twig")
      * @Method("GET")
      */
-    public function indexAction() : array {
+    public function updateAction() : array {
         $settingsService = $this->get('app.service.settings');
         $settings = $settingsService->getSettings();
 
@@ -36,13 +36,13 @@ class SettingsController  extends Controller {
     }
 
     /**
-     * Index process action.
+     * Update process action.
      *
      * @Route("", name="admin_settings_updateProcess")
      * @Template("@App/admin/settings/update.html.twig")
      * @Method("POST")
      */
-    public function indexProcessAction(Request $request) {
+    public function updateProcessAction(Request $request) {
         $settingsService = $this->get('app.service.settings');
         $settings = $settingsService->getSettings();
         $form = $this->createUpdateForm($settings);

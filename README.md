@@ -66,7 +66,7 @@ Change `admin_article_index` for you route name and include the following snippe
 
 ## Slugs
 
-In order to enable slugs for a new entity it is needed to update your model, SlugService and Administration.
+In order to enable slugs for a new entity it is needed to update your Model, SlugService, Controller and Controllers's view.
 
 ### Model
 
@@ -157,7 +157,7 @@ Update `SlugService#getByEntityAndLocale(Entity $entity, string $locale)` method
 Update `SlugService` attribute `slugTypes`.
 
 
-### Administration
+### Controller and Controller's view
 
 Update your Controller with: 
 

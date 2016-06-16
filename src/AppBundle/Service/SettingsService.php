@@ -23,6 +23,11 @@ class SettingsService extends CrudService{
      */
     private $settingsRepository;
 
+    /**
+     * Constructor.
+     * 
+     * @param EntityManager $entityManager
+     */
     public function __construct(EntityManager $entityManager) {
         parent::__construct($entityManager);
         $this->settingsRepository = $this->em->getRepository('AppBundle:Settings');

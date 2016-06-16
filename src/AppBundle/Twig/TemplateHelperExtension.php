@@ -2,6 +2,7 @@
 
 namespace AppBundle\Twig;
 
+use AppBundle\Service\SettingsService;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Translation\Translator;
 
@@ -22,17 +23,25 @@ class TemplateHelperExtension extends \Twig_Extension {
     private $em;
 
     /**
+     * @var SettingsService
+     */
+    private $settingsService;
+
+    /**
      * Constructor.
      *
      * @param Translator $translator
      * @param EntityManager $entityManager entity manager
+     * @param SettingsService $settingsService settings service
      */
     public function __construct(
         Translator $translator,
-        EntityManager $entityManager
+        EntityManager $entityManager,
+        SettingsService $settingsService
     ) {
         $this->translator = $translator;
         $this->em = $entityManager;
+        $this->settingsService = $settingsService;
     }
 
     /**
@@ -40,11 +49,12 @@ class TemplateHelperExtension extends \Twig_Extension {
      *
      * @return array
      */
-    public function getFunctions(): array {
+    public function getFunctions() : array {
         return [
             new \Twig_SimpleFunction('bool', [$this, 'boolFunction'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('merge', [$this, 'mergeFunction'], ['is_safe' => ['html']]),
             new \Twig_SimpleFunction('languagesCount', [$this, 'languagesCountFunction'], ['is_safe' => ['html']]),
+            new \Twig_SimpleFunction('showAdvancedMenu', [$this, 'showAdvancedMenuFunction'], ['is_safe' => ['html']]),
         ];
     }
 
@@ -57,6 +67,15 @@ class TemplateHelperExtension extends \Twig_Extension {
         return [
             new \Twig_SimpleFilter('substr', [$this, 'substrFilter']),
         ];
+    }
+
+    /**
+     * Show advanced menu function.
+     * 
+     * @return bool true if advanced menu is shown, false otherwise.
+     */
+    public function showAdvancedMenuFunction() : bool {
+        return $this->settingsService->getSettings()->getIsAdvancedMenuShown();
     }
 
     /**

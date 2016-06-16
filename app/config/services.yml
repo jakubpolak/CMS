@@ -49,7 +49,7 @@ services:
     app.twig.template_helper:
         class: AppBundle\Twig\TemplateHelperExtension
         public: false
-        arguments: ['@translator.default', '@doctrine.orm.default_entity_manager']
+        arguments: ['@translator.default', '@doctrine.orm.default_entity_manager', '@app.service.settings']
         tags:
             - { name: twig.extension }
     app.twig.menu_helper:

@@ -62,11 +62,13 @@
                                     <i class="fa fa-file fa-fw"></i> <span>{{ 'Články'|trans({}, 'admin') }}</span>
                                 </a>
                             </li>
-                            <li>
-                                <a {% if 'admin_language' in currentRoute %} class="active"{% endif %} href="{{ path('admin_language_index') }}">
-                                    <i class="fa fa-language fa-fw"></i> <span>{{ 'Jazyky'|trans({}, 'admin') }}</span>
-                                </a>
-                            </li>
+                            {% if showAdvancedMenu() == true %}
+                                <li>
+                                    <a {% if 'admin_language' in currentRoute %} class="active"{% endif %} href="{{ path('admin_language_index') }}">
+                                        <i class="fa fa-language fa-fw"></i> <span>{{ 'Jazyky'|trans({}, 'admin') }}</span>
+                                    </a>
+                                </li>
+                            {% endif %}
                             <li>
                                 <a {% if 'admin_translation' in currentRoute %} class="active"{% endif %} href="{{ path('admin_translation_index') }}">
                                     <i class="fa fa-language fa-fw"></i> <span>{{ 'Preklady'|trans({}, 'admin') }}</span>

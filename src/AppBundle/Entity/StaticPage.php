@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -55,9 +57,24 @@ class StaticPage implements Entity {
     private $meta;
 
     /**
+     * @var Collection
+     *
+     * @ORM\OneToMany(targetEntity="Slug", mappedBy="article")
+     */
+    private $slugs;
+
+    /**
+     * Constructor.
+     */
+    public function __construct() {
+        $this->isActive = true;
+        $this->slugs = new ArrayCollection();
+    }
+
+    /**
      * Get id.
      *
-     * @return int|null
+     * @return null|int
      */
     public function getId() {
         return $this->id;
@@ -66,9 +83,9 @@ class StaticPage implements Entity {
     /**
      * Get heading.
      *
-     * @return string
+     * @return null|string
      */
-    public function getHeading(): string {
+    public function getHeading() {
         return $this->heading;
     }
 
@@ -76,9 +93,9 @@ class StaticPage implements Entity {
      * Set heading.
      *
      * @param string $heading
-     * @return self
+     * @return StaticPage
      */
-    public function setHeading($heading): self {
+    public function setHeading(string $heading) : self {
         $this->heading = $heading;
 
         return $this;
@@ -87,40 +104,40 @@ class StaticPage implements Entity {
     /**
      * Get content.
      *
-     * @return string
+     * @return null|string
      */
-    public function getContent(): string {
+    public function getContent() {
         return $this->content;
     }
 
     /**
      * Set content.
      *
-     * @param string $content
-     * @return self
+     * @param string $content content
+     * @return StaticPage
      */
-    public function setContent(string $content): self {
+    public function setContent(string $content) : self {
         $this->content = $content;
 
         return $this;
     }
 
     /**
-     * Get is active.
+     * Get isActive.
      *
      * @return bool
      */
-    public function getIsActive(): bool {
+    public function getIsActive() : bool {
         return $this->isActive;
     }
 
     /**
-     * Set is active.
+     * Set isActive.
      *
-     * @param bool $isActive
-     * @return self
+     * @param bool $isActive is active
+     * @return StaticPage
      */
-    public function setIsActive(bool $isActive): self {
+    public function setIsActive(bool $isActive) : self {
         $this->isActive = $isActive;
 
         return $this;
@@ -129,21 +146,42 @@ class StaticPage implements Entity {
     /**
      * Get meta.
      *
-     * @return Meta
+     * @return null|string
      */
-    public function getMeta(): string {
+    public function getMeta() {
         return $this->meta;
     }
 
     /**
      * Set meta.
      *
-     * @param Meta $meta
-     * @return self
+     * @param string $meta meta
+     * @return StaticPage
      */
-    public function setMeta($meta): self {
+    public function setMeta(string $meta) : self {
         $this->meta = $meta;
 
+        return $this;
+    }
+
+    /**
+     * Get slugs.
+     * 
+     * @return Collection
+     */
+    public function getSlugs() : Collection {
+        return $this->slugs;
+    }
+
+    /**
+     * Set slugs.
+     * 
+     * @param Collection $slugs slugs
+     * @return StaticPage
+     */
+    public function setSlugs(Collection $slugs) : self {
+        $this->slugs = $slugs;
+        
         return $this;
     }
 }

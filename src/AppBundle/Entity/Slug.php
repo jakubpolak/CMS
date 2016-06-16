@@ -13,8 +13,9 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="AppBundle\Repository\SlugRepository")
  */
 class Slug implements Entity {
-    const MENU = "Menu";
-    const ARTICLE = "Article";
+    const MENU = 'Menu';
+    const ARTICLE = 'Article';
+    const STATIC_PAGE = 'StaticPage';
     
     /**
      * @var int
@@ -39,6 +40,14 @@ class Slug implements Entity {
      * @ORM\JoinColumn(referencedColumnName="id", name="menu_id")
      */
     private $menu;
+
+    /**
+     * @var StaticPage
+     *
+     * @ORM\ManyToOne(targetEntity="StaticPage", inversedBy="slugs")
+     * @ORM\JoinColumn(referencedColumnName="id", name="static_page_id")
+     */
+    private $staticPage;
 
     /**
      * @var Language
@@ -75,8 +84,8 @@ class Slug implements Entity {
     /**
      * Set content.
      *
-     * @param string $content
-     * @return self
+     * @param string $content content
+     * @return Slug
      */
     public function setContent(string $content) : self {
         $this->content = $content;
@@ -105,8 +114,8 @@ class Slug implements Entity {
     /**
      * Set menu.
      *
-     * @param Menu $menu
-     * @return self
+     * @param Menu $menu menu
+     * @return Slug
      */
     public function setMenu(Menu $menu) : self {
         $this->menu = $menu;
@@ -126,8 +135,8 @@ class Slug implements Entity {
     /**
      * Set language.
      *
-     * @param Language $language
-     * @return self
+     * @param Language $language language
+     * @return Slug
      */
     public function setLanguage(Language $language) : self {
         $this->language = $language;
@@ -147,11 +156,32 @@ class Slug implements Entity {
     /**
      * Set article.
      *
-     * @param Article $article
-     * @return self
+     * @param Article $article article
+     * @return Slug
      */
     public function setArticle(Article $article) : self {
         $this->article = $article;
+
+        return $this;
+    }
+
+    /**
+     * Get staticPage.
+     *
+     * @return StaticPage
+     */
+    public function getStaticPage() {
+        return $this->staticPage;
+    }
+
+    /**
+     * Set staticPage.
+     *
+     * @param StaticPage $staticPage
+     * @return Slug
+     */
+    public function setStaticPage(StaticPage $staticPage) : self {
+        $this->staticPage = $staticPage;
 
         return $this;
     }

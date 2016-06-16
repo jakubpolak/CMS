@@ -64,7 +64,13 @@ Change `admin_article_index` for you route name and include the following snippe
 {% include 'AppBundle:admin/layout:pagination.html.twig' with {'pagesCount': pagesCount, 'currentPage': currentPage, 'route': 'admin_article_index'} %}
 ```
 
+## Slugs
 
+In order to enable slugs for a new entity it is needed to:
+
+* update Slug entity with new const and ManyToOne relation to a new entity,
+* update SlugService#getByEntityAndLocale(Entity $entity, string $locale) method,
+* update SlugService attribute slugTypes.
 
 
 

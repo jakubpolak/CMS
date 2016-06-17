@@ -68,7 +68,11 @@ Change `admin_article_index` for you route name and include the following snippe
 
 ### Usage
 
+To get a slug for an entity in twig use `slugOrId method`:
 
+```
+slugOrId(myEntity, app.request.locale)
+```
 
 ### Enable for a new entity
 

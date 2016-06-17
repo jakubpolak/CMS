@@ -5,11 +5,13 @@ namespace AppBundle\Controller\Admin;
 use AppBundle\Entity\Slug;
 use AppBundle\Form\Admin\SlugType;
 use AppBundle\Helper\MessageHelper;
+use AppBundle\Service\Exception\ServiceException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -72,6 +74,8 @@ class SlugController extends Controller {
                 $slugService->save($slug, $entity);
                 $flashBag->add(MessageHelper::TYPE_SUCCESS, 'Slug bol uložený.');
                 return $this->redirect($this->generateUrl("admin_{$entityName}_update", ['id' => $entityId]));
+            } catch (ServiceException $e) {
+                $message = new MessageHelper(MessageHelper::TYPE_DANGER, $e->getMessage());
             } catch (\Exception $e) {
                 $message = new MessageHelper(MessageHelper::TYPE_DANGER, 'Slug sa nepodarilo uložiť.');
             }
@@ -156,7 +160,7 @@ class SlugController extends Controller {
      * @Route("/delete/{entityName}/{entityId}/{id}", name="admin_slug_delete")
      * @Method("GET")
      */
-    public function deleteAction(string $entityName, int $entityId, Slug $slug) {
+    public function deleteAction(string $entityName, int $entityId, Slug $slug) : RedirectResponse {
         $flashBag = $this->get('session')->getFlashBag();
         $slugService = $this->get('app.service.slug');
         $entity = $slugService->getEntity($entityName, $entityId);
@@ -183,7 +187,7 @@ class SlugController extends Controller {
      * @param Slug $slug
      * @return Form
      */
-    public function createCreateForm(string $entityName, int  $entityId, Slug $slug): Form {
+    public function createCreateForm(string $entityName, int  $entityId, Slug $slug) : Form {
         return $this->createForm(SlugType::class, $slug, [
             'method' => Request::METHOD_POST,
             'action' => $this->generateUrl('admin_slug_createProcess', [
@@ -201,7 +205,7 @@ class SlugController extends Controller {
      * @param Slug $slug
      * @return Form
      */
-    public function createUpdateForm(string $entityName, int $entityId, Slug $slug): Form {
+    public function createUpdateForm(string $entityName, int $entityId, Slug $slug) : Form {
         return $this->createForm(SlugType::class, $slug, [
             'method' => Request::METHOD_POST,
             'action' => $this->generateUrl('admin_slug_updateProcess', [

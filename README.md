@@ -66,9 +66,15 @@ Change `admin_article_index` for you route name and include the following snippe
 
 ## Slugs
 
-In order to enable slugs for a new entity it is needed to update your Model, SlugService, Controller and Controllers's view.
+### Usage
 
-### Model
+
+
+### Enable for a new entity
+
+In order to enable slugs for a new entity it is needed to update your Model, SlugService, Controller and it's view and admin's layout.html.twig.
+
+#### Model
 
 Update `Slug` entity with new `const` and `ManyToOne` relation to a new entity.
 
@@ -150,14 +156,14 @@ class MyEntity implements Entity {
 }
 ```
 
-### SlugService
+#### SlugService
 
 Update `SlugService#getByEntityAndLocale(Entity $entity, string $locale)` method.
 
 Update `SlugService` attribute `slugTypes`.
 
 
-### Controller and Controller's view
+#### Controller and it's view
 
 Update your Controller with: 
 
@@ -201,6 +207,16 @@ Update update.html.twig with:
 ```
 
 Replace `myEntityName` and `myEntity.id` with name of your entity and name of your entity variable passed to view in your controller's update and updateProcess actions.
+
+#### admin's layout.html.twig
+
+In order to display menu as active add `or entityName == 'myEntity'` to `if` condition: 
+
+```
+<li>
+    <a {% if '...' in currentRoute or entityName == 'myEntity' %} class="active"{% endif %} href="..."><!-- ... --></a>
+</li>
+```
 
 
 

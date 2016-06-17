@@ -77,8 +77,7 @@
                                 </li>
                             {% endif %}
                             <li>
-                                {# TODO: Add link.#}
-                                <a {% if 'admin_menu' in currentRoute or entityName == 'article' %} class="active"{% endif %} href="{{ path('admin_menu_index') }}">
+                                <a {% if 'admin_menu' in currentRoute or entityName == 'menu' %} class="active"{% endif %} href="{{ path('admin_menu_index') }}">
                                     <i class="fa fa-list fa-fw"></i> <span>{{ 'Menu'|trans({}, 'admin') }}</span>
                                 </a>
                             </li>
@@ -88,12 +87,12 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ path('admin_staticPage_index') }}">
+                                <a {% if 'admin_staticPage' in currentRoute or entityName == 'staticPage' %} class="active"{% endif %} href="{{ path('admin_staticPage_index') }}">
                                     <i class="fa fa-files-o"></i> <span>{{ 'Statické stránky'|trans({}, 'admin') }}</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ path('admin_sliderGallery_index') }}">
+                                <a {% if 'admin_sliderGallery' in currentRoute %}class="active"{% endif %} href="{{ path('admin_sliderGallery_index') }}">
                                     <i class="fa fa-picture-o fa-fw"></i> <span>{{ 'Banner'|trans({}, 'admin') }}</span>
                                 </a>
                             </li>

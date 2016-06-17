@@ -2,7 +2,6 @@
 
 namespace AppBundle\Controller\Home;
 
-use AppBundle\Entity\Article;
 use AppBundle\Entity\Slug;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;

@@ -133,13 +133,11 @@ class SlugService {
 
         if (($slugId === null && $this->slugExists($entity, $language)) ||
             ($slugId !== null && $this->slugExistsExceptSpecifiedSlug($entity, $language, $slug))) {
-            $message = 'Slug for entity "'
-                . $entityName
-                . '" with content "'
+            $message = 'Nie je možné vytvoriť slug "'
                 . $slug->getContent()
-                . '" in language "'
+                . '" pretože už v jazyku "'
                 . $language->getCode()
-                .  '" already exists.'
+                .  '" existuje.'
             ;
 
             throw new ServiceException($message);
